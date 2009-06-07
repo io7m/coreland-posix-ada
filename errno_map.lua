@@ -22,22 +22,14 @@ assert (errno_to_int_fh)
 
 for line in errno_to_int_fh:lines() do
   local parts        = string_ex.split (line, ":")
-  local ok           = true
   local errno        = parts [1]:gsub (" ", "")
   local value        = parts [2]:gsub (" ", "")
   local value_number = tonumber (value)
 
-  io.stderr:write ("errno_map: errno '"..errno.."' value '"..value.."'\n")
+  assert (value_number);
 
-  if not value_number then
-    io.stderr:write ("errno_map: no value for "..errno.."\n")
-    ok = false
-  end
-
-  if ok then
-    errno_values [errno]             = value_number
-    errno_values_used [value_number] = false
-  end
+  errno_values [errno]             = value_number
+  errno_values_used [value_number] = false
 end
 
 --

@@ -1,7 +1,17 @@
 
--- ./posix.apk
-pragma source_file_name(POSIX, spec_file_name => "posix.ads");
-
 -- ./posix-error.apk
 pragma source_file_name(POSIX.Error, spec_file_name => "posix-error.ads");
 pragma source_file_name(POSIX.Error, body_file_name => "posix-error.adb");
+
+-- ./posix-file.apk
+pragma source_file_name(POSIX.File, spec_file_name => "posix-file.ads");
+pragma source_file_name(POSIX.File, body_file_name => "posix-file.adb");
+
+-- ./posix-file_thin.apk
+pragma source_file_name(POSIX.File_Thin, spec_file_name => "posix-file_thin.ads");
+
+-- ./posix-permissions.apk
+pragma source_file_name(POSIX.Permissions, spec_file_name => "posix-permissions.ads");
+
+-- ./posix.apk
+pragma source_file_name(POSIX, spec_file_name => "posix.ads");

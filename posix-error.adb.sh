@@ -29,11 +29,16 @@ cat <<EOF
     return Error_t'Wide_Image (Value);
   end Wide_Message;
 
-  function Message (Value : Error_t) return String is
+  function Message (Value : in Error_t) return String is
   begin
     -- return Catalog_Get (Ada_To_Errno (Value));
     return Error_t'Image (Value);
   end Message;
+
+  function Get_Error return Error_t is
+  begin
+    return Errno_To_Ada (Errno_Get);
+  end Get_Error;
 
 end POSIX.Error;
 EOF
