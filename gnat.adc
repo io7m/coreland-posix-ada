@@ -1,0 +1,7 @@
+
+-- ./posix.apk
+pragma source_file_name(POSIX, spec_file_name => "posix.ads");
+
+-- ./posix-error.apk
+pragma source_file_name(POSIX.Error, spec_file_name => "posix-error.ads");
+pragma source_file_name(POSIX.Error, body_file_name => "posix-error.adb");

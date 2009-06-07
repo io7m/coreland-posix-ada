@@ -1,0 +1,2 @@
+errno_int.c: errno_int.c.lua errno_to_ada.map
+	./errno_int.c.lua < errno_to_ada.map > errno_int.c.tmp && mv errno_int.c.tmp errno_int.c

@@ -1,0 +1,2 @@
+posix-error.ads: posix-error.ads.sh
+  ./posix-error.ads.sh > posix-error.ads.tmp && mv posix-error.ads.tmp posix-error.ads
