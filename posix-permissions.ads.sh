@@ -1,8 +1,19 @@
-with Interfaces.C;
+#!/bin/sh
+
+cat LICENSE || exit 1
+cat <<EOF
+
+--
+-- Auto generated, do not edit.
+--
 
 package POSIX.Permissions is
 
-  type Mode_t is new Interfaces.C.unsigned;
+EOF
+
+./type-discrete Mode || exit 1
+
+cat <<EOF
 
   None        : constant Mode_t := 8#0000#;
 
@@ -19,3 +30,4 @@ package POSIX.Permissions is
   World_Exec  : constant Mode_t := 8#0001#;
 
 end POSIX.Permissions;
+EOF

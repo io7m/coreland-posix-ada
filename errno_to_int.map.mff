@@ -1,2 +1,6 @@
-errno_to_int.map: errno_to_int.sh errno_int errno.map
-	./errno_to_int.sh > errno_to_int.map.tmp && mv errno_to_int.map.tmp errno_to_int.map
+errno_to_int.map: \
+errno_int         \
+errno.map         \
+errno_to_int.sh
+	./errno_to_int.sh > errno_to_int.map.tmp
+	mv errno_to_int.map.tmp errno_to_int.map

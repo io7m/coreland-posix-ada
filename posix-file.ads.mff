@@ -1,0 +1,9 @@
+posix-file.ads:       \
+LICENSE               \
+posix-error.ads       \
+posix_file            \
+posix-file.ads.sh     \
+posix-permissions.ads \
+type-discrete
+	./posix-file.ads.sh > posix-file.ads.tmp
+	mv posix-file.ads.tmp posix-file.ads

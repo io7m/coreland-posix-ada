@@ -32,7 +32,7 @@ io.write ([[
 ]])
 
 for name, value in pairs (errno_values) do
-  io.write ("    "..name.." : constant := "..value..";\n")
+  io.write ("    "..name.." : constant Errno_Int_t := "..value..";\n")
 end
 
 io.write ([[

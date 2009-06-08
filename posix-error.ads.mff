@@ -1,2 +1,8 @@
-posix-error.ads: posix-error.ads.sh
-  ./posix-error.ads.sh > posix-error.ads.tmp && mv posix-error.ads.tmp posix-error.ads
+posix-error.ads:   \
+enum_type.lua      \
+errno_to_ada.map   \
+LICENSE            \
+posix-error.ads.sh \
+type-discrete
+	./posix-error.ads.sh > posix-error.ads.tmp
+	mv posix-error.ads.tmp posix-error.ads

@@ -1,0 +1,6 @@
+posix-permissions.ads:   \
+posix-permissions.ads.sh \
+type-discrete            \
+LICENSE
+	./posix-permissions.ads.sh > posix-permissions.ads.tmp
+	mv posix-permissions.ads.tmp posix-permissions.ads

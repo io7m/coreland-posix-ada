@@ -59,7 +59,8 @@ io.write ([[
   -- Map POSIX errno to Ada POSIX error code value.
   --
 
-  function Errno_To_Ada (Value : in Interfaces.C.int) return Error_t is
+  function Errno_To_Ada (Value : in Errno_Int_t) return Error_t is
+    use type Errno_Int_t;
   begin
     case Value is
 ]])
@@ -92,7 +93,8 @@ io.write ([[
   -- Map Ada error code value to POSIX errno.
   --
 
-  function Ada_To_Errno (Value : in Error_t) return Interfaces.C.int is
+  function Ada_To_Errno (Value : in Error_t) return Errno_Int_t is
+    use type Errno_Int_t;
   begin
     case Value is
 ]])

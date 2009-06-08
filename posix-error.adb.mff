@@ -1,2 +1,10 @@
-posix-error.adb: posix-error.adb.sh errno_constants.lua errno_to_int.map errno_map.lua posix-error.ads errno_to_ada.map
-  ./posix-error.adb.sh > posix-error.adb.tmp && mv posix-error.adb.tmp posix-error.adb
+posix-error.adb:    \
+errno_constants.lua \
+errno_map.lua       \
+errno_to_ada.map    \
+errno_to_int.map    \
+LICENSE             \
+posix-error.adb.sh  \
+posix-error.ads
+	./posix-error.adb.sh > posix-error.adb.tmp
+	mv posix-error.adb.tmp posix-error.adb

@@ -1,15 +1,15 @@
 #!/bin/sh
 
-cat LICENSE
+cat LICENSE || exit 1
 cat <<EOF
 
 --
 -- Auto generated, do not edit.
 --
 
-with Interfaces.C;
-
-package POSIX.Error is
+package POSIX.Error
+  --# own POSIX_errno;
+is
 
 EOF
 
@@ -21,36 +21,48 @@ cat <<EOF
   -- Map error value to locale-specific error message.
   --
 
-  function Wide_Message (Value : in Error_t) return Wide_String;
-  function Message (Value : in Error_t) return String;
+  procedure Message
+    (Value  : in Error_t;
+     Buffer : out String);
+  --# derives Buffer from Value;
 
   --
   -- Get current error code.
   --
 
   function Get_Error return Error_t;
+  --# global in POSIX_errno;
 
 private
+
+EOF
+
+./type-discrete Errno_Int || exit 1
+
+cat <<EOF
 
   --
   -- Mapping between errno and Ada error codes.
   --
 
-  function Ada_To_Errno (Value : in Error_t) return Interfaces.C.int;
-  function Errno_To_Ada (Value : in Interfaces.C.int) return Error_t;
+  function Ada_To_Errno (Value : in Error_t) return Errno_Int_t;
+  function Errno_To_Ada (Value : in Errno_Int_t) return Error_t;
 
   --
   -- Return POSIX errno integer.
   --
 
-  function Errno_Get return Interfaces.C.int;
+  function Errno_Get return Errno_Int_t;
+  --# global in POSIX_errno;
   pragma Import (C, Errno_Get, "posix_errno_get");
 
   --
   -- Set POSIX errno integer.
   --
 
-  procedure Errno_Set (Code : Interfaces.C.int);
+  procedure Errno_Set (Code : in Errno_Int_t);
+  --# global out POSIX_Errno;
+  --# derives POSIX_Errno from Code;
   pragma Import (C, Errno_Set, "posix_errno_set");
 
 end POSIX.Error;
