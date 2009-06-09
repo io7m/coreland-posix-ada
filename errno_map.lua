@@ -39,6 +39,9 @@ end
 local errno_to_ada_fh = io.open (argv [2])
 assert (errno_to_ada_fh)
 
+local longest_errno_name = 0
+local longest_ada_name   = 0
+
 for line in errno_to_ada_fh:lines() do
   local parts = string_ex.split (line, ":")
   local code  = {}
@@ -46,8 +49,14 @@ for line in errno_to_ada_fh:lines() do
   code.errno = parts [1]:gsub (" ", "")
   code.ada   = parts [2]:gsub (" ", "")
 
+  if #code.ada   > longest_ada_name then longest_ada_name = #code.ada end
+  if #code.errno > longest_errno_name then longest_errno_name = #code.errno end
+
   table.insert (codes, code)
 end
+
+assert (longest_errno_name > 0)
+assert (longest_ada_name > 0)
 
 --
 -- Write Ada spec.
@@ -60,6 +69,7 @@ io.write ([[
   --
 
   function Errno_To_Ada (Value : in Errno_Int_t) return Error_t is
+    Return_Value : Error_t := Error_Unknown;
   begin
     case Value is
 ]])
@@ -74,9 +84,13 @@ for index, code in pairs (codes) do
     ok = false
   end
 
+  local name_length = #code.errno
+
   if ok then
     if errno_values_used [error_int] == false then
-      io.write ("      when C_Constants."..code.errno.." => return Error_"..code.ada..";\n")
+      io.write ("      when "..code.errno)
+      for index = name_length, longest_errno_name do io.write (" ") end
+      io.write ("=> Return_Value := Error_"..code.ada..";\n")
       errno_values_used [error_int] = true
     end
   end
@@ -85,7 +99,7 @@ end
 io.write ([[
       when others => null;
     end case;
-    return Error_Unknown;
+    return Return_Value;
   end Errno_To_Ada;
 
   --
@@ -93,18 +107,24 @@ io.write ([[
   --
 
   function Ada_To_Errno (Value : in Error_t) return Errno_Int_t is
+    Return_Value : Errno_Int_t := -1;
   begin
     case Value is
 ]])
 
 for index, code in pairs (codes) do
   assert (type (code) == "table")
-  io.write ("      when Error_"..code.ada.." => return C_Constants."..code.errno..";\n")
+
+  local name_length = #code.ada
+
+  io.write ("      when Error_"..code.ada)
+  for index = name_length, longest_ada_name do io.write (" ") end
+  io.write ("=> Return_Value := "..code.errno..";\n")
 end
 
 io.write ([[
       when others => null;
     end case;
-    return -1;
+    return Return_Value;
   end Ada_To_Errno;
 ]])

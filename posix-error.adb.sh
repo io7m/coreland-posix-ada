@@ -25,8 +25,9 @@ cat <<EOF
   --
 
   procedure Message
-    (Value  : in Error_t;
-     Buffer : out String)
+    (Value      : in Error_t;
+     Buffer     : out String;
+     Last_Index : out Positive)
   is
     Upper_Bound : Positive;
     Error_Image : constant String := Error_t'Image (Value);
@@ -37,8 +38,10 @@ cat <<EOF
       Upper_Bound := Buffer'Last;
     end if;
 
-    Buffer (Buffer'First .. Upper_Bound) :=
-      Error_Image (Error_Image'First .. Upper_Bound);
+    Last_Index := Error_Image'Last;
+    for Index in Positive range Error_Image'First .. Upper_Bound loop
+      Buffer (Index) := Error_Image (Index);
+    end loop;
   end Message;
 
   function Get_Error return Error_t is

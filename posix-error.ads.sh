@@ -25,7 +25,7 @@ cat <<EOF
     (Value      : in Error_t;
      Buffer     : out String;
      Last_Index : out Positive);
-  --# derives Buffer from Value, Last_Index;
+  --# derives Buffer, Last_Index from Value;
   --# post Last_Index <= Buffer'Last;
 
   --
