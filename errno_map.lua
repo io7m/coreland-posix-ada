@@ -60,7 +60,6 @@ io.write ([[
   --
 
   function Errno_To_Ada (Value : in Errno_Int_t) return Error_t is
-    use type Errno_Int_t;
   begin
     case Value is
 ]])
@@ -94,7 +93,6 @@ io.write ([[
   --
 
   function Ada_To_Errno (Value : in Error_t) return Errno_Int_t is
-    use type Errno_Int_t;
   begin
     case Value is
 ]])
