@@ -7,11 +7,18 @@ cat <<EOF
 -- Auto generated, do not edit.
 --
 
+with POSIX.C_Types;
+use type POSIX.C_Types.Int_t;
+
 with POSIX.Error;
+use type POSIX.Error.Error_t;
+use type POSIX.Error.Return_Value_t;
+
 with POSIX.Path;
 with POSIX.Permissions;
 
---# inherit POSIX.Error,
+--# inherit POSIX.C_Types,
+--#         POSIX.Error,
 --#         POSIX.Path,
 --#         POSIX.Permissions;
 
@@ -129,6 +136,21 @@ cat << EOF
   Read_Write : constant Flags_t;
   Truncate   : constant Flags_t;
   Write_Only : constant Flags_t;
+
+  procedure Change_Mode
+    (File_Name   : in String;
+     Mode        : in Permissions.Mode_t;
+     Error_Value : out Error.Error_t);
+  --# global in Error.POSIX_errno;
+  --# derives Error_Value from File_Name, Mode, Error.POSIX_errno;
+
+  procedure Change_Descriptor_Mode
+    (Descriptor  : in Descriptor_t;
+     Mode        : in Permissions.Mode_t;
+     Error_Value : out Error.Error_t);
+  --# global in Error.POSIX_errno;
+  --# derives Error_Value from Descriptor, Mode, Error.POSIX_errno;
+  --# pre Descriptor >= 0;
 
 private
 
