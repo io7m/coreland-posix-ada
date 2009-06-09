@@ -1,0 +1,6 @@
+posix-c_types.ads:   \
+posix-c_types.ads.sh \
+type-discrete        \
+LICENSE
+	./posix-c_types.ads.sh > posix-c_types.ads.tmp
+	mv posix-c_types.ads.tmp posix-c_types.ads

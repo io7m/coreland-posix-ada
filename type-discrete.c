@@ -20,6 +20,16 @@ struct discrete_t {
 };
 
 static const struct discrete_t type_table[] = {
+  { "Char",  -CHAR_MAX, CHAR_MAX, 10, sizeof (char) * CHAR_BIT,  DISCRETE_RANGED },
+  { "Short", -SHRT_MAX, SHRT_MAX, 10, sizeof (short) * CHAR_BIT, DISCRETE_RANGED },
+  { "Int",    -INT_MAX,  INT_MAX, 10, sizeof (int) * CHAR_BIT,   DISCRETE_RANGED },
+  { "Long",  -LONG_MAX, LONG_MAX, 10, sizeof (long) * CHAR_BIT,  DISCRETE_RANGED },
+
+  { "Unsigned_Char",  0, 0, 10, sizeof (unsigned char) * CHAR_BIT,  DISCRETE_MOD },
+  { "Unsigned_Short", 0, 0, 10, sizeof (unsigned short) * CHAR_BIT, DISCRETE_MOD },
+  { "Unsigned_Int",   0, 0, 10, sizeof (unsigned int) * CHAR_BIT,   DISCRETE_MOD },
+  { "Unsigned_Long",  0, 0, 10, sizeof (unsigned long) * CHAR_BIT,  DISCRETE_MOD },
+
   { "Descriptor", -1,      INT_MAX, 10, sizeof (int) * CHAR_BIT,    DISCRETE_RANGED },
   { "Errno_Int", -INT_MAX, INT_MAX, 10, sizeof (int) * CHAR_BIT,    DISCRETE_RANGED },
   { "Mode",      0,        07777l,  8,  sizeof (mode_t) * CHAR_BIT, DISCRETE_RANGED },

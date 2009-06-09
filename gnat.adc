@@ -2,6 +2,9 @@
 -- ./posix.apk
 pragma source_file_name(POSIX, spec_file_name => "posix.ads");
 
+-- ./posix-c_types.apk
+pragma source_file_name(POSIX.C_Types, spec_file_name => "posix-c_types.ads");
+
 -- ./posix-error.apk
 pragma source_file_name(POSIX.Error, spec_file_name => "posix-error.ads");
 pragma source_file_name(POSIX.Error, body_file_name => "posix-error.adb");
@@ -9,6 +12,9 @@ pragma source_file_name(POSIX.Error, body_file_name => "posix-error.adb");
 -- ./posix-file.apk
 pragma source_file_name(POSIX.File, spec_file_name => "posix-file.ads");
 pragma source_file_name(POSIX.File, body_file_name => "posix-file.adb");
+
+-- ./posix-path.apk
+pragma source_file_name(POSIX.Path, spec_file_name => "posix-path.ads");
 
 -- ./posix-permissions.apk
 pragma source_file_name(POSIX.Permissions, spec_file_name => "posix-permissions.ads");

@@ -8,9 +8,11 @@ cat <<EOF
 --
 
 with POSIX.Error;
+with POSIX.Path;
 with POSIX.Permissions;
 
 --# inherit POSIX.Error,
+--#         POSIX.Path,
 --#         POSIX.Permissions;
 
 package POSIX.File is
@@ -22,7 +24,7 @@ EOF
 cat << EOF
 
   -- Filename subtype based on POSIX PATH_MAX
-  subtype File_Name_Index_t is Positive range Positive'First .. 4096;
+  subtype File_Name_Index_t is Positive range Positive'First .. Path.Max_Length;
   subtype File_Name_t is String (File_Name_Index_t);
 
   type Flags_t is mod 2 ** 32;
@@ -36,8 +38,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking &
   --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   procedure Open_Write_Only
     (File_Name    : in String;
@@ -48,8 +49,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking &
   --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   procedure Open_Exclusive
     (File_Name    : in String;
@@ -61,8 +61,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking, Mode &
   --#         Error_Value from File_Name, Non_Blocking, Mode, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   procedure Open_Append
     (File_Name    : in String;
@@ -73,8 +72,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking &
   --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   procedure Open_Truncate
     (File_Name    : in String;
@@ -86,8 +84,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking, Mode &
   --#         Error_Value from File_Name, Non_Blocking, Mode, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   procedure Open_Read_Write
     (File_Name    : in String;
@@ -98,8 +95,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking &
   --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   procedure Open_Create
     (File_Name    : in String;
@@ -111,8 +107,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking, Mode &
   --#         Error_Value from File_Name, Non_Blocking, Mode, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   procedure Open
     (File_Name    : in String;
@@ -125,8 +120,7 @@ cat << EOF
   --# derives Descriptor from File_Name, Non_Blocking, Mode, Flags &
   --#         Error_Value from File_Name, Non_Blocking, Mode, Flags, Error.POSIX_errno;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None)) or
-  --#      ((File_Name'Length > File_Name_Index_t'Last) and (Error_Value = Error.Error_Name_Too_Long));
+  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
   Append     : constant Flags_t;
   Create     : constant Flags_t;
