@@ -4,10 +4,10 @@ default: all
 
 all:\
 errno_int errno_int.o posix-ada.a posix-c_types.ali posix-c_types.o \
-posix-error.ali posix-error.o posix-file.ali posix-file.o posix-path.ali \
-posix-path.o posix-permissions.ali posix-permissions.o posix.ali posix.o \
-posix_error.o posix_file posix_file.o spark_conf spark_conf.ali spark_conf.o \
-type-discrete type-discrete.o
+posix-error.ali posix-error.o posix-error_internal.ali posix-error_internal.o \
+posix-file.ali posix-file.o posix-path.ali posix-path.o posix-permissions.ali \
+posix-permissions.o posix.ali posix.o posix_error.o posix_file posix_file.o \
+spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
 
 ada-bind:\
 conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist
@@ -38,11 +38,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-systype:\
@@ -125,11 +125,12 @@ posix-error.ads
 	mv posix-error.adb.tmp posix-error.adb
 
 # posix-error.ads.mff
-posix-error.ads:   \
-enum_type.lua      \
-errno_to_ada.map   \
-LICENSE            \
-posix-error.ads.sh \
+posix-error.ads:         \
+enum_type.lua            \
+errno_to_ada.map         \
+LICENSE                  \
+posix-error.ads.sh       \
+posix-error_internal.ads \
 type-discrete
 	./posix-error.ads.sh > posix-error.ads.tmp
 	mv posix-error.ads.tmp posix-error.ads
@@ -140,6 +141,23 @@ ada-compile posix-error.adb
 
 posix-error.o:\
 posix-error.ali
+
+# posix-error_internal.ads.mff
+posix-error_internal.ads:   \
+enum_type.lua               \
+errno_to_ada.map            \
+LICENSE                     \
+posix-error_internal.ads.sh \
+type-discrete
+	./posix-error_internal.ads.sh > posix-error_internal.ads.tmp
+	mv posix-error_internal.ads.tmp posix-error_internal.ads
+
+posix-error_internal.ali:\
+ada-compile posix-error_internal.ads
+	./ada-compile posix-error_internal.ads
+
+posix-error_internal.o:\
+posix-error_internal.ali
 
 # posix-file.ads.mff
 posix-file.ads:       \
@@ -225,7 +243,8 @@ clean: obj_clean
 obj_clean:
 	rm -f errno_int errno_int.c errno_int.o posix-ada.a posix-c_types.ads \
 	posix-c_types.ali posix-c_types.o posix-error.adb posix-error.ads \
-	posix-error.ali posix-error.o posix-file.ads posix-file.ali posix-file.o \
+	posix-error.ali posix-error.o posix-error_internal.ads posix-error_internal.ali \
+	posix-error_internal.o posix-file.ads posix-file.ali posix-file.o \
 	posix-path.ali posix-path.o posix-permissions.ads posix-permissions.ali \
 	posix-permissions.o posix.ali posix.o posix_error.o posix_file posix_file.o \
 	spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o

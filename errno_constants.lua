@@ -41,5 +41,5 @@ for name, value in pairs (errno_values) do
   local name_length = #name
   for index = name_length, longest_name do io.write (" ") end
 
-  io.write (": constant Errno_Int_t := "..value..";\n")
+  io.write (": constant Error_Internal.Errno_Int_t := "..value..";\n")
 end

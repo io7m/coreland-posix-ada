@@ -204,7 +204,7 @@ package body POSIX.File is
        Non_Blocking => False,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
-    if Error_Value /= Error.Error_None then
+    if Error_Value = Error.Error_None then
       Change_Descriptor_Mode
         (Descriptor  => Descriptor,
          Mode        => Mode,

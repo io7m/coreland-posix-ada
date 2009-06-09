@@ -9,6 +9,9 @@ pragma source_file_name(POSIX.C_Types, spec_file_name => "posix-c_types.ads");
 pragma source_file_name(POSIX.Error, spec_file_name => "posix-error.ads");
 pragma source_file_name(POSIX.Error, body_file_name => "posix-error.adb");
 
+-- ./posix-error_internal.apk
+pragma source_file_name(POSIX.Error_Internal, spec_file_name => "posix-error_internal.ads");
+
 -- ./posix-file.apk
 pragma source_file_name(POSIX.File, spec_file_name => "posix-file.ads");
 pragma source_file_name(POSIX.File, body_file_name => "posix-file.adb");

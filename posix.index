@@ -1,8 +1,9 @@
-POSIX             spec is in posix.ads
-POSIX.C_Types     spec is in posix-c_types.ads
-POSIX.Error       spec is in posix-error.ads
-POSIX.Error       body is in posix-error.adb
-POSIX.File        spec is in posix-file.ads
-POSIX.File        body is in posix-file.adb
-POSIX.Path        spec is in posix-path.ads
-POSIX.Permissions spec is in posix-permissions.ads
+POSIX.C_Types        spec is in posix-c_types.ads
+POSIX.Error          body is in posix-error.adb
+POSIX.Error_Internal spec is in posix-error_internal.ads
+POSIX.Error          spec is in posix-error.ads
+POSIX.File           body is in posix-file.adb
+POSIX.File           spec is in posix-file.ads
+POSIX.Path           spec is in posix-path.ads
+POSIX.Permissions    spec is in posix-permissions.ads
+POSIX                spec is in posix.ads

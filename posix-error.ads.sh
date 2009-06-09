@@ -7,9 +7,12 @@ cat <<EOF
 -- Auto generated, do not edit.
 --
 
-package POSIX.Error
-  --# own POSIX_errno;
-is
+with POSIX.Error_Internal;
+use type POSIX.Error_Internal.Errno_Int_t;
+
+--# inherit POSIX.Error_Internal;
+
+package POSIX.Error is
 
 EOF
 
@@ -18,22 +21,11 @@ EOF
 cat <<EOF
 
   --
-  -- Map error value to locale-specific error message.
-  --
-
-  procedure Message
-    (Value      : in Error_t;
-     Buffer     : out String;
-     Last_Index : out Positive);
-  --# derives Buffer, Last_Index from Value;
-  --# post Last_Index <= Buffer'Last;
-
-  --
   -- Get current error code.
   --
 
   function Get_Error return Error_t;
-  --# global in POSIX_errno;
+  --# global in Error_Internal.Errno;
 
   --
   -- Range of return values returned by many POSIX procedures.
@@ -48,35 +40,12 @@ cat <<EOF
 
 private
 
-EOF
-
-./type-discrete Errno_Int || exit 1
-
-cat <<EOF
-
   --
   -- Mapping between errno and Ada error codes.
   --
 
-  function Ada_To_Errno (Value : in Error_t) return Errno_Int_t;
-  function Errno_To_Ada (Value : in Errno_Int_t) return Error_t;
-
-  --
-  -- Return POSIX errno integer.
-  --
-
-  function Errno_Get return Errno_Int_t;
-  --# global in POSIX_errno;
-  pragma Import (C, Errno_Get, "posix_errno_get");
-
-  --
-  -- Set POSIX errno integer.
-  --
-
-  procedure Errno_Set (Code : in Errno_Int_t);
-  --# global out POSIX_Errno;
-  --# derives POSIX_Errno from Code;
-  pragma Import (C, Errno_Set, "posix_errno_set");
+  function Ada_To_Errno (Value : in Error_t) return Error_Internal.Errno_Int_t;
+  function Errno_To_Ada (Value : in Error_Internal.Errno_Int_t) return Error_t;
 
 end POSIX.Error;
 EOF

@@ -28,6 +28,9 @@ echo                           || exit 1
 echo                           || exit 1
 ./type-discrete Unsigned_Long  || exit 1
 
+echo                  || exit 1
+./type-discrete Size  || exit 1
+
 cat <<EOF
 
 end POSIX.C_Types;

@@ -1,0 +1,8 @@
+posix-error_internal.ads:   \
+enum_type.lua               \
+errno_to_ada.map            \
+LICENSE                     \
+posix-error_internal.ads.sh \
+type-discrete
+	./posix-error_internal.ads.sh > posix-error_internal.ads.tmp
+	mv posix-error_internal.ads.tmp posix-error_internal.ads
