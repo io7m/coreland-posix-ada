@@ -2,24 +2,24 @@ with System;
 
 package body POSIX.File is
 
-  function C_Open_Boundary
+  function C_open_Boundary
     (File_Name : in String;
      Flags     : in Flags_t;
      Mode      : in Permissions.Mode_t) return Descriptor_t is
-    --# hide C_Open_Boundary
+    --# hide C_open_Boundary
 
-    function C_Open
+    function C_open
       (File_Name : in System.Address;
        Flags     : in Flags_t;
        Mode      : in Permissions.Mode_t) return Descriptor_t;
-    pragma Import (C, C_Open, "open");
+    pragma Import (C, C_open, "open");
 
   begin
-    return C_Open
+    return C_open
       (File_Name => File_Name (File_Name'First)'Address,
        Flags     => Flags,
        Mode      => Mode);
-  end C_Open_Boundary;
+  end C_open_Boundary;
 
   procedure Open
     (File_Name    : in String;
@@ -51,7 +51,7 @@ package body POSIX.File is
       C_File_Name (File_Name'Last + 1) := Character'Val (0);
 
       -- Call system open() procedure.
-      Descriptor := C_Open_Boundary
+      Descriptor := C_open_Boundary
         (File_Name => C_File_Name,
          Flags     => C_Flags,
          Mode      => Mode);
@@ -170,5 +170,46 @@ package body POSIX.File is
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
   end Open_Create;
+
+  procedure Change_Descriptor_Mode
+    (Descriptor  : in Descriptor_t;
+     Mode        : in Permissions.Mode_t;
+     Error_Value : out Error.Error_t)
+  is
+    Return_Value : Error.Return_Value_t;
+
+    function C_fchmod
+      (Descriptor : in Descriptor_t;
+       Mode       : in Permissions.Mode_t) return Error.Return_Value_t;
+    pragma Import (C, C_fchmod, "fchmod");
+  begin
+    Return_Value := C_fchmod
+      (Descriptor => Descriptor,
+       Mode       => Mode);
+    case Return_Value is
+      when -1 => Error_Value := Error.Get_Error;
+      when 0  => Error_Value := Error.Error_None;
+    end case;
+  end Change_Descriptor_Mode;
+
+  procedure Change_Mode
+    (File_Name   : in String;
+     Mode        : in Permissions.Mode_t;
+     Error_Value : out Error.Error_t)
+  is
+    Descriptor : Descriptor_t;
+  begin
+    Open_Read_Only
+      (File_Name    => File_Name,
+       Non_Blocking => False,
+       Descriptor   => Descriptor,
+       Error_Value  => Error_Value);
+    if Error_Value /= Error.Error_None then
+      Change_Descriptor_Mode
+        (Descriptor  => Descriptor,
+         Mode        => Mode,
+         Error_Value => Error_Value);
+    end if;
+  end Change_Mode;
 
 end POSIX.File;
