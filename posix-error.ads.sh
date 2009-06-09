@@ -22,9 +22,11 @@ cat <<EOF
   --
 
   procedure Message
-    (Value  : in Error_t;
-     Buffer : out String);
-  --# derives Buffer from Value;
+    (Value      : in Error_t;
+     Buffer     : out String;
+     Last_Index : out Positive);
+  --# derives Buffer from Value, Last_Index;
+  --# post Last_Index <= Buffer'Last;
 
   --
   -- Get current error code.
@@ -32,6 +34,17 @@ cat <<EOF
 
   function Get_Error return Error_t;
   --# global in POSIX_errno;
+
+  --
+  -- Range of return values returned by many POSIX procedures.
+  -- Compatible with C int.
+  --
+
+EOF
+
+./type-discrete Return_Value || exit 1
+
+cat <<EOF
 
 private
 
