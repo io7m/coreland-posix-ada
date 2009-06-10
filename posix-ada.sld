@@ -6,3 +6,4 @@ posix-file.o
 posix.o
 posix-path.o
 posix-permissions.o
+posix-symlink.o

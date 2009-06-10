@@ -1,4 +1,5 @@
 posix-errno.ads:   \
+auto-warn.txt      \
 enum_type.lua      \
 errno_to_ada.map   \
 LICENSE            \

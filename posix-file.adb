@@ -4,16 +4,14 @@ package body POSIX.File is
 
   function C_open_Boundary
     (File_Name : in String;
-     Flags     : in Flags_t;
+     Flags     : in Open_Flags_t;
      Mode      : in Permissions.Mode_t) return Descriptor_t is
     --# hide C_open_Boundary
-
     function C_open
       (File_Name : in System.Address;
-       Flags     : in Flags_t;
+       Flags     : in Open_Flags_t;
        Mode      : in Permissions.Mode_t) return Descriptor_t;
     pragma Import (C, C_open, "open");
-
   begin
     return C_open
       (File_Name => File_Name (File_Name'First)'Address,
@@ -25,11 +23,11 @@ package body POSIX.File is
     (File_Name    : in String;
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
-     Flags        : in Flags_t;
+     Flags        : in Open_Flags_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    C_Flags     : Flags_t;
+    C_Flags     : Open_Flags_t;
     C_File_Name : File_Name_t := File_Name_t'(File_Name_Index_t => Character'Val (0));
   begin
     -- Reject long filename.

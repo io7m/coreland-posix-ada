@@ -1,12 +1,8 @@
 #!/bin/sh
 
-cat LICENSE || exit 1
+cat LICENSE       || exit 1
+cat auto-warn.txt || exit 1
 cat <<EOF
-
---
--- Auto generated, do not edit.
---
-
 with POSIX.C_Types;
 use type POSIX.C_Types.Int_t;
 
@@ -37,8 +33,6 @@ cat << EOF
   -- Filename subtype based on POSIX PATH_MAX
   subtype File_Name_Index_t is Positive range Positive'First .. Path.Max_Length;
   subtype File_Name_t is String (File_Name_Index_t);
-
-  type Flags_t is mod 2 ** 32;
 
   procedure Open_Read_Only
     (File_Name    : in String;
@@ -120,11 +114,26 @@ cat << EOF
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
+EOF
+
+./type-discrete Open_Flags || exit 1
+
+cat <<EOF
+
+  Append     : constant Open_Flags_t;
+  Create     : constant Open_Flags_t;
+  Exclusive  : constant Open_Flags_t;
+  Read_Only  : constant Open_Flags_t;
+  Read_Write : constant Open_Flags_t;
+  Truncate   : constant Open_Flags_t;
+  Write_Only : constant Open_Flags_t;
+
+  -- proc_map : open
   procedure Open
     (File_Name    : in String;
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
-     Flags        : in Flags_t;
+     Flags        : in Open_Flags_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
   --# global in Errno.Errno_Value;
@@ -133,14 +142,7 @@ cat << EOF
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
-  Append     : constant Flags_t;
-  Create     : constant Flags_t;
-  Exclusive  : constant Flags_t;
-  Read_Only  : constant Flags_t;
-  Read_Write : constant Flags_t;
-  Truncate   : constant Flags_t;
-  Write_Only : constant Flags_t;
-
+  -- proc_map : chmod
   procedure Change_Mode
     (File_Name   : in String;
      Mode        : in Permissions.Mode_t;
@@ -148,6 +150,7 @@ cat << EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from File_Name, Mode, Errno.Errno_Value;
 
+  -- proc_map : fchmod
   procedure Change_Descriptor_Mode
     (Descriptor  : in Descriptor_t;
      Mode        : in Permissions.Mode_t;
@@ -160,16 +163,16 @@ private
 
 EOF
 
-./posix_file               || exit 1
+./posix_file || exit 1
 
 cat <<EOF
 
-  Append     : constant Flags_t := O_APPEND;
-  Create     : constant Flags_t := O_CREAT;
-  Exclusive  : constant Flags_t := O_EXCL;
-  Read_Only  : constant Flags_t := O_RDONLY;
-  Read_Write : constant Flags_t := O_RDONLY or O_WRONLY;
-  Truncate   : constant Flags_t := O_TRUNC;
-  Write_Only : constant Flags_t := O_WRONLY;
+  Append     : constant Open_Flags_t := O_APPEND;
+  Create     : constant Open_Flags_t := O_CREAT;
+  Exclusive  : constant Open_Flags_t := O_EXCL;
+  Read_Only  : constant Open_Flags_t := O_RDONLY;
+  Read_Write : constant Open_Flags_t := O_RDONLY or O_WRONLY;
+  Truncate   : constant Open_Flags_t := O_TRUNC;
+  Write_Only : constant Open_Flags_t := O_WRONLY;
 
 end POSIX.File;

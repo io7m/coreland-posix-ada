@@ -1,12 +1,8 @@
 #!/bin/sh
 
-cat LICENSE || exit 1
+cat LICENSE       || exit 1
+cat auto-warn.txt || exit 1
 cat <<EOF
-
---
--- Auto generated, do not edit.
---
-
 package POSIX.C_Types is
 
 EOF
@@ -28,8 +24,10 @@ echo                           || exit 1
 echo                           || exit 1
 ./type-discrete Unsigned_Long  || exit 1
 
-echo                  || exit 1
-./type-discrete Size  || exit 1
+echo                        || exit 1
+./type-discrete Size        || exit 1
+echo                        || exit 1
+./type-discrete Signed_Size || exit 1
 
 cat <<EOF
 

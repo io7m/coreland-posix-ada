@@ -1,8 +1,10 @@
 posix-file.ads:       \
+auto-warn.txt         \
 LICENSE               \
 posix-error.ads       \
 posix_file            \
 posix-file.ads.sh     \
+posix-path.ads        \
 posix-permissions.ads \
 type-discrete
 	./posix-file.ads.sh > posix-file.ads.tmp

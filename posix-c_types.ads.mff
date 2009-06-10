@@ -1,4 +1,5 @@
 posix-c_types.ads:   \
+auto-warn.txt        \
 posix-c_types.ads.sh \
 type-discrete        \
 LICENSE

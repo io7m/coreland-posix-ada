@@ -1,0 +1,6 @@
+posix-path.ads:  \
+auto-warn.txt    \
+LICENSE          \
+posix-path.ads.sh
+	./posix-path.ads.sh > posix-path.ads.tmp
+	mv posix-path.ads.tmp posix-path.ads

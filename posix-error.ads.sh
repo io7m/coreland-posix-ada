@@ -1,12 +1,8 @@
 #!/bin/sh
 
-cat LICENSE || exit 1
+cat LICENSE       || exit 1
+cat auto-warn.txt || exit 1
 cat <<EOF
-
---
--- Auto generated, do not edit.
---
-
 with POSIX.Errno;
 use type POSIX.Errno.Errno_Int_t;
 

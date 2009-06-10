@@ -7,3 +7,5 @@ POSIX.File        spec is in posix-file.ads
 POSIX.Path        spec is in posix-path.ads
 POSIX.Permissions spec is in posix-permissions.ads
 POSIX             spec is in posix.ads
+POSIX.Symlink     body is in posix-symlink.adb
+POSIX.Symlink     spec is in posix-symlink.ads

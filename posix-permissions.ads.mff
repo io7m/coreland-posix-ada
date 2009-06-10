@@ -1,4 +1,5 @@
 posix-permissions.ads:   \
+auto-warn.txt            \
 posix-permissions.ads.sh \
 type-discrete            \
 LICENSE

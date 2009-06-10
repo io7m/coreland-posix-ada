@@ -1,4 +1,5 @@
 posix-error.adb:    \
+auto-warn.txt       \
 errno_constants.lua \
 errno_map.lua       \
 errno_to_ada.map    \

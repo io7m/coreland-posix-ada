@@ -1,0 +1,10 @@
+posix-symlink.ads:    \
+auto-warn.txt         \
+LICENSE               \
+posix-error.ads       \
+posix-file.ads        \
+posix-symlink.ads.sh  \
+posix-path.ads        \
+type-discrete
+	./posix-symlink.ads.sh > posix-symlink.ads.tmp
+	mv posix-symlink.ads.tmp posix-symlink.ads
