@@ -21,7 +21,7 @@ cat <<EOF
 
   function Get_Error return Error_t is
   begin
-    return Errno_To_Ada (Error_Internal.Errno_Get);
+    return Errno_To_Ada (Errno.Errno_Get);
   end Get_Error;
 
 end POSIX.Error;

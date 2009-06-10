@@ -1,4 +1,5 @@
 posix-c_types.o
+posix-errno.o
 posix_error.o
 posix-error.o
 posix-file.o

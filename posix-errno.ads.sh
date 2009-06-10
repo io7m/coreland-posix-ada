@@ -7,8 +7,8 @@ cat <<EOF
 -- Auto generated, do not edit.
 --
 
-package POSIX.Error_Internal
-  --# own Errno;
+package POSIX.Errno
+  --# own Errno_Value;
 is
 
 EOF
@@ -22,7 +22,7 @@ cat <<EOF
   --
 
   function Errno_Get return Errno_Int_t;
-  --# global in Errno;
+  --# global in Errno_Value;
   pragma Import (C, Errno_Get, "posix_errno_get");
 
   --
@@ -30,9 +30,9 @@ cat <<EOF
   --
 
   procedure Errno_Set (Code : in Errno_Int_t);
-  --# global out Errno;
-  --# derives Errno from Code;
+  --# global out Errno_Value;
+  --# derives Errno_Value from Code;
   pragma Import (C, Errno_Set, "posix_errno_set");
 
-end POSIX.Error_Internal;
+end POSIX.Errno;
 EOF

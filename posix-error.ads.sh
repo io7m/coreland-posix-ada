@@ -7,10 +7,10 @@ cat <<EOF
 -- Auto generated, do not edit.
 --
 
-with POSIX.Error_Internal;
-use type POSIX.Error_Internal.Errno_Int_t;
+with POSIX.Errno;
+use type POSIX.Errno.Errno_Int_t;
 
---# inherit POSIX.Error_Internal;
+--# inherit POSIX.Errno;
 
 package POSIX.Error is
 
@@ -25,7 +25,7 @@ cat <<EOF
   --
 
   function Get_Error return Error_t;
-  --# global in Error_Internal.Errno;
+  --# global in Errno.Errno_Value;
 
   --
   -- Range of return values returned by many POSIX procedures.
@@ -38,14 +38,13 @@ EOF
 
 cat <<EOF
 
-private
-
   --
   -- Mapping between errno and Ada error codes.
   --
 
-  function Ada_To_Errno (Value : in Error_t) return Error_Internal.Errno_Int_t;
-  function Errno_To_Ada (Value : in Error_Internal.Errno_Int_t) return Error_t;
+  function Ada_To_Errno (Value : in Error_t) return Errno.Errno_Int_t;
+
+  function Errno_To_Ada (Value : in Errno.Errno_Int_t) return Error_t;
 
 end POSIX.Error;
 EOF

@@ -14,10 +14,14 @@ with POSIX.Error;
 use type POSIX.Error.Error_t;
 use type POSIX.Error.Return_Value_t;
 
+with POSIX.Errno;
+use type POSIX.Errno.Errno_Int_t;
+
 with POSIX.Path;
 with POSIX.Permissions;
 
 --# inherit POSIX.C_Types,
+--#         POSIX.Errno,
 --#         POSIX.Error,
 --#         POSIX.Path,
 --#         POSIX.Permissions;
@@ -41,9 +45,9 @@ cat << EOF
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -52,9 +56,9 @@ cat << EOF
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -64,9 +68,9 @@ cat << EOF
      Mode         : in Permissions.Mode_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking, Mode &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -75,9 +79,9 @@ cat << EOF
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -87,9 +91,9 @@ cat << EOF
      Mode         : in Permissions.Mode_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking, Mode &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -98,9 +102,9 @@ cat << EOF
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -110,9 +114,9 @@ cat << EOF
      Mode         : in Permissions.Mode_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking, Mode &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -123,9 +127,9 @@ cat << EOF
      Flags        : in Flags_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
-  --# global in Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
   --# derives Descriptor from File_Name, Non_Blocking, Mode, Flags &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Flags, Error.POSIX_errno;
+  --#         Error_Value from File_Name, Non_Blocking, Mode, Flags, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -141,15 +145,15 @@ cat << EOF
     (File_Name   : in String;
      Mode        : in Permissions.Mode_t;
      Error_Value : out Error.Error_t);
-  --# global in Error.POSIX_errno;
-  --# derives Error_Value from File_Name, Mode, Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from File_Name, Mode, Errno.Errno_Value;
 
   procedure Change_Descriptor_Mode
     (Descriptor  : in Descriptor_t;
      Mode        : in Permissions.Mode_t;
      Error_Value : out Error.Error_t);
-  --# global in Error.POSIX_errno;
-  --# derives Error_Value from Descriptor, Mode, Error.POSIX_errno;
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Mode, Errno.Errno_Value;
   --# pre Descriptor >= 0;
 
 private

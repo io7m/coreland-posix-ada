@@ -1,0 +1,8 @@
+posix-errno.ads:   \
+enum_type.lua      \
+errno_to_ada.map   \
+LICENSE            \
+posix-errno.ads.sh \
+type-discrete
+	./posix-errno.ads.sh > posix-errno.ads.tmp
+	mv posix-errno.ads.tmp posix-errno.ads
