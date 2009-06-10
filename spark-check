@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm -rf posix posix_
+spark @posix
+echo
+sparksimp -l -p=2
+pogs

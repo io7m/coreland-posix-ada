@@ -33,7 +33,7 @@ package body POSIX.File is
     C_File_Name : File_Name_t := File_Name_t'(File_Name_Index_t => Character'Val (0));
   begin
     -- Reject long filename.
-    if File_Name'Last >= File_Name_t'Last then
+    if File_Name'Last > File_Name_t'Last then
       Descriptor  := -1;
       Error_Value := Error.Error_Name_Too_Long;
     else
