@@ -3,7 +3,7 @@
 default: all
 
 all:\
-UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+local UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
 posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
 posix-error.ali posix-error.o posix-file.ali posix-file.o posix-path.ali \
@@ -11,11 +11,22 @@ posix-path.o posix-permissions.ali posix-permissions.o posix-symlink.ali \
 posix-symlink.o posix.ali posix.o posix_error.o posix_file posix_file.o \
 spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
 
+# Mkf-local
+#
+# XXX:
+# This target is required because the makefile generator is incapable
+# of determining the dependencies of generated files. This target ensures
+# that the library is built before any of the test suite.
+#
+
+local: posix-ada.a
+local_clean:
+
 UNIT_TESTS/t_symlink1:\
-ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/test.ali posix-file.ali \
-posix-symlink.ali posix-ada.a
-	./ada-bind UNIT_TESTS/test.ali
-	./ada-link UNIT_TESTS/t_symlink1 UNIT_TESTS/test.ali posix-ada.a
+ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/t_symlink1.ali \
+UNIT_TESTS/test.ali posix-file.ali posix-symlink.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_symlink1.ali
+	./ada-link UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali posix-ada.a
 
 UNIT_TESTS/t_symlink1.ali:\
 ada-compile UNIT_TESTS/t_symlink1.adb
@@ -193,6 +204,7 @@ posix-error.ali
 posix-file.ads:       \
 auto-warn.txt         \
 LICENSE               \
+posix-c_types.ads     \
 posix-error.ads       \
 posix_file            \
 posix-file.ads.sh     \
@@ -298,7 +310,7 @@ type-discrete.o:\
 cc-compile type-discrete.c
 	./cc-compile type-discrete.c
 
-clean-all: obj_clean ext_clean
+clean-all: local_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
 	rm -f UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \

@@ -1,6 +1,7 @@
 posix-file.ads:       \
 auto-warn.txt         \
 LICENSE               \
+posix-c_types.ads     \
 posix-error.ads       \
 posix_file            \
 posix-file.ads.sh     \

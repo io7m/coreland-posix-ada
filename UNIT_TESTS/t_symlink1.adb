@@ -1,8 +1,4 @@
-with POSIX.File;
-with POSIX.Symlink;
-with Test;
-
-procedure Symlink1 is
+procedure T_Symlink1 is
 begin
   null;
-end Symlink1;
+end T_Symlink1;
