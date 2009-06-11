@@ -1,10 +1,10 @@
-posix-error.ads:   \
-auto-warn.txt      \
-enum_type.lua      \
-errno_to_ada.map   \
-LICENSE            \
-posix-error.ads.sh \
-posix-errno.ads    \
+posix-error.ads:    \
+auto-warn.txt       \
+errno_enum_type.lua \
+errno_to_ada.map    \
+LICENSE             \
+posix-error.ads.sh  \
+posix-errno.ads     \
 type-discrete
 	./posix-error.ads.sh > posix-error.ads.tmp
 	mv posix-error.ads.tmp posix-error.ads

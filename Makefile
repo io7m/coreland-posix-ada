@@ -115,12 +115,12 @@ posix-c_types.o:\
 posix-c_types.ali
 
 # posix-errno.ads.mff
-posix-errno.ads:   \
-auto-warn.txt      \
-enum_type.lua      \
-errno_to_ada.map   \
-LICENSE            \
-posix-errno.ads.sh \
+posix-errno.ads:    \
+auto-warn.txt       \
+errno_enum_type.lua \
+errno_to_ada.map    \
+LICENSE             \
+posix-errno.ads.sh  \
 type-discrete
 	./posix-errno.ads.sh > posix-errno.ads.tmp
 	mv posix-errno.ads.tmp posix-errno.ads
@@ -146,13 +146,13 @@ posix-error.ads
 	mv posix-error.adb.tmp posix-error.adb
 
 # posix-error.ads.mff
-posix-error.ads:   \
-auto-warn.txt      \
-enum_type.lua      \
-errno_to_ada.map   \
-LICENSE            \
-posix-error.ads.sh \
-posix-errno.ads    \
+posix-error.ads:    \
+auto-warn.txt       \
+errno_enum_type.lua \
+errno_to_ada.map    \
+LICENSE             \
+posix-error.ads.sh  \
+posix-errno.ads     \
 type-discrete
 	./posix-error.ads.sh > posix-error.ads.tmp
 	mv posix-error.ads.tmp posix-error.ads

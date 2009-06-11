@@ -12,7 +12,7 @@ package POSIX.Error is
 
 EOF
 
-./enum_type.lua < errno_to_ada.map || exit 1
+./errno_enum_type.lua < errno_to_ada.map || exit 1
 
 cat <<EOF
 

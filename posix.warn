@@ -1,4 +1,5 @@
 pragma convention
 pragma import
 pragma pure
+pragma warnings
 representation_clauses
