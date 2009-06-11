@@ -1,0 +1,4 @@
+test.ali
+../posix-file.ali
+../posix-symlink.ali
+../posix-ada.a

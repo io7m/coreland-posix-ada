@@ -3,18 +3,43 @@
 default: all
 
 all:\
-errno_int errno_int.o posix-ada.a posix-c_types.ali posix-c_types.o \
-posix-errno.ali posix-errno.o posix-error.ali posix-error.o posix-file.ali \
-posix-file.o posix-path.ali posix-path.o posix-permissions.ali \
-posix-permissions.o posix-symlink.ali posix-symlink.o posix.ali posix.o \
-posix_error.o posix_file posix_file.o spark_conf spark_conf.ali spark_conf.o \
-type-discrete type-discrete.o
+UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
+posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
+posix-error.ali posix-error.o posix-file.ali posix-file.o posix-path.ali \
+posix-path.o posix-permissions.ali posix-permissions.o posix-symlink.ali \
+posix-symlink.o posix.ali posix.o posix_error.o posix_file posix_file.o \
+spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
+
+UNIT_TESTS/t_symlink1:\
+ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/test.ali posix-file.ali \
+posix-symlink.ali posix-ada.a
+	./ada-bind UNIT_TESTS/test.ali
+	./ada-link UNIT_TESTS/t_symlink1 UNIT_TESTS/test.ali posix-ada.a
+
+UNIT_TESTS/t_symlink1.ali:\
+ada-compile UNIT_TESTS/t_symlink1.adb
+	./ada-compile UNIT_TESTS/t_symlink1.adb
+
+UNIT_TESTS/t_symlink1.o:\
+UNIT_TESTS/t_symlink1.ali
+
+UNIT_TESTS/test.a:\
+cc-slib UNIT_TESTS/test.sld UNIT_TESTS/test.o
+	./cc-slib UNIT_TESTS/test UNIT_TESTS/test.o
+
+UNIT_TESTS/test.ali:\
+ada-compile UNIT_TESTS/test.adb UNIT_TESTS/test.ads
+	./ada-compile UNIT_TESTS/test.adb
+
+UNIT_TESTS/test.o:\
+UNIT_TESTS/test.ali
 
 ada-bind:\
-conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist
+conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist flags-cwd
 
 ada-compile:\
-conf-adacomp conf-adatype conf-systype conf-adacflags conf-adafflist
+conf-adacomp conf-adatype conf-systype conf-adacflags conf-adafflist flags-cwd
 
 ada-link:\
 conf-adalink conf-adatype conf-systype conf-adaldflags conf-aldfflist
@@ -276,14 +301,15 @@ cc-compile type-discrete.c
 clean-all: obj_clean ext_clean
 clean: obj_clean
 obj_clean:
-	rm -f errno_int errno_int.c errno_int.o posix-ada.a posix-c_types.ads \
-	posix-c_types.ali posix-c_types.o posix-errno.ads posix-errno.ali posix-errno.o \
-	posix-error.adb posix-error.ads posix-error.ali posix-error.o posix-file.ads \
-	posix-file.ali posix-file.o posix-path.ads posix-path.ali posix-path.o \
-	posix-permissions.ads posix-permissions.ali posix-permissions.o \
-	posix-symlink.ali posix-symlink.o posix.ali posix.o posix_error.o posix_file \
-	posix_file.o spark_conf spark_conf.ali spark_conf.o type-discrete \
-	type-discrete.o
+	rm -f UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.c \
+	errno_int.o posix-ada.a posix-c_types.ads posix-c_types.ali posix-c_types.o \
+	posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb posix-error.ads \
+	posix-error.ali posix-error.o posix-file.ads posix-file.ali posix-file.o \
+	posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
+	posix-permissions.ali posix-permissions.o posix-symlink.ali posix-symlink.o \
+	posix.ali posix.o posix_error.o posix_file posix_file.o spark_conf \
+	spark_conf.ali spark_conf.o type-discrete type-discrete.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-systype mk-ctxt
 
