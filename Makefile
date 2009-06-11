@@ -4,7 +4,9 @@ default: all
 
 all:\
 local UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
+UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
 UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
 posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
 posix-error.ali posix-error.o posix-file.ali posix-file.o posix-path.ali \
@@ -61,6 +63,19 @@ ada-compile UNIT_TESTS/t_error1.adb
 UNIT_TESTS/t_error1.o:\
 UNIT_TESTS/t_error1.ali
 
+UNIT_TESTS/t_open1:\
+ada-bind ada-link UNIT_TESTS/t_open1.ald UNIT_TESTS/t_open1.ali \
+UNIT_TESTS/test.ali posix-file.ali posix-permissions.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_open1.ali
+	./ada-link UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali posix-ada.a
+
+UNIT_TESTS/t_open1.ali:\
+ada-compile UNIT_TESTS/t_open1.adb
+	./ada-compile UNIT_TESTS/t_open1.adb
+
+UNIT_TESTS/t_open1.o:\
+UNIT_TESTS/t_open1.ali
+
 UNIT_TESTS/t_symlink1:\
 ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/t_symlink1.ali \
 UNIT_TESTS/test.ali posix-file.ali posix-symlink.ali posix-ada.a
@@ -73,6 +88,19 @@ ada-compile UNIT_TESTS/t_symlink1.adb
 
 UNIT_TESTS/t_symlink1.o:\
 UNIT_TESTS/t_symlink1.ali
+
+UNIT_TESTS/t_unlink1:\
+ada-bind ada-link UNIT_TESTS/t_unlink1.ald UNIT_TESTS/t_unlink1.ali \
+UNIT_TESTS/test.ali posix-file.ali posix-permissions.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_unlink1.ali
+	./ada-link UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali posix-ada.a
+
+UNIT_TESTS/t_unlink1.ali:\
+ada-compile UNIT_TESTS/t_unlink1.adb
+	./ada-compile UNIT_TESTS/t_unlink1.adb
+
+UNIT_TESTS/t_unlink1.o:\
+UNIT_TESTS/t_unlink1.ali
 
 UNIT_TESTS/test.a:\
 cc-slib UNIT_TESTS/test.sld UNIT_TESTS/test.o
@@ -356,7 +384,9 @@ clean-all: sysdeps_clean local_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
 	rm -f UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
+	UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
 	UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+	UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.c \
 	errno_int.o posix-ada.a posix-c_types.ads posix-c_types.ali posix-c_types.o \
 	posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb posix-error.ads \

@@ -1,6 +1,12 @@
+with C_String;
+with Interfaces.C;
 with System;
 
 package body POSIX.File is
+
+  --
+  -- File opening/creation.
+  --
 
   function C_Open_Boundary
     (File_Name : in String;
@@ -169,6 +175,10 @@ package body POSIX.File is
        Error_Value  => Error_Value);
   end Open_Create;
 
+  --
+  -- File permissions.
+  --
+
   procedure Change_Descriptor_Mode
     (Descriptor  : in Descriptor_t;
      Mode        : in Permissions.Mode_t;
@@ -209,5 +219,59 @@ package body POSIX.File is
          Error_Value => Error_Value);
     end if;
   end Change_Mode;
+
+  --
+  -- File removal.
+  --
+
+  function Unlink_Boundary (File_Name : in String)
+    return Error.Return_Value_t is
+    --# hide Unlink_Boundary
+    function C_Unlink (File_Name : in C_String.String_Not_Null_Ptr_t)
+      return Error.Return_Value_t;
+    pragma Import (C, C_Unlink, "unlink");
+  begin
+    declare
+      C_File_Name_Buffer : aliased Interfaces.C.char_array :=
+        Interfaces.C.To_C (File_Name, Append_Nul => True);
+    begin
+      return C_Unlink (C_String.To_C_String (C_File_Name_Buffer'Unchecked_Access));
+    end;
+  exception
+    -- Do not propagate exceptions.
+    when Storage_Error =>
+      Error.Set_Error (Error.Error_Out_Of_Memory);
+      return -1;
+    when others =>
+      Error.Set_Error (Error.Error_Unknown);
+      return -1;
+  end Unlink_Boundary;
+
+  procedure Unlink
+    (File_Name   : in String;
+     Error_Value : out Error.Error_t) is
+  begin
+    case Unlink_Boundary (File_Name) is
+      when  0 => Error_Value := Error.Error_None;
+      when -1 => Error_Value := Error.Get_Error;
+    end case;
+  end Unlink;
+
+  --
+  -- File closing.
+  --
+
+  procedure Close
+    (Descriptor  : in Descriptor_t;
+     Error_Value : out Error.Error_t)
+  is
+    function C_Close (Descriptor : in Descriptor_t) return Error.Return_Value_t;
+    pragma Import (C, C_Close, "close");
+  begin
+    case C_Close (Descriptor) is
+      when  0 => Error_Value := Error.Error_None;
+      when -1 => Error_Value := Error.Get_Error;
+    end case;
+  end Close;
 
 end POSIX.File;

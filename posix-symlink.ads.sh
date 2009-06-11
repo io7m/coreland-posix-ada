@@ -35,7 +35,7 @@ package POSIX.Symlink is
      Target      : in String;
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Error_Value from File_Name, Destination, Errno.Errno_Value;
+  --# derives Error_Value from File_Name, Target, Errno.Errno_Value;
 
 end POSIX.Symlink;
 EOF

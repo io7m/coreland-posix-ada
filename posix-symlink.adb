@@ -62,13 +62,25 @@ package body POSIX.Symlink is
       (File_Name : in C_String.String_Not_Null_Ptr_t;
        Target    : in C_String.String_Not_Null_Ptr_t) return Error.Return_Value_t;
     pragma Import (C, C_Symlink, "symlink");
-
-    C_File_Name_Buffer : aliased Interfaces.C.char_array := Interfaces.C.To_C (File_Name, Append_Nul => True);
-    C_Target_Buffer    : aliased Interfaces.C.char_array := Interfaces.C.To_C (Target, Append_Nul => True);
   begin
-    return C_Symlink
-      (Target    => C_String.To_C_String (C_File_Name_Buffer'Unchecked_Access),
-       File_Name => C_String.To_C_String (C_Target_Buffer'Unchecked_Access));
+    declare
+      C_File_Name_Buffer : aliased Interfaces.C.char_array :=
+        Interfaces.C.To_C (File_Name, Append_Nul => True);
+      C_Target_Buffer    : aliased Interfaces.C.char_array :=
+        Interfaces.C.To_C (Target, Append_Nul => True);
+    begin
+      return C_Symlink
+        (Target    => C_String.To_C_String (C_File_Name_Buffer'Unchecked_Access),
+         File_Name => C_String.To_C_String (C_Target_Buffer'Unchecked_Access));
+    end;
+  exception
+    -- Do not propagate exceptions.
+    when Storage_Error =>
+      Error.Set_Error (Error.Error_Out_Of_Memory);
+      return -1;
+    when others =>
+      Error.Set_Error (Error.Error_Unknown);
+      return -1;
   end C_Create_Boundary;
 
   procedure Create

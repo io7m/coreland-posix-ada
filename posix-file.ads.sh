@@ -34,6 +34,10 @@ cat << EOF
   subtype File_Name_Index_t is Positive range Positive'First .. Path.Max_Length;
   subtype File_Name_t is String (File_Name_Index_t);
 
+  --
+  -- File opening/creation.
+  --
+
   procedure Open_Read_Only
     (File_Name    : in String;
      Non_Blocking : in Boolean;
@@ -142,6 +146,10 @@ cat <<EOF
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
+  --
+  -- File permissions.
+  --
+
   -- proc_map : chmod
   procedure Change_Mode
     (File_Name   : in String;
@@ -157,6 +165,29 @@ cat <<EOF
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Mode, Errno.Errno_Value;
+  --# pre Descriptor >= 0;
+
+  --
+  -- File removal.
+  --
+
+  -- proc_map : unlink
+  procedure Unlink
+    (File_Name   : in String;
+     Error_Value : out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from File_Name, Errno.Errno_Value;
+
+  --
+  -- File closing.
+  --
+
+  -- proc_map : close
+  procedure Close
+    (Descriptor  : in Descriptor_t;
+     Error_Value : out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Errno.Errno_Value;
   --# pre Descriptor >= 0;
 
 private

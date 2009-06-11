@@ -25,5 +25,12 @@ cat <<EOF
   World_Write : constant Mode_t := 8#0002#;
   World_Exec  : constant Mode_t := 8#0001#;
 
+  -- Default (conventional) mode for newly created files.
+  Default_File_Mode : constant Mode_t :=
+    User_Read  or
+    User_Write or
+    Group_Read or
+    World_Read;
+
 end POSIX.Permissions;
 EOF
