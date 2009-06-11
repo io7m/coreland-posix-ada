@@ -2,22 +2,22 @@ with System;
 
 package body POSIX.File is
 
-  function C_open_Boundary
+  function C_Open_Boundary
     (File_Name : in String;
      Flags     : in Open_Flags_t;
      Mode      : in Permissions.Mode_t) return Descriptor_t is
-    --# hide C_open_Boundary
-    function C_open
+    --# hide C_Open_Boundary
+    function C_Open
       (File_Name : in System.Address;
        Flags     : in Open_Flags_t;
        Mode      : in Permissions.Mode_t) return Descriptor_t;
-    pragma Import (C, C_open, "open");
+    pragma Import (C, C_Open, "open");
   begin
-    return C_open
+    return C_Open
       (File_Name => File_Name (File_Name'First)'Address,
        Flags     => Flags,
        Mode      => Mode);
-  end C_open_Boundary;
+  end C_Open_Boundary;
 
   procedure Open
     (File_Name    : in String;
@@ -49,7 +49,7 @@ package body POSIX.File is
       C_File_Name (File_Name'Last + 1) := Character'Val (0);
 
       -- Call system open() procedure.
-      Descriptor := C_open_Boundary
+      Descriptor := C_Open_Boundary
         (File_Name => C_File_Name,
          Flags     => C_Flags,
          Mode      => Mode);
