@@ -20,5 +20,10 @@ cat <<EOF
     return Errno_To_Ada (Errno.Errno_Get);
   end Get_Error;
 
+  procedure Set_Error (Error_Value : in Error_t) is
+  begin
+    Errno.Errno_Set (Ada_To_Errno (Error_Value));
+  end Set_Error;
+
 end POSIX.Error;
 EOF

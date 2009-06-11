@@ -24,6 +24,13 @@ cat <<EOF
   --# global in Errno.Errno_Value;
 
   --
+  -- Set current error code.
+  --
+
+  procedure Set_Error (Error_Value : in Error_t);
+  --# global out Errno.Error_Value;
+
+  --
   -- Range of return values returned by many POSIX procedures.
   -- Compatible with C int.
   --
