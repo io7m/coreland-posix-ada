@@ -1,0 +1,9 @@
+#
+# XXX:
+# This target is required because the makefile generator is incapable
+# of determining the dependencies of generated files. This target ensures
+# that the library is built before any of the test suite.
+#
+
+local: posix-ada.a
+local_clean:
