@@ -28,7 +28,8 @@ cat <<EOF
   --
 
   procedure Set_Error (Error_Value : in Error_t);
-  --# global out Errno.Error_Value;
+  --# global out Errno.Errno_Value;
+  --# derives Errno.Errno_Value from Error_Value;
 
   --
   -- Range of return values returned by many POSIX procedures.
