@@ -1,0 +1,5 @@
+t_error1.ali
+test.ali
+../posix-error.ali
+../posix-errno.ali
+../posix-ada.a

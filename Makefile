@@ -3,7 +3,8 @@
 default: all
 
 all:\
-local UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+local UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
+UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
 posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
 posix-error.ali posix-error.o posix-file.ali posix-file.o posix-path.ali \
@@ -21,6 +22,19 @@ spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
 
 local: posix-ada.a
 local_clean:
+
+UNIT_TESTS/t_error1:\
+ada-bind ada-link UNIT_TESTS/t_error1.ald UNIT_TESTS/t_error1.ali \
+UNIT_TESTS/test.ali posix-error.ali posix-errno.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_error1.ali
+	./ada-link UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali posix-ada.a
+
+UNIT_TESTS/t_error1.ali:\
+ada-compile UNIT_TESTS/t_error1.adb
+	./ada-compile UNIT_TESTS/t_error1.adb
+
+UNIT_TESTS/t_error1.o:\
+UNIT_TESTS/t_error1.ali
 
 UNIT_TESTS/t_symlink1:\
 ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/t_symlink1.ali \
@@ -313,7 +327,8 @@ cc-compile type-discrete.c
 clean-all: local_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
-	rm -f UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+	rm -f UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
+	UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.c \
 	errno_int.o posix-ada.a posix-c_types.ads posix-c_types.ali posix-c_types.o \
 	posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb posix-error.ads \
