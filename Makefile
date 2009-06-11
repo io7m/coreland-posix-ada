@@ -23,6 +23,31 @@ spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
 local: posix-ada.a
 local_clean:
 
+# -- SYSDEPS start
+flags-c_string:
+	@echo SYSDEPS c_string-flags run create flags-c_string 
+	@(cd SYSDEPS/modules/c_string-flags && ./run)
+libs-c_string-S:
+	@echo SYSDEPS c_string-libs-S run create libs-c_string-S 
+	@(cd SYSDEPS/modules/c_string-libs-S && ./run)
+
+
+c_string-flags_clean:
+	@echo SYSDEPS c_string-flags clean flags-c_string 
+	@(cd SYSDEPS/modules/c_string-flags && ./clean)
+c_string-libs-S_clean:
+	@echo SYSDEPS c_string-libs-S clean libs-c_string-S 
+	@(cd SYSDEPS/modules/c_string-libs-S && ./clean)
+
+
+sysdeps_clean:\
+c_string-flags_clean \
+c_string-libs-S_clean \
+
+
+# -- SYSDEPS end
+
+
 UNIT_TESTS/t_error1:\
 ada-bind ada-link UNIT_TESTS/t_error1.ald UNIT_TESTS/t_error1.ali \
 UNIT_TESTS/test.ali posix-error.ali posix-errno.ali posix-ada.a
@@ -61,13 +86,16 @@ UNIT_TESTS/test.o:\
 UNIT_TESTS/test.ali
 
 ada-bind:\
-conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist flags-cwd
+conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist flags-cwd \
+	flags-c_string
 
 ada-compile:\
-conf-adacomp conf-adatype conf-systype conf-adacflags conf-adafflist flags-cwd
+conf-adacomp conf-adatype conf-systype conf-adacflags conf-adafflist flags-cwd \
+	flags-c_string
 
 ada-link:\
-conf-adalink conf-adatype conf-systype conf-adaldflags conf-aldfflist
+conf-adalink conf-adatype conf-systype conf-adaldflags conf-aldfflist \
+	libs-c_string-S
 
 ada-srcmap:\
 conf-adacomp conf-adatype conf-systype
@@ -324,7 +352,7 @@ type-discrete.o:\
 cc-compile type-discrete.c
 	./cc-compile type-discrete.c
 
-clean-all: local_clean obj_clean ext_clean
+clean-all: sysdeps_clean local_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
 	rm -f UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \

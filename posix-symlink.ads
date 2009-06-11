@@ -47,7 +47,7 @@ package POSIX.Symlink is
   -- proc_map : symlink
   procedure Create
     (File_Name   : in String;
-     Destination : in String;
+     Target      : in String;
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from File_Name, Destination, Errno.Errno_Value;

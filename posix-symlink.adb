@@ -1,5 +1,7 @@
-with System;
+with C_String;
+with Interfaces.C;
 with POSIX.Path;
+with System;
 
 package body POSIX.Symlink is
 
@@ -53,22 +55,25 @@ package body POSIX.Symlink is
   end Read_Link;
 
   function C_Create_Boundary
-    (File_Name   : in String;
-     Destination : in String) return Error.Return_Value_t is
+    (File_Name : in String;
+     Target    : in String) return Error.Return_Value_t is
     --# hide C_Create_Boundary
     function C_Symlink
-      (Old_Path : in System.Address;
-       New_Path : in System.Address) return Error.Return_Value_t;
+      (File_Name : in C_String.String_Not_Null_Ptr_t;
+       Target    : in C_String.String_Not_Null_Ptr_t) return Error.Return_Value_t;
     pragma Import (C, C_Symlink, "symlink");
+
+    C_File_Name_Buffer : aliased Interfaces.C.char_array := Interfaces.C.To_C (File_Name, Append_Nul => True);
+    C_Target_Buffer    : aliased Interfaces.C.char_array := Interfaces.C.To_C (Target, Append_Nul => True);
   begin
     return C_Symlink
-      (Old_Path => File_Name (File_Name'First)'Address,
-       New_Path => Destination (Destination'First)'Address);
+      (Target    => C_String.To_C_String (C_File_Name_Buffer'Unchecked_Access),
+       File_Name => C_String.To_C_String (C_Target_Buffer'Unchecked_Access));
   end C_Create_Boundary;
 
   procedure Create
     (File_Name   : in String;
-     Destination : in String;
+     Target      : in String;
      Error_Value : out Error.Error_t)
   is
     Names_OK     : Boolean;
@@ -82,15 +87,15 @@ package body POSIX.Symlink is
       Names_OK    := False;
     end if;
 
-    if Destination'Last > Path.Max_Length then
+    if Target'Last > Path.Max_Length then
       Error_Value := Error.Error_Name_Too_Long;
       Names_OK    := False;
     end if;
 
     if Names_OK then
       Return_Value := C_Create_Boundary
-        (File_Name   => File_Name,
-         Destination => Destination);
+        (File_Name => File_Name,
+         Target    => Target);
       case Return_Value is
         when  0 => Error_Value := Error.Error_None;
         when -1 => Error_Value := Error.Get_Error;
