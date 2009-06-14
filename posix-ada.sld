@@ -3,6 +3,7 @@ posix-errno.o
 posix_error.o
 posix-error.o
 posix-file.o
+posix-io.o
 posix.o
 posix-path.o
 posix-permissions.o

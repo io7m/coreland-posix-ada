@@ -24,11 +24,13 @@ with POSIX.Permissions;
 
 package POSIX.File is
 
+  -- File descriptor type.
 EOF
 
 ./type-discrete Descriptor || exit 1
 
 cat << EOF
+  subtype Valid_Descriptor_t is Descriptor_t range 0 .. Descriptor_t'Last;
 
   -- Filename subtype based on POSIX PATH_MAX
   subtype File_Name_Index_t is Positive range Positive'First .. Path.Max_Length;
@@ -160,12 +162,11 @@ cat <<EOF
 
   -- proc_map : fchmod
   procedure Change_Descriptor_Mode
-    (Descriptor  : in Descriptor_t;
+    (Descriptor  : in Valid_Descriptor_t;
      Mode        : in Permissions.Mode_t;
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Mode, Errno.Errno_Value;
-  --# pre Descriptor >= 0;
 
   --
   -- File removal.
@@ -184,11 +185,10 @@ cat <<EOF
 
   -- proc_map : close
   procedure Close
-    (Descriptor  : in Descriptor_t;
+    (Descriptor  : in Valid_Descriptor_t;
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Errno.Errno_Value;
-  --# pre Descriptor >= 0;
 
 private
 

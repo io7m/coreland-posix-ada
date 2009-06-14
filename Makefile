@@ -9,10 +9,11 @@ UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
 posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
-posix-error.ali posix-error.o posix-file.ali posix-file.o posix-path.ali \
-posix-path.o posix-permissions.ali posix-permissions.o posix-symlink.ali \
-posix-symlink.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
+posix-error.ali posix-error.o posix-file.ali posix-file.o posix-io.ali \
+posix-io.o posix-path.ali posix-path.o posix-permissions.ali \
+posix-permissions.o posix-symlink.ali posix-symlink.o posix.ali posix.o \
+posix_error.o posix_file posix_file.o spark_conf spark_conf.ali spark_conf.o \
+type-discrete type-discrete.o
 
 # Mkf-local
 #
@@ -151,11 +152,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc conf-cc mk-cctype
+conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld conf-ld mk-ldtype
+conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-systype:\
@@ -206,9 +207,11 @@ conf-cc conf-ld
 
 posix-ada.a:\
 cc-slib posix-ada.sld posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-posix-file.o posix.o posix-path.o posix-permissions.o posix-symlink.o
+posix-file.o posix-io.o posix.o posix-path.o posix-permissions.o \
+posix-symlink.o
 	./cc-slib posix-ada posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-	posix-file.o posix.o posix-path.o posix-permissions.o posix-symlink.o
+	posix-file.o posix-io.o posix.o posix-path.o posix-permissions.o \
+	posix-symlink.o
 
 # posix-c_types.ads.mff
 posix-c_types.ads:   \
@@ -297,6 +300,26 @@ ada-compile posix-file.adb posix.ali posix-file.ads
 
 posix-file.o:\
 posix-file.ali
+
+# posix-io.ads.mff
+posix-io.ads:   \
+auto-warn.txt   \
+posix-error.ads \
+posix-error.adb \
+posix-file.ads  \
+posix-file.adb  \
+posix-io.ads.sh \
+type-discrete   \
+LICENSE
+	./posix-io.ads.sh > posix-io.ads.tmp
+	mv posix-io.ads.tmp posix-io.ads
+
+posix-io.ali:\
+ada-compile posix-io.adb posix.ali posix-io.ads
+	./ada-compile posix-io.adb
+
+posix-io.o:\
+posix-io.ali
 
 # posix-path.ads.mff
 posix-path.ads:  \
@@ -398,10 +421,11 @@ obj_clean:
 	errno_int.o posix-ada.a posix-c_types.ads posix-c_types.ali posix-c_types.o \
 	posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb posix-error.ads \
 	posix-error.ali posix-error.o posix-file.ads posix-file.ali posix-file.o \
-	posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
-	posix-permissions.ali posix-permissions.o posix-symlink.ali posix-symlink.o \
-	posix.ali posix.o posix_error.o posix_file posix_file.o spark_conf \
-	spark_conf.ali spark_conf.o type-discrete type-discrete.o
+	posix-io.ads posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o \
+	posix-permissions.ads posix-permissions.ali posix-permissions.o \
+	posix-symlink.ali posix-symlink.o posix.ali posix.o posix_error.o posix_file \
+	posix_file.o spark_conf spark_conf.ali spark_conf.o type-discrete \
+	type-discrete.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-systype mk-ctxt
 

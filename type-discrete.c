@@ -40,6 +40,7 @@ static const struct discrete_t type_table[] = {
   { "Mode_Integer",          0,    07777l,  8, sizeof (mode_t) * CHAR_BIT,  DISCRETE_MOD },
   { "Size",                  0,         0,  0, sizeof (size_t) * CHAR_BIT,  DISCRETE_MOD },
   { "Signed_Size",  -SSIZE_MAX, SSIZE_MAX, 10, sizeof (ssize_t) * CHAR_BIT, DISCRETE_RANGED },
+  { "Storage_Element",       0,         0, 10, sizeof (unsigned char) * CHAR_BIT, DISCRETE_MOD },
 };
 static const size_t type_table_size = sizeof (type_table) / sizeof (struct discrete_t);
 

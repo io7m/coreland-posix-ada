@@ -185,14 +185,14 @@ package body POSIX.File is
   --
 
   procedure Change_Descriptor_Mode
-    (Descriptor  : in Descriptor_t;
+    (Descriptor  : in Valid_Descriptor_t;
      Mode        : in Permissions.Mode_t;
      Error_Value : out Error.Error_t)
   is
     Return_Value : Error.Return_Value_t;
 
     function C_fchmod
-      (Descriptor : in Descriptor_t;
+      (Descriptor : in Valid_Descriptor_t;
        Mode       : in Permissions.Mode_t) return Error.Return_Value_t;
     pragma Import (C, C_fchmod, "fchmod");
   begin
@@ -267,10 +267,10 @@ package body POSIX.File is
   --
 
   procedure Close
-    (Descriptor  : in Descriptor_t;
+    (Descriptor  : in Valid_Descriptor_t;
      Error_Value : out Error.Error_t)
   is
-    function C_Close (Descriptor : in Descriptor_t) return Error.Return_Value_t;
+    function C_Close (Descriptor : in Valid_Descriptor_t) return Error.Return_Value_t;
     pragma Import (C, C_Close, "close");
   begin
     case C_Close (Descriptor) is
