@@ -38,11 +38,11 @@ package POSIX.Symlink is
   procedure Read_Link
     (File_Name   : in String;
      Buffer      : in out File.File_Name_t;
-     Buffer_Size : in out File.File_Name_Index_t;
+     Buffer_Size : out File.File_Name_Size_t;
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Buffer      from File_Name, Buffer &
-  --#         Buffer_Size from File_Name, Buffer_Size &
+  --#         Buffer_Size from File_Name &
   --#         Error_Value from File_Name, Errno.Errno_Value;
 
   -- proc_map : symlink
