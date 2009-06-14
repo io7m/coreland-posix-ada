@@ -6,6 +6,7 @@ posix-error.ads       \
 posix_file            \
 posix-file.ads.sh     \
 posix-path.ads        \
+posix-permissions.adb \
 posix-permissions.ads \
 type-discrete
 	./posix-file.ads.sh > posix-file.ads.tmp

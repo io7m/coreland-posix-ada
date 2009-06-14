@@ -68,7 +68,7 @@ io.write ([[
   -- Map POSIX errno to Ada POSIX error code value.
   --
 
-  function Errno_To_Ada (Value : in Errno.Errno_Int_t) return Error_t is
+  function Errno_To_Ada (Value : in Errno.Errno_Integer_t) return Error_t is
     Return_Value : Error_t := Error_Unknown;
   begin
     case Value is
@@ -106,8 +106,8 @@ io.write ([[
   -- Map Ada error code value to POSIX errno.
   --
 
-  function Ada_To_Errno (Value : in Error_t) return Errno.Errno_Int_t is
-    Return_Value : Errno.Errno_Int_t := -1;
+  function Ada_To_Errno (Value : in Error_t) return Errno.Errno_Integer_t is
+    Return_Value : Errno.Errno_Integer_t := -1;
   begin
     case Value is
 ]])

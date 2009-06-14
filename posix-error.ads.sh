@@ -4,7 +4,7 @@ cat LICENSE       || exit 1
 cat auto-warn.txt || exit 1
 cat <<EOF
 with POSIX.Errno;
-use type POSIX.Errno.Errno_Int_t;
+use type POSIX.Errno.Errno_Integer_t;
 
 --# inherit POSIX.Errno;
 
@@ -46,9 +46,9 @@ cat <<EOF
   -- Mapping between errno and Ada error codes.
   --
 
-  function Ada_To_Errno (Value : in Error_t) return Errno.Errno_Int_t;
+  function Ada_To_Errno (Value : in Error_t) return Errno.Errno_Integer_t;
 
-  function Errno_To_Ada (Value : in Errno.Errno_Int_t) return Error_t;
+  function Errno_To_Ada (Value : in Errno.Errno_Integer_t) return Error_t;
 
 end POSIX.Error;
 EOF

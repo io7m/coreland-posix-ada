@@ -42,7 +42,7 @@ package POSIX.Symlink is
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Buffer, Buffer_Size from File_Name &
-  --#         Error_Value         from Errno.Errno_Value;
+  --#         Error_Value         from File_Name, Errno.Errno_Value;
 
   -- proc_map : symlink
   procedure Create

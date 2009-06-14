@@ -1,6 +1,5 @@
 with C_String;
 with Interfaces.C;
-with System;
 
 package body POSIX.File is
 
@@ -14,15 +13,28 @@ package body POSIX.File is
      Mode      : in Permissions.Mode_t) return Descriptor_t is
     --# hide C_Open_Boundary
     function C_Open
-      (File_Name : in System.Address;
+      (File_Name : in C_String.String_Not_Null_Ptr_t;
        Flags     : in Open_Flags_t;
        Mode      : in Permissions.Mode_t) return Descriptor_t;
     pragma Import (C, C_Open, "open");
   begin
-    return C_Open
-      (File_Name => File_Name (File_Name'First)'Address,
-       Flags     => Flags,
-       Mode      => Mode);
+    declare
+      C_File_Name_Buffer : aliased Interfaces.C.char_array :=
+        Interfaces.C.To_C (File_Name, Append_Nul => True);
+    begin
+      return C_Open
+        (File_Name => C_String.To_C_String (C_File_Name_Buffer'Unchecked_Access),
+         Flags     => Flags,
+         Mode      => Mode);
+    end;
+  exception
+    -- Do not propagate exceptions.
+    when Storage_Error =>
+      Error.Set_Error (Error.Error_Out_Of_Memory);
+      return -1;
+    when others =>
+      Error.Set_Error (Error.Error_Unknown);
+      return -1;
   end C_Open_Boundary;
 
   procedure Open
@@ -34,7 +46,6 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     C_Flags     : Open_Flags_t;
-    C_File_Name : File_Name_t := File_Name_t'(File_Name_Index_t => Character'Val (0));
   begin
     -- Reject long filename.
     if File_Name'Last > File_Name_t'Last then
@@ -48,15 +59,9 @@ package body POSIX.File is
         C_Flags := Flags;
       end if;
 
-      -- Copy and null-terminate filename.
-      for Index in Positive range File_Name'First .. File_Name'Last loop
-        C_File_Name (Index) := File_Name (Index);
-      end loop;
-      C_File_Name (File_Name'Last + 1) := Character'Val (0);
-
       -- Call system open() procedure.
       Descriptor := C_Open_Boundary
-        (File_Name => C_File_Name,
+        (File_Name => File_Name,
          Flags     => C_Flags,
          Mode      => Mode);
       if Descriptor = -1 then

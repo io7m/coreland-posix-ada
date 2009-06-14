@@ -21,6 +21,7 @@ pragma source_file_name(POSIX.Path, spec_file_name => "posix-path.ads");
 
 -- ./posix-permissions.apk
 pragma source_file_name(POSIX.Permissions, spec_file_name => "posix-permissions.ads");
+pragma source_file_name(POSIX.Permissions, body_file_name => "posix-permissions.adb");
 
 -- ./posix-symlink.apk
 pragma source_file_name(POSIX.Symlink, spec_file_name => "posix-symlink.ads");

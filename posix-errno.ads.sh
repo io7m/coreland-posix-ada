@@ -9,7 +9,7 @@ is
 
 EOF
 
-./type-discrete Errno_Int || exit 1
+./type-discrete Errno_Integer || exit 1
 
 cat <<EOF
 
@@ -17,7 +17,7 @@ cat <<EOF
   -- Return POSIX errno integer.
   --
 
-  function Errno_Get return Errno_Int_t;
+  function Errno_Get return Errno_Integer_t;
   --# global in Errno_Value;
   pragma Import (C, Errno_Get, "posix_errno_get");
 
@@ -25,7 +25,7 @@ cat <<EOF
   -- Set POSIX errno integer.
   --
 
-  procedure Errno_Set (Code : in Errno_Int_t);
+  procedure Errno_Set (Code : in Errno_Integer_t);
   --# global out Errno_Value;
   --# derives Errno_Value from Code;
   pragma Import (C, Errno_Set, "posix_errno_set");

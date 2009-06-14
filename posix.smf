@@ -1,3 +1,4 @@
 posix-error.adb
 posix-file.adb
+posix-permissions.adb
 posix-symlink.adb

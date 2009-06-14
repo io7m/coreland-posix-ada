@@ -11,7 +11,7 @@ use type POSIX.Error.Error_t;
 use type POSIX.Error.Return_Value_t;
 
 with POSIX.Errno;
-use type POSIX.Errno.Errno_Int_t;
+use type POSIX.Errno.Errno_Integer_t;
 
 with POSIX.Path;
 with POSIX.Permissions;

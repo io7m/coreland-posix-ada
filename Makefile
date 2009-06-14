@@ -25,6 +25,12 @@ spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
 local: posix-ada.a
 local_clean:
 
+# Mkf-test
+tests:
+	(cd UNIT_TESTS && make)
+tests_clean:
+	(cd UNIT_TESTS && make clean)
+
 # -- SYSDEPS start
 flags-c_string:
 	@echo SYSDEPS c_string-flags run create flags-c_string 
@@ -279,6 +285,7 @@ posix-error.ads       \
 posix_file            \
 posix-file.ads.sh     \
 posix-path.ads        \
+posix-permissions.adb \
 posix-permissions.ads \
 type-discrete
 	./posix-file.ads.sh > posix-file.ads.tmp
@@ -316,8 +323,8 @@ LICENSE
 	mv posix-permissions.ads.tmp posix-permissions.ads
 
 posix-permissions.ali:\
-ada-compile posix-permissions.ads
-	./ada-compile posix-permissions.ads
+ada-compile posix-permissions.adb posix.ali posix-permissions.ads
+	./ada-compile posix-permissions.adb
 
 posix-permissions.o:\
 posix-permissions.ali
@@ -380,7 +387,7 @@ type-discrete.o:\
 cc-compile type-discrete.c
 	./cc-compile type-discrete.c
 
-clean-all: sysdeps_clean local_clean obj_clean ext_clean
+clean-all: sysdeps_clean tests_clean local_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
 	rm -f UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
