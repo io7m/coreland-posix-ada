@@ -50,8 +50,8 @@ package body POSIX.Symlink is
 
   procedure Read_Link
     (File_Name   : in String;
-     Buffer      : out File.File_Name_t;
-     Buffer_Size : out File.File_Name_Index_t;
+     Buffer      : in out File.File_Name_t;
+     Buffer_Size : in out File.File_Name_Index_t;
      Error_Value : out Error.Error_t)
   is
     Returned_Buffer : File.File_Name_t;
