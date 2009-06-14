@@ -226,6 +226,56 @@ package body POSIX.File is
   end Change_Mode;
 
   --
+  -- File ownership.
+  --
+
+  procedure Change_Descriptor_Ownership
+    (Descriptor  : in Valid_Descriptor_t;
+     Owner       : in User_DB.User_ID_t;
+     Group       : in User_DB.Group_ID_t;
+     Error_Value : out Error.Error_t)
+  is
+    Return_Value : Error.Return_Value_t;
+
+    function C_fchown
+      (Descriptor : in Valid_Descriptor_t;
+       Owner      : in User_DB.User_ID_t;
+       Group      : in User_DB.Group_ID_t) return Error.Return_Value_t;
+    pragma Import (C, C_fchown, "fchown");
+  begin
+    Return_Value := C_fchown
+      (Descriptor => Descriptor,
+       Owner      => Owner,
+       Group      => Group);
+    case Return_Value is
+      when -1 => Error_Value := Error.Get_Error;
+      when 0  => Error_Value := Error.Error_None;
+    end case;
+  end Change_Descriptor_Ownership;
+
+  procedure Change_Ownership
+    (File_Name   : in String;
+     Owner       : in User_DB.User_ID_t;
+     Group       : in User_DB.Group_ID_t;
+     Error_Value : out Error.Error_t)
+  is
+    Descriptor : Descriptor_t;
+  begin
+    Open_Read_Only
+      (File_Name    => File_Name,
+       Non_Blocking => False,
+       Descriptor   => Descriptor,
+       Error_Value  => Error_Value);
+    if Error_Value = Error.Error_None then
+      Change_Descriptor_Ownership
+        (Descriptor  => Descriptor,
+         Owner       => Owner,
+         Group       => Group,
+         Error_Value => Error_Value);
+    end if;
+  end Change_Ownership;
+
+  --
   -- File removal.
   --
 

@@ -15,12 +15,14 @@ use type POSIX.Errno.Errno_Integer_t;
 
 with POSIX.Path;
 with POSIX.Permissions;
+with POSIX.User_DB;
 
 --# inherit POSIX.C_Types,
 --#         POSIX.Errno,
 --#         POSIX.Error,
 --#         POSIX.Path,
---#         POSIX.Permissions;
+--#         POSIX.Permissions,
+--#         POSIX.User_DB;
 
 package POSIX.File is
 
@@ -168,6 +170,28 @@ cat <<EOF
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Mode, Errno.Errno_Value;
+
+  --
+  -- File ownership.
+  --
+
+  -- proc_map : chown
+  procedure Change_Ownership
+    (File_Name   : in String;
+     Owner       : in User_DB.User_ID_t;
+     Group       : in User_DB.Group_ID_t;
+     Error_Value : out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from File_Name, Owner, Group, Errno.Errno_Value;
+
+  -- proc_map : fchown
+  procedure Change_Descriptor_Ownership
+    (Descriptor  : in Valid_Descriptor_t;
+     Owner       : in User_DB.User_ID_t;
+     Group       : in User_DB.Group_ID_t;
+     Error_Value : out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Owner, Group, Errno.Errno_Value;
 
   --
   -- File removal.

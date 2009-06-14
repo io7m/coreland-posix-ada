@@ -11,3 +11,5 @@ POSIX.Permissions spec is in posix-permissions.ads
 POSIX             spec is in posix.ads
 POSIX.Symlink     body is in posix-symlink.adb
 POSIX.Symlink     spec is in posix-symlink.ads
+POSIX.User_DB     body is in posix-user_db.adb
+POSIX.User_DB     spec is in posix-user_db.ads

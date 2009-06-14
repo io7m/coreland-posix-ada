@@ -31,6 +31,9 @@ pragma source_file_name(POSIX.Permissions, body_file_name => "posix-permissions.
 pragma source_file_name(POSIX.Symlink, spec_file_name => "posix-symlink.ads");
 pragma source_file_name(POSIX.Symlink, body_file_name => "posix-symlink.adb");
 
+-- ./posix-user_db.apk
+pragma source_file_name(POSIX.User_DB, spec_file_name => "posix-user_db.ads");
+
 -- UNIT_TESTS/test.apk
 pragma source_file_name(Test, spec_file_name => "test.ads");
 pragma source_file_name(Test, body_file_name => "test.adb");

@@ -1,0 +1,7 @@
+posix-user_db.ads:   \
+auto-warn.txt        \
+posix-user_db.ads.sh \
+type-discrete        \
+LICENSE
+	./posix-user_db.ads.sh > posix-user_db.ads.tmp
+	mv posix-user_db.ads.tmp posix-user_db.ads

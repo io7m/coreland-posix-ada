@@ -33,14 +33,16 @@ static const struct discrete_t type_table[] = {
   { "Unsigned_Long",  0, 0, 10, sizeof (unsigned long) * CHAR_BIT,  DISCRETE_MOD },
 
   /* specific integral types */
-  { "Return_Value",         -1,         0, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
   { "Descriptor",           -1,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
-  { "Open_Flags",            0,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_MOD },
   { "Errno_Integer",  -INT_MAX,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
+  { "Group_ID",             -1,   INT_MAX, 10, sizeof (gid_t) * CHAR_BIT,   DISCRETE_RANGED },
   { "Mode_Integer",          0,    07777l,  8, sizeof (mode_t) * CHAR_BIT,  DISCRETE_MOD },
-  { "Size",                  0,         0,  0, sizeof (size_t) * CHAR_BIT,  DISCRETE_MOD },
+  { "Open_Flags",            0,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_MOD },
+  { "Return_Value",         -1,         0, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
   { "Signed_Size",  -SSIZE_MAX, SSIZE_MAX, 10, sizeof (ssize_t) * CHAR_BIT, DISCRETE_RANGED },
+  { "Size",                  0,         0,  0, sizeof (size_t) * CHAR_BIT,  DISCRETE_MOD },
   { "Storage_Element",       0,         0, 10, sizeof (unsigned char) * CHAR_BIT, DISCRETE_MOD },
+  { "User_ID",              -1,   INT_MAX, 10, sizeof (uid_t) * CHAR_BIT,   DISCRETE_RANGED },
 };
 static const size_t type_table_size = sizeof (type_table) / sizeof (struct discrete_t);
 
