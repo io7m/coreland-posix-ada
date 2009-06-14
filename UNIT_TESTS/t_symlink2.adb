@@ -17,7 +17,7 @@ begin
     (File_Name   => "tmp/symlink",
      Target      => "",
      Error_Value => Error_Value);
-  Test.Assert (Error_Value = POSIX.Error.Error_No_Such_File_Or_Directory);
+  Test.Assert (Error_Value = POSIX.Error.Error_None);
 
   POSIX.Symlink.Read_Link
     (File_Name   => "tmp/symlink",

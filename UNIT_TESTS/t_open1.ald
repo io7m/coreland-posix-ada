@@ -1,5 +1,6 @@
 t_open1.ali
 test.ali
+../posix-error.ali
 ../posix-file.ali
 ../posix-permissions.ali
 ../posix-ada.a

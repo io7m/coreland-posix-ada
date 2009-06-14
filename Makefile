@@ -5,7 +5,10 @@ default: all
 all:\
 local UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
 UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
+UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali UNIT_TESTS/t_open2.o \
 UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali UNIT_TESTS/t_symlink2.o \
+UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali UNIT_TESTS/t_symlink3.o \
 UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
 posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
@@ -72,7 +75,8 @@ UNIT_TESTS/t_error1.ali
 
 UNIT_TESTS/t_open1:\
 ada-bind ada-link UNIT_TESTS/t_open1.ald UNIT_TESTS/t_open1.ali \
-UNIT_TESTS/test.ali posix-file.ali posix-permissions.ali posix-ada.a
+UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-permissions.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_open1.ali
 	./ada-link UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali posix-ada.a
 
@@ -83,9 +87,23 @@ ada-compile UNIT_TESTS/t_open1.adb
 UNIT_TESTS/t_open1.o:\
 UNIT_TESTS/t_open1.ali
 
+UNIT_TESTS/t_open2:\
+ada-bind ada-link UNIT_TESTS/t_open2.ald UNIT_TESTS/t_open2.ali \
+UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_open2.ali
+	./ada-link UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali posix-ada.a
+
+UNIT_TESTS/t_open2.ali:\
+ada-compile UNIT_TESTS/t_open2.adb
+	./ada-compile UNIT_TESTS/t_open2.adb
+
+UNIT_TESTS/t_open2.o:\
+UNIT_TESTS/t_open2.ali
+
 UNIT_TESTS/t_symlink1:\
 ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/t_symlink1.ali \
-UNIT_TESTS/test.ali posix-file.ali posix-symlink.ali posix-ada.a
+UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-symlink.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_symlink1.ali
 	./ada-link UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali posix-ada.a
 
@@ -95,6 +113,34 @@ ada-compile UNIT_TESTS/t_symlink1.adb
 
 UNIT_TESTS/t_symlink1.o:\
 UNIT_TESTS/t_symlink1.ali
+
+UNIT_TESTS/t_symlink2:\
+ada-bind ada-link UNIT_TESTS/t_symlink2.ald UNIT_TESTS/t_symlink2.ali \
+UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-symlink.ali \
+posix-ada.a
+	./ada-bind UNIT_TESTS/t_symlink2.ali
+	./ada-link UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali posix-ada.a
+
+UNIT_TESTS/t_symlink2.ali:\
+ada-compile UNIT_TESTS/t_symlink2.adb
+	./ada-compile UNIT_TESTS/t_symlink2.adb
+
+UNIT_TESTS/t_symlink2.o:\
+UNIT_TESTS/t_symlink2.ali
+
+UNIT_TESTS/t_symlink3:\
+ada-bind ada-link UNIT_TESTS/t_symlink3.ald UNIT_TESTS/t_symlink3.ali \
+UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-symlink.ali \
+posix-ada.a
+	./ada-bind UNIT_TESTS/t_symlink3.ali
+	./ada-link UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali posix-ada.a
+
+UNIT_TESTS/t_symlink3.ali:\
+ada-compile UNIT_TESTS/t_symlink3.adb
+	./ada-compile UNIT_TESTS/t_symlink3.adb
+
+UNIT_TESTS/t_symlink3.o:\
+UNIT_TESTS/t_symlink3.ali
 
 UNIT_TESTS/t_unlink1:\
 ada-bind ada-link UNIT_TESTS/t_unlink1.ald UNIT_TESTS/t_unlink1.ali \
@@ -152,11 +198,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-systype:\
@@ -415,7 +461,10 @@ clean: obj_clean
 obj_clean:
 	rm -f UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
 	UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
+	UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali UNIT_TESTS/t_open2.o \
 	UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
+	UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali UNIT_TESTS/t_symlink2.o \
+	UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali UNIT_TESTS/t_symlink3.o \
 	UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.c \
 	errno_int.o posix-ada.a posix-c_types.ads posix-c_types.ali posix-c_types.o \
