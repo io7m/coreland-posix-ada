@@ -6,7 +6,8 @@ cat <<EOF
 with POSIX.File;
 with POSIX.Error;
 
---# inherit POSIX.Error,
+--# inherit POSIX.C_Types,
+--#         POSIX.Error,
 --#         POSIX.Errno,
 --#         POSIX.File;
 
@@ -19,7 +20,7 @@ EOF
 
 cat <<EOF
 
-  subtype Storage_Element_Array_Index_t is Positive range Positive'First .. Positive'Last;
+  subtype Storage_Element_Array_Index_t is Natural range Natural'First .. Natural'Last;
   type Storage_Element_Array_t is array (Storage_Element_Array_Index_t range <>) of Storage_Element_t;
 
   procedure Read
@@ -29,6 +30,14 @@ cat <<EOF
      Error_Value   : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Buffer, Elements_Read, Error_Value from Descriptor, Errno.Errno_Value;
+
+  procedure Write
+    (Descriptor       : in File.Valid_Descriptor_t;
+     Buffer           : in Storage_Element_Array_t;
+     Elements_Written : out Storage_Element_Array_Index_t;
+     Error_Value      : out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Elements_Written, Error_Value from Descriptor, Buffer, Errno.Errno_Value;
 
 end POSIX.IO;
 EOF
