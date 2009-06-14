@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ./t_symlink3
+exec ktrace ./t_symlink3

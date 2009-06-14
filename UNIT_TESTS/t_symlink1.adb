@@ -8,24 +8,24 @@ with Test;
 procedure T_Symlink1 is
   Error_Value : POSIX.Error.Error_t;
 begin
-  POSIX.File.Unlink ("tmp/symlink", Error_Value);
+  POSIX.File.Unlink ("tmp/symlink1", Error_Value);
   Test.Assert (Error_Value = POSIX.Error.Error_No_Such_File_Or_Directory);
 
   POSIX.Symlink.Create
-    (File_Name   => "tmp/symlink",
+    (File_Name   => "tmp/symlink1",
      Target      => "symlink_target",
      Error_Value => Error_Value);
   Test.Assert (Error_Value = POSIX.Error.Error_None);
 
   POSIX.Symlink.Create
-    (File_Name   => "tmp/symlink",
+    (File_Name   => "tmp/symlink1",
      Target      => "symlink_target",
      Error_Value => Error_Value);
   Test.Assert (Error_Value = POSIX.Error.Error_File_Exists);
 
-  POSIX.File.Unlink ("tmp/symlink", Error_Value);
+  POSIX.File.Unlink ("tmp/symlink1", Error_Value);
   Test.Assert (Error_Value = POSIX.Error.Error_None);
 
-  POSIX.File.Unlink ("tmp/symlink", Error_Value);
+  POSIX.File.Unlink ("tmp/symlink1", Error_Value);
   Test.Assert (Error_Value = POSIX.Error.Error_No_Such_File_Or_Directory);
 end T_Symlink1;
