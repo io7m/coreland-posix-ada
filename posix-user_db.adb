@@ -29,7 +29,7 @@ package body POSIX.User_DB is
     begin
       Return_Value := C_posix_getpwnam
         (User_Name      => C_String.To_C_String (C_User_Name_Buffer'Unchecked_Access),
-         Database_Entry => Database_Entry.C_Core (Database_Entry.C_Core'First)'Address);
+         Database_Entry => Database_Entry.C_Data (Database_Entry.C_Data'First)'Address);
     end;
   exception
     -- Do not propagate exceptions.
@@ -84,7 +84,7 @@ package body POSIX.User_DB is
     pragma Import (C, C_posix_passwd_get_uid, "posix_passwd_get_uid");
   begin
     return C_posix_passwd_get_uid
-      (Database_Entry.C_Core (Database_Entry.C_Core'First)'Address);
+      (Database_Entry.C_Data (Database_Entry.C_Data'First)'Address);
   end C_Get_User_ID;
 
   function Get_User_ID (Database_Entry : in Database_Entry_t) return User_ID_t is

@@ -25,6 +25,9 @@ package POSIX.File_Status is
   -- Abstract file status type.
   type Status_t is private;
 
+  -- Status is valid?
+  function Is_Valid (Status : in Status_t) return Boolean;
+
   -- proc_map : stat
   procedure Get_Status
     (File_Name   : in String;
@@ -55,18 +58,25 @@ cat <<EOF
   --
 
   function Get_Device_ID (Status : in Status_t) return Device_ID_t;
+  --# pre Is_Valid (Status);
 
   function Get_INode (Status : in Status_t) return INode_t;
+  --# pre Is_Valid (Status);
 
   function Get_Mode (Status : in Status_t) return Permissions.Mode_t;
+  --# pre Is_Valid (Status);
 
   function Get_Number_Of_Links (Status : in Status_t) return Positive;
+  --# pre Is_Valid (Status);
 
   function Get_User_ID (Status : in Status_t) return User_DB.User_ID_t;
+  --# pre Is_Valid (Status);
 
   function Get_Group_ID (Status : in Status_t) return User_DB.Group_ID_t;
+  --# pre Is_Valid (Status);
 
   function Get_Size (Status : in Status_t) return File.Offset_t;
+  --# pre Is_Valid (Status);
 
 private
 
@@ -74,9 +84,14 @@ private
   -- stack allocation.
 EOF
 
-./type-status Status || exit 1
+./type-status C_Status || exit 1
 
 cat <<EOF
+
+  type Status_t is record
+    Valid  : Boolean;
+    C_Data : C_Status_t;
+  end record;
 
 end POSIX.File_Status;
 EOF

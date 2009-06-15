@@ -1,5 +1,6 @@
 posix-user_db.ads:   \
 auto-warn.txt        \
+posix-c_types.ads    \
 posix-user_db.ads.sh \
 type-discrete        \
 type-passwd          \

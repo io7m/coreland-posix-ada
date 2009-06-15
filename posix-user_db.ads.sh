@@ -62,7 +62,7 @@ cat <<EOF
 
   type Database_Entry_t is record
     Valid  : Boolean;
-    C_Core : C_Database_Entry_t;
+    C_Data : C_Database_Entry_t;
   end record;
 
 end POSIX.User_DB;

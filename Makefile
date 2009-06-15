@@ -381,11 +381,14 @@ posix-file.ali
 # posix-file_status.ads.mff
 posix-file_status.ads:   \
 auto-warn.txt            \
-posix-error.ads          \
 posix-error.adb          \
-posix-file.ads           \
+posix-error.ads          \
 posix-file.adb           \
+posix-file.ads           \
 posix-file_status.ads.sh \
+posix-permissions.ads    \
+posix-user_db.adb        \
+posix-user_db.ads        \
 type-discrete            \
 type-status              \
 LICENSE
@@ -472,6 +475,7 @@ posix-symlink.ali
 # posix-user_db.ads.mff
 posix-user_db.ads:   \
 auto-warn.txt        \
+posix-c_types.ads    \
 posix-user_db.ads.sh \
 type-discrete        \
 type-passwd          \
