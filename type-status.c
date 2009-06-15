@@ -21,7 +21,8 @@ main (int argc, char *argv[])
   printf ("  pragma Convention (C, %s_Element_t);\n", argv[1]);
   printf ("\n");
 
-  printf ("  type %s_t is array (1 .. %u) of %s_Element_t;\n", argv[1], size, argv[1]);
+  printf ("  subtype %s_Element_Index_t is Positive range 1 .. %u;\n", argv[1], size);
+  printf ("  type %s_t is array (%s_Element_Index_t) of %s_Element_t;\n", argv[1], argv[1], argv[1]);
   printf ("  for %s_t'Size use %u;\n", argv[1], size * CHAR_BIT);
   printf ("  pragma Convention (C, %s_t);\n", argv[1]);
 

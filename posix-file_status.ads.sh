@@ -31,8 +31,7 @@ package POSIX.File_Status is
      Status      : out Status_t;
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Status      from File_Name &
-  --#         Error_Value from File_Name, Errno.Errno_Value;
+  --# derives Status, Error_Value from File_Name, Errno.Errno_Value;
 
   -- proc_map : fstat
   procedure Get_Descriptor_Status
@@ -71,7 +70,8 @@ cat <<EOF
 
 private
 
-  -- Pseudo type to allow stack allocation.
+  -- Pseudo type matching size of the system stat structure to allow
+  -- stack allocation.
 EOF
 
 ./type-status Status || exit 1

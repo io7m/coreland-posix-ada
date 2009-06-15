@@ -8,5 +8,6 @@ posix-io.o
 posix.o
 posix-path.o
 posix-permissions.o
+posix_stat.o
 posix-symlink.o
 posix-user_db.o
