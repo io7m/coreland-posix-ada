@@ -34,6 +34,13 @@ EOF
 cat << EOF
   subtype Valid_Descriptor_t is Descriptor_t range 0 .. Descriptor_t'Last;
 
+  -- File offset/size.
+EOF
+
+./type-discrete Offset || exit 1
+
+cat <<EOF
+
   -- Filename subtype based on POSIX PATH_MAX
   subtype File_Name_Size_t  is Natural range Natural'First .. Path.Max_Length;
   subtype File_Name_Index_t is File_Name_Size_t range File_Name_Size_t'First + 1 .. Path.Max_Length - 1;

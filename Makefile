@@ -12,11 +12,12 @@ UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali UNIT_TESTS/t_symlink3.o \
 UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
 posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
-posix-error.ali posix-error.o posix-file.ali posix-file.o posix-io.ali \
-posix-io.o posix-path.ali posix-path.o posix-permissions.ali \
-posix-permissions.o posix-symlink.ali posix-symlink.o posix-user_db.ali \
-posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o
+posix-error.ali posix-error.o posix-file.ali posix-file.o posix-file_status.ali \
+posix-file_status.o posix-io.ali posix-io.o posix-path.ali posix-path.o \
+posix-permissions.ali posix-permissions.o posix-symlink.ali posix-symlink.o \
+posix-user_db.ali posix-user_db.o posix.ali posix.o posix_error.o posix_file \
+posix_file.o posix_stat.o spark_conf spark_conf.ali spark_conf.o type-discrete \
+type-discrete.o type-status type-status.o
 
 # Mkf-local
 #
@@ -253,11 +254,11 @@ conf-cc conf-ld
 
 posix-ada.a:\
 cc-slib posix-ada.sld posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-posix-file.o posix-io.o posix.o posix-path.o posix-permissions.o \
-posix-symlink.o posix-user_db.o
+posix-file.o posix-file_status.o posix-io.o posix.o posix-path.o \
+posix-permissions.o posix-symlink.o posix-user_db.o
 	./cc-slib posix-ada posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-	posix-file.o posix-io.o posix.o posix-path.o posix-permissions.o \
-	posix-symlink.o posix-user_db.o
+	posix-file.o posix-file_status.o posix-io.o posix.o posix-path.o \
+	posix-permissions.o posix-symlink.o posix-user_db.o
 
 # posix-c_types.ads.mff
 posix-c_types.ads:   \
@@ -347,6 +348,27 @@ ada-compile posix-file.adb posix.ali posix-file.ads
 
 posix-file.o:\
 posix-file.ali
+
+# posix-file_status.ads.mff
+posix-file_status.ads:   \
+auto-warn.txt            \
+posix-error.ads          \
+posix-error.adb          \
+posix-file.ads           \
+posix-file.adb           \
+posix-file_status.ads.sh \
+type-discrete            \
+type-status              \
+LICENSE
+	./posix-file_status.ads.sh > posix-file_status.ads.tmp
+	mv posix-file_status.ads.tmp posix-file_status.ads
+
+posix-file_status.ali:\
+ada-compile posix-file_status.adb posix-file_status.ads
+	./ada-compile posix-file_status.adb
+
+posix-file_status.o:\
+posix-file_status.ali
 
 # posix-io.ads.mff
 posix-io.ads:   \
@@ -453,6 +475,10 @@ posix_file.o:\
 cc-compile posix_file.c
 	./cc-compile posix_file.c
 
+posix_stat.o:\
+cc-compile posix_stat.c
+	./cc-compile posix_stat.c
+
 spark_conf:\
 ada-bind ada-link spark_conf.ald spark_conf.ali
 	./ada-bind spark_conf.ali
@@ -473,6 +499,14 @@ type-discrete.o:\
 cc-compile type-discrete.c
 	./cc-compile type-discrete.c
 
+type-status:\
+cc-link type-status.ld type-status.o
+	./cc-link type-status type-status.o
+
+type-status.o:\
+cc-compile type-status.c
+	./cc-compile type-status.c
+
 clean-all: sysdeps_clean tests_clean local_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
@@ -487,12 +521,14 @@ obj_clean:
 	errno_int.o posix-ada.a posix-c_types.ads posix-c_types.ali posix-c_types.o \
 	posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb posix-error.ads \
 	posix-error.ali posix-error.o posix-file.ads posix-file.ali posix-file.o \
-	posix-io.ads posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o \
+	posix-file_status.ads posix-file_status.ali posix-file_status.o posix-io.ads \
+	posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o \
 	posix-permissions.ads posix-permissions.ali posix-permissions.o \
 	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
-	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-	spark_conf
-	rm -f spark_conf.ali spark_conf.o type-discrete type-discrete.o
+	posix-user_db.o
+	rm -f posix.ali posix.o posix_error.o posix_file posix_file.o posix_stat.o \
+	spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o \
+	type-status type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-systype mk-ctxt
 

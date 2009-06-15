@@ -34,9 +34,12 @@ static const struct discrete_t type_table[] = {
 
   /* specific integral types */
   { "Descriptor",           -1,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
+  { "Device_ID",             0,   INT_MAX, 10, sizeof (dev_t) * CHAR_BIT,   DISCRETE_RANGED },
   { "Errno_Integer",  -INT_MAX,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
   { "Group_ID",             -1,   INT_MAX, 10, sizeof (gid_t) * CHAR_BIT,   DISCRETE_RANGED },
+  { "INode",                 0,   INT_MAX, 10, sizeof (ino_t) * CHAR_BIT,   DISCRETE_RANGED },
   { "Mode_Integer",          0,    07777l,  8, sizeof (mode_t) * CHAR_BIT,  DISCRETE_MOD },
+  { "Offset",                0,         0, 10, sizeof (off_t) * CHAR_BIT,   DISCRETE_MOD },
   { "Open_Flags",            0,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_MOD },
   { "Return_Value",         -1,         0, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
   { "Signed_Size",  -SSIZE_MAX, SSIZE_MAX, 10, sizeof (ssize_t) * CHAR_BIT, DISCRETE_RANGED },

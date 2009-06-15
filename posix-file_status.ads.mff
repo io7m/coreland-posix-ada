@@ -1,0 +1,12 @@
+posix-file_status.ads:   \
+auto-warn.txt            \
+posix-error.ads          \
+posix-error.adb          \
+posix-file.ads           \
+posix-file.adb           \
+posix-file_status.ads.sh \
+type-discrete            \
+type-status              \
+LICENSE
+	./posix-file_status.ads.sh > posix-file_status.ads.tmp
+	mv posix-file_status.ads.tmp posix-file_status.ads

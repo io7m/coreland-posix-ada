@@ -4,6 +4,8 @@ POSIX.Error       body is in posix-error.adb
 POSIX.Error       spec is in posix-error.ads
 POSIX.File        body is in posix-file.adb
 POSIX.File        spec is in posix-file.ads
+POSIX.File_Status body is in posix-file_status.adb
+POSIX.File_Status spec is in posix-file_status.ads
 POSIX.IO          body is in posix-io.adb
 POSIX.IO          spec is in posix-io.ads
 POSIX.Path        spec is in posix-path.ads

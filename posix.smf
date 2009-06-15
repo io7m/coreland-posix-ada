@@ -1,5 +1,6 @@
 posix-error.adb
 posix-file.adb
+posix-file_status.adb
 posix-io.adb
 posix-permissions.adb
 posix-symlink.adb
