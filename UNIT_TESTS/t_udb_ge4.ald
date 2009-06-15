@@ -1,5 +1,6 @@
 t_udb_ge4.ali
 test.ali
+../test_config.ali
 ../posix-error.ali
 ../posix-user_db.ali
 ../posix-ada.a

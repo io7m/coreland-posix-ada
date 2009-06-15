@@ -3,6 +3,7 @@ use type POSIX.Error.Error_t;
 
 with POSIX.User_DB;
 with Test;
+with Test_Config;
 
 procedure T_UDB_GE5 is
   Error_Value    : POSIX.Error.Error_t;
@@ -13,7 +14,7 @@ procedure T_UDB_GE5 is
 begin
 
   POSIX.User_DB.Get_Entry_By_Name
-    (User_Name      => "root",
+    (User_Name      => Test_Config.User_Name,
      Database_Entry => Database_Entry,
      Found_Entry    => Found_Entry,
      Error_Value    => Error_Value);
@@ -25,6 +26,6 @@ begin
     (Database_Entry => Database_Entry,
      Home_Directory => Home_Directory,
      Last_Index     => Last_Index);
-  Test.Assert (Home_Directory (Home_Directory'First .. Last_Index) = "/root");
+  Test.Assert (Home_Directory (Home_Directory'First .. Last_Index) = Test_Config.User_Directory);
 
 end T_UDB_GE5;

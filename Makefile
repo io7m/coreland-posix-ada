@@ -23,8 +23,9 @@ posix-file.o posix-file_status.ali posix-file_status.o posix-io.ali posix-io.o \
 posix-path.ali posix-path.o posix-permissions.ali posix-permissions.o \
 posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
 posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
-spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o \
-type-passwd type-passwd.o type-status type-status.o
+spark_conf spark_conf.ali spark_conf.o test_config.ali test_config.o \
+type-discrete type-discrete.o type-passwd type-passwd.o type-status \
+type-status.o
 
 # Mkf-local
 #
@@ -70,7 +71,7 @@ c_string-libs-S_clean \
 
 UNIT_TESTS/t_error1:\
 ada-bind ada-link UNIT_TESTS/t_error1.ald UNIT_TESTS/t_error1.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-errno.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-errno.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_error1.ali
 	./ada-link UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali posix-ada.a
 
@@ -83,8 +84,8 @@ UNIT_TESTS/t_error1.ali
 
 UNIT_TESTS/t_open1:\
 ada-bind ada-link UNIT_TESTS/t_open1.ald UNIT_TESTS/t_open1.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-permissions.ali \
-posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file.ali \
+posix-permissions.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_open1.ali
 	./ada-link UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali posix-ada.a
 
@@ -97,7 +98,7 @@ UNIT_TESTS/t_open1.ali
 
 UNIT_TESTS/t_open2:\
 ada-bind ada-link UNIT_TESTS/t_open2.ald UNIT_TESTS/t_open2.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_open2.ali
 	./ada-link UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali posix-ada.a
 
@@ -110,8 +111,8 @@ UNIT_TESTS/t_open2.ali
 
 UNIT_TESTS/t_symlink1:\
 ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/t_symlink1.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-symlink.ali \
-posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file.ali \
+posix-symlink.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_symlink1.ali
 	./ada-link UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali posix-ada.a
 
@@ -124,8 +125,8 @@ UNIT_TESTS/t_symlink1.ali
 
 UNIT_TESTS/t_symlink2:\
 ada-bind ada-link UNIT_TESTS/t_symlink2.ald UNIT_TESTS/t_symlink2.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-symlink.ali \
-posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file.ali \
+posix-symlink.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_symlink2.ali
 	./ada-link UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali posix-ada.a
 
@@ -138,8 +139,8 @@ UNIT_TESTS/t_symlink2.ali
 
 UNIT_TESTS/t_symlink3:\
 ada-bind ada-link UNIT_TESTS/t_symlink3.ald UNIT_TESTS/t_symlink3.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-file.ali posix-symlink.ali \
-posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file.ali \
+posix-symlink.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_symlink3.ali
 	./ada-link UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali posix-ada.a
 
@@ -152,7 +153,8 @@ UNIT_TESTS/t_symlink3.ali
 
 UNIT_TESTS/t_udb_ge1:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge1.ald UNIT_TESTS/t_udb_ge1.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-user_db.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge1.ali
 	./ada-link UNIT_TESTS/t_udb_ge1 UNIT_TESTS/t_udb_ge1.ali posix-ada.a
 
@@ -165,7 +167,8 @@ UNIT_TESTS/t_udb_ge1.ali
 
 UNIT_TESTS/t_udb_ge2:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge2.ald UNIT_TESTS/t_udb_ge2.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-user_db.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge2.ali
 	./ada-link UNIT_TESTS/t_udb_ge2 UNIT_TESTS/t_udb_ge2.ali posix-ada.a
 
@@ -178,7 +181,8 @@ UNIT_TESTS/t_udb_ge2.ali
 
 UNIT_TESTS/t_udb_ge3:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge3.ald UNIT_TESTS/t_udb_ge3.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-user_db.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge3.ali
 	./ada-link UNIT_TESTS/t_udb_ge3 UNIT_TESTS/t_udb_ge3.ali posix-ada.a
 
@@ -191,7 +195,8 @@ UNIT_TESTS/t_udb_ge3.ali
 
 UNIT_TESTS/t_udb_ge4:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge4.ald UNIT_TESTS/t_udb_ge4.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-user_db.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge4.ali
 	./ada-link UNIT_TESTS/t_udb_ge4 UNIT_TESTS/t_udb_ge4.ali posix-ada.a
 
@@ -204,7 +209,8 @@ UNIT_TESTS/t_udb_ge4.ali
 
 UNIT_TESTS/t_udb_ge5:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge5.ald UNIT_TESTS/t_udb_ge5.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-user_db.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge5.ali
 	./ada-link UNIT_TESTS/t_udb_ge5 UNIT_TESTS/t_udb_ge5.ali posix-ada.a
 
@@ -217,7 +223,8 @@ UNIT_TESTS/t_udb_ge5.ali
 
 UNIT_TESTS/t_udb_ge6:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge6.ald UNIT_TESTS/t_udb_ge6.ali \
-UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-user_db.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge6.ali
 	./ada-link UNIT_TESTS/t_udb_ge6 UNIT_TESTS/t_udb_ge6.ali posix-ada.a
 
@@ -230,7 +237,8 @@ UNIT_TESTS/t_udb_ge6.ali
 
 UNIT_TESTS/t_unlink1:\
 ada-bind ada-link UNIT_TESTS/t_unlink1.ald UNIT_TESTS/t_unlink1.ali \
-UNIT_TESTS/test.ali posix-file.ali posix-permissions.ali posix-ada.a
+UNIT_TESTS/test.ali test_config.ali posix-file.ali posix-permissions.ali \
+posix-ada.a
 	./ada-bind UNIT_TESTS/t_unlink1.ali
 	./ada-link UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali posix-ada.a
 
@@ -595,6 +603,24 @@ ada-compile spark_conf.adb
 spark_conf.o:\
 spark_conf.ali
 
+# test_config.ads.mff
+test_config.ads:   \
+test_config.ads.sh \
+conf-T-gid         \
+conf-T-root_dir    \
+conf-T-shell       \
+conf-T-uid         \
+conf-T-user
+	./test_config.ads.sh > test_config.ads.tmp
+	mv test_config.ads.tmp test_config.ads
+
+test_config.ali:\
+ada-compile test_config.ads
+	./ada-compile test_config.ads
+
+test_config.o:\
+test_config.ali
+
 type-discrete:\
 cc-link type-discrete.ld type-discrete.o
 	./cc-link type-discrete type-discrete.o
@@ -646,8 +672,8 @@ obj_clean:
 	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
 	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
 	posix_passwd.o posix_stat.o spark_conf spark_conf.ali spark_conf.o \
-	type-discrete type-discrete.o type-passwd type-passwd.o type-status \
-	type-status.o
+	test_config.ads test_config.ali test_config.o type-discrete type-discrete.o \
+	type-passwd type-passwd.o type-status type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-systype mk-ctxt
 

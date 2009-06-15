@@ -1,5 +1,6 @@
 t_unlink1.ali
 test.ali
+../test_config.ali
 ../posix-file.ali
 ../posix-permissions.ali
 ../posix-ada.a

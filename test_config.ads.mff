@@ -1,0 +1,9 @@
+test_config.ads:   \
+test_config.ads.sh \
+conf-T-gid         \
+conf-T-root_dir    \
+conf-T-shell       \
+conf-T-uid         \
+conf-T-user
+	./test_config.ads.sh > test_config.ads.tmp
+	mv test_config.ads.tmp test_config.ads

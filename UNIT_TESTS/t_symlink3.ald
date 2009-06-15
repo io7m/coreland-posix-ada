@@ -1,5 +1,6 @@
 t_symlink3.ali
 test.ali
+../test_config.ali
 ../posix-error.ali
 ../posix-file.ali
 ../posix-symlink.ali
