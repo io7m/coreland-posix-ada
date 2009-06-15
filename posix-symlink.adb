@@ -50,7 +50,7 @@ package body POSIX.Symlink is
 
   procedure Read_Link
     (File_Name   : in String;
-     Buffer      : in out File.File_Name_t;
+     Buffer      : out File.File_Name_t;
      Buffer_Size : out File.File_Name_Size_t;
      Error_Value : out Error.Error_t)
   is
@@ -59,6 +59,7 @@ package body POSIX.Symlink is
   begin
     if File_Name'Last > Path.Max_Length then
       Error_Value := Error.Error_Name_Too_Long;
+      Buffer      := File.File_Name_t'(File.File_Name_Index_t => Character'Val (0));
       Buffer_Size := 0;
     else
       -- Call system readlink().
@@ -68,6 +69,7 @@ package body POSIX.Symlink is
          Modified_Size   => Returned_Size);
       if Returned_Size = -1 then
         Error_Value := Error.Get_Error;
+        Buffer      := File.File_Name_t'(File.File_Name_Index_t => Character'Val (0));
         Buffer_Size := 0;
       else
         Error_Value := Error.Error_None;
