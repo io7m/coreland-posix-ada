@@ -13,4 +13,17 @@ package body POSIX.Permissions is
     return Return_Mode;
   end Mode_To_Integer;
 
+  function Mode_Integer_To_Mode (Mode : in Mode_Integer_t) return Mode_t is
+    Return_Mode : Mode_t := None;
+  begin
+    for Mode_Element in Mode_Element_t range Mode_t'First .. Mode_t'Last loop
+      if (Mode and Mode_Map (Mode_Element)) = Mode_Map (Mode_Element) then
+        Return_Mode (Mode_Element) := True;
+      end if;
+      --# assert (Mode_Element <= Mode_t'Last) and
+      --#        (Mode_Element >= Mode_t'First);
+    end loop;
+    return Return_Mode;
+  end Mode_Integer_To_Mode;
+
 end POSIX.Permissions;

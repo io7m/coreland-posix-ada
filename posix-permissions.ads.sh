@@ -45,6 +45,9 @@ cat <<EOF
   -- Map Mode_t to discrete type.
   function Mode_To_Integer (Mode : in Mode_t) return Mode_Integer_t;
 
+  -- Map Mode_Integer_t to Mode_t.
+  function Mode_Integer_To_Mode (Mode : in Mode_Integer_t) return Mode_t;
+
 private
 
   Internal_User_Read    : constant Mode_Integer_t := 8#0400#;
