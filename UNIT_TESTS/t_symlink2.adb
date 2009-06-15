@@ -24,7 +24,8 @@ begin
      Buffer      => Name_Buffer,
      Buffer_Size => Name_Size,
      Error_Value => Error_Value);
-  Test.Assert (Error_Value = POSIX.Error.Error_No_Such_File_Or_Directory);
+  Test.Assert (Error_Value = POSIX.Error.Error_None);
+  Test.Assert (Name_Size = 0);
 
   POSIX.File.Unlink ("tmp/symlink2", Error_Value);
   Test.Assert (Error_Value = POSIX.Error.Error_None);
