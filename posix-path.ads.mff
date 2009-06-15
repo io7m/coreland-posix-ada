@@ -1,5 +1,6 @@
 posix-path.ads:  \
 auto-warn.txt    \
+constants        \
 LICENSE          \
 posix-path.ads.sh
 	./posix-path.ads.sh > posix-path.ads.tmp

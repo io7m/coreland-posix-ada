@@ -17,6 +17,8 @@ EOF
 echo
 ./type-discrete Group_ID || exit 1
 
+LOGIN_NAME_MAX=`./constants LOGIN_NAME_MAX` || exit 1
+
 cat <<EOF
 
   Unspecified_User  : constant User_ID_t;
@@ -39,12 +41,28 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Database_Entry, Found_Entry from User_Name &
   --#         Error_Value                 from User_Name, Errno.Errno_Value;
+  --# post ((Error_Value = Error.Error_None)  and (Is_Valid (Database_Entry))) or
+  --#      ((Error_Value /= Error.Error_None) and (not Is_Valid (Database_Entry)));
+
+  --
+  -- Database entry types.
+  --
+
+  subtype User_Name_Index_t is Positive range 1 .. $LOGIN_NAME_MAX;
+  subtype User_Name_t is String (User_Name_Index_t);
 
   --
   -- Accessor functions.
   --
 
   function Get_User_ID (Database_Entry : in Database_Entry_t) return User_ID_t;
+  --# pre Is_Valid (Database_Entry);
+
+  procedure Get_User_Name
+    (Database_Entry : in Database_Entry_t;
+     User_Name      : out User_Name_t;
+     Last_Index     : out User_Name_Index_t);
+  --# derives User_Name, Last_Index from Database_Entry;
   --# pre Is_Valid (Database_Entry);
 
 private

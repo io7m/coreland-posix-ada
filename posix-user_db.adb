@@ -70,7 +70,7 @@ package body POSIX.User_DB is
   end Get_Entry_By_Name;
 
   --
-  -- Accessor functions.
+  -- Accessor subprograms.
   --
 
   function Is_Valid (Database_Entry : in Database_Entry_t) return Boolean is
@@ -91,5 +91,35 @@ package body POSIX.User_DB is
   begin
     return C_Get_User_ID (Database_Entry);
   end Get_User_ID;
+
+  procedure C_Get_User_Name
+    (Database_Entry : in Database_Entry_t;
+     User_Name      : out User_Name_t;
+     Last_Index     : out User_Name_Index_t)
+    --# derives User_Name, Last_Index from Database_Entry;
+  is
+    --# hide C_Get_User_Name
+    procedure C_posix_passwd_get_pw_name
+      (Database_Entry : in System.Address;
+       User_Name      : in System.Address;
+       Last_Index     : out User_Name_Index_t);
+    pragma Import (C, C_posix_passwd_get_pw_name, "posix_passwd_get_pw_name");
+  begin
+    C_posix_passwd_get_pw_name
+      (Database_Entry => Database_Entry.C_Data (Database_Entry.C_Data'First)'Address,
+       User_Name      => User_Name (User_Name'First)'Address,
+       Last_Index     => Last_Index);
+  end C_Get_User_Name;
+
+  procedure Get_User_Name
+    (Database_Entry : in Database_Entry_t;
+     User_Name      : out User_Name_t;
+     Last_Index     : out User_Name_Index_t) is
+  begin
+    C_Get_User_Name
+      (Database_Entry => Database_Entry,
+       User_Name      => User_Name,
+       Last_Index     => Last_Index);
+  end Get_User_Name;
 
 end POSIX.User_DB;

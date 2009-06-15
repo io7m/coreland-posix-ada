@@ -7,7 +7,7 @@ package POSIX.Path is
   pragma Pure (POSIX.Path);
 
   -- PATH_MAX
-  Max_Length : constant Positive := 4096;
+  Max_Length : constant Positive := `./constants PATH_MAX`;
 
 end POSIX.Path;
 EOF

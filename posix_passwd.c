@@ -45,3 +45,15 @@ posix_passwd_get_uid (const struct posix_passwd_t *pw)
 {
   return pw->result_ptr->pw_uid;
 }
+
+void
+posix_passwd_get_pw_name (const struct posix_passwd_t *pw,
+  char *data, unsigned int *data_length)
+{
+  const char *name          = pw->result_ptr->pw_name;
+  const unsigned int length = strlen (name);
+
+  (void) memcpy (data, name, length);
+
+  *data_length = length;
+}
