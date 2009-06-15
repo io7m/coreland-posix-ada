@@ -6,6 +6,7 @@ posix-file.o
 posix-file_status.o
 posix-io.o
 posix.o
+posix_passwd.o
 posix-path.o
 posix-permissions.o
 posix_stat.o

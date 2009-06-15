@@ -9,6 +9,8 @@ UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali UNIT_TESTS/t_open2.o \
 UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali UNIT_TESTS/t_symlink2.o \
 UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali UNIT_TESTS/t_symlink3.o \
+UNIT_TESTS/t_udb_ge1 UNIT_TESTS/t_udb_ge1.ali UNIT_TESTS/t_udb_ge1.o \
+UNIT_TESTS/t_udb_ge2 UNIT_TESTS/t_udb_ge2.ali UNIT_TESTS/t_udb_ge2.o \
 UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.o \
 posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o \
@@ -16,8 +18,9 @@ posix-error.ali posix-error.o posix-file.ali posix-file.o posix-file_status.ali 
 posix-file_status.o posix-io.ali posix-io.o posix-path.ali posix-path.o \
 posix-permissions.ali posix-permissions.o posix-symlink.ali posix-symlink.o \
 posix-user_db.ali posix-user_db.o posix.ali posix.o posix_error.o posix_file \
-posix_file.o posix_stat.o spark_conf spark_conf.ali spark_conf.o type-discrete \
-type-discrete.o type-status type-status.o
+posix_file.o posix_passwd.o posix_stat.o spark_conf spark_conf.ali spark_conf.o \
+type-discrete type-discrete.o type-passwd type-passwd.o type-status \
+type-status.o
 
 # Mkf-local
 #
@@ -143,6 +146,32 @@ ada-compile UNIT_TESTS/t_symlink3.adb
 UNIT_TESTS/t_symlink3.o:\
 UNIT_TESTS/t_symlink3.ali
 
+UNIT_TESTS/t_udb_ge1:\
+ada-bind ada-link UNIT_TESTS/t_udb_ge1.ald UNIT_TESTS/t_udb_ge1.ali \
+UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_udb_ge1.ali
+	./ada-link UNIT_TESTS/t_udb_ge1 UNIT_TESTS/t_udb_ge1.ali posix-ada.a
+
+UNIT_TESTS/t_udb_ge1.ali:\
+ada-compile UNIT_TESTS/t_udb_ge1.adb
+	./ada-compile UNIT_TESTS/t_udb_ge1.adb
+
+UNIT_TESTS/t_udb_ge1.o:\
+UNIT_TESTS/t_udb_ge1.ali
+
+UNIT_TESTS/t_udb_ge2:\
+ada-bind ada-link UNIT_TESTS/t_udb_ge2.ald UNIT_TESTS/t_udb_ge2.ali \
+UNIT_TESTS/test.ali posix-error.ali posix-user_db.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_udb_ge2.ali
+	./ada-link UNIT_TESTS/t_udb_ge2 UNIT_TESTS/t_udb_ge2.ali posix-ada.a
+
+UNIT_TESTS/t_udb_ge2.ali:\
+ada-compile UNIT_TESTS/t_udb_ge2.adb
+	./ada-compile UNIT_TESTS/t_udb_ge2.adb
+
+UNIT_TESTS/t_udb_ge2.o:\
+UNIT_TESTS/t_udb_ge2.ali
+
 UNIT_TESTS/t_unlink1:\
 ada-bind ada-link UNIT_TESTS/t_unlink1.ald UNIT_TESTS/t_unlink1.ali \
 UNIT_TESTS/test.ali posix-file.ali posix-permissions.ali posix-ada.a
@@ -254,11 +283,11 @@ conf-cc conf-ld
 
 posix-ada.a:\
 cc-slib posix-ada.sld posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-posix-file.o posix-file_status.o posix-io.o posix.o posix-path.o \
-posix-permissions.o posix-symlink.o posix-user_db.o
+posix-file.o posix-file_status.o posix-io.o posix.o posix_passwd.o posix-path.o \
+posix-permissions.o posix_stat.o posix-symlink.o posix-user_db.o
 	./cc-slib posix-ada posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-	posix-file.o posix-file_status.o posix-io.o posix.o posix-path.o \
-	posix-permissions.o posix-symlink.o posix-user_db.o
+	posix-file.o posix-file_status.o posix-io.o posix.o posix_passwd.o posix-path.o \
+	posix-permissions.o posix_stat.o posix-symlink.o posix-user_db.o
 
 # posix-c_types.ads.mff
 posix-c_types.ads:   \
@@ -445,13 +474,14 @@ posix-user_db.ads:   \
 auto-warn.txt        \
 posix-user_db.ads.sh \
 type-discrete        \
+type-passwd          \
 LICENSE
 	./posix-user_db.ads.sh > posix-user_db.ads.tmp
 	mv posix-user_db.ads.tmp posix-user_db.ads
 
 posix-user_db.ali:\
-ada-compile posix-user_db.ads
-	./ada-compile posix-user_db.ads
+ada-compile posix-user_db.adb
+	./ada-compile posix-user_db.adb
 
 posix-user_db.o:\
 posix-user_db.ali
@@ -474,6 +504,10 @@ cc-link posix_file.ld posix_file.o
 posix_file.o:\
 cc-compile posix_file.c
 	./cc-compile posix_file.c
+
+posix_passwd.o:\
+cc-compile posix_passwd.c posix_passwd.h
+	./cc-compile posix_passwd.c
 
 posix_stat.o:\
 cc-compile posix_stat.c
@@ -499,6 +533,14 @@ type-discrete.o:\
 cc-compile type-discrete.c
 	./cc-compile type-discrete.c
 
+type-passwd:\
+cc-link type-passwd.ld type-passwd.o
+	./cc-link type-passwd type-passwd.o
+
+type-passwd.o:\
+cc-compile type-passwd.c posix_passwd.h
+	./cc-compile type-passwd.c
+
 type-status:\
 cc-link type-status.ld type-status.o
 	./cc-link type-status type-status.o
@@ -516,19 +558,21 @@ obj_clean:
 	UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 	UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali UNIT_TESTS/t_symlink2.o \
 	UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali UNIT_TESTS/t_symlink3.o \
+	UNIT_TESTS/t_udb_ge1 UNIT_TESTS/t_udb_ge1.ali UNIT_TESTS/t_udb_ge1.o \
+	UNIT_TESTS/t_udb_ge2 UNIT_TESTS/t_udb_ge2.ali UNIT_TESTS/t_udb_ge2.o \
 	UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o errno_int errno_int.c \
 	errno_int.o posix-ada.a posix-c_types.ads posix-c_types.ali posix-c_types.o \
 	posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb posix-error.ads \
 	posix-error.ali posix-error.o posix-file.ads posix-file.ali posix-file.o \
 	posix-file_status.ads posix-file_status.ali posix-file_status.o posix-io.ads \
-	posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o \
-	posix-permissions.ads posix-permissions.ali posix-permissions.o \
+	posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o
+	rm -f posix-permissions.ads posix-permissions.ali posix-permissions.o \
 	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
-	posix-user_db.o
-	rm -f posix.ali posix.o posix_error.o posix_file posix_file.o posix_stat.o \
-	spark_conf spark_conf.ali spark_conf.o type-discrete type-discrete.o \
-	type-status type-status.o
+	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
+	posix_passwd.o posix_stat.o spark_conf spark_conf.ali spark_conf.o \
+	type-discrete type-discrete.o type-passwd type-passwd.o type-status \
+	type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-systype mk-ctxt
 
