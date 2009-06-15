@@ -17,7 +17,7 @@
 with Ada.Text_IO;
 with System;
 
-procedure spark_conf is
+procedure spark_config is
   package IO renames Ada.Text_IO;
 
   type Discrete_Type is range System.Min_Int .. System.Max_Int;
@@ -57,4 +57,4 @@ begin
   IO.New_Line;
   IO.Put_Line ("end System;");
 
-end spark_conf;
+end spark_config;

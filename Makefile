@@ -23,7 +23,7 @@ posix-file.o posix-file_status.ali posix-file_status.o posix-io.ali posix-io.o \
 posix-path.ali posix-path.o posix-permissions.ali posix-permissions.o \
 posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
 posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
-spark_conf spark_conf.ali spark_conf.o test_config.ali test_config.o \
+spark_config spark_config.ali spark_config.o test_config.ali test_config.o \
 type-discrete type-discrete.o type-passwd type-passwd.o type-status \
 type-status.o
 
@@ -591,17 +591,17 @@ posix_stat.o:\
 cc-compile posix_stat.c
 	./cc-compile posix_stat.c
 
-spark_conf:\
-ada-bind ada-link spark_conf.ald spark_conf.ali
-	./ada-bind spark_conf.ali
-	./ada-link spark_conf spark_conf.ali
+spark_config:\
+ada-bind ada-link spark_config.ald spark_config.ali
+	./ada-bind spark_config.ali
+	./ada-link spark_config spark_config.ali
 
-spark_conf.ali:\
-ada-compile spark_conf.adb
-	./ada-compile spark_conf.adb
+spark_config.ali:\
+ada-compile spark_config.adb
+	./ada-compile spark_config.adb
 
-spark_conf.o:\
-spark_conf.ali
+spark_config.o:\
+spark_config.ali
 
 # test_config.ads.mff
 test_config.ads:   \
@@ -671,7 +671,7 @@ obj_clean:
 	posix-permissions.ads posix-permissions.ali posix-permissions.o \
 	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
 	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-	posix_passwd.o posix_stat.o spark_conf spark_conf.ali spark_conf.o \
+	posix_passwd.o posix_stat.o spark_config spark_config.ali spark_config.o \
 	test_config.ads test_config.ali test_config.o type-discrete type-discrete.o \
 	type-passwd type-passwd.o type-status type-status.o
 ext_clean:
