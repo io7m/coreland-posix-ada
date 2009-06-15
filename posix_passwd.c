@@ -46,6 +46,12 @@ posix_passwd_get_uid (const struct posix_passwd_t *pw)
   return pw->result_ptr->pw_uid;
 }
 
+gid_t                      
+posix_passwd_get_gid (const struct posix_passwd_t *pw)
+{
+  return pw->result_ptr->pw_gid;
+}
+
 void
 posix_passwd_get_pw_name (const struct posix_passwd_t *pw,
   char *data, unsigned int *data_length)
@@ -54,6 +60,27 @@ posix_passwd_get_pw_name (const struct posix_passwd_t *pw,
   const unsigned int length = strlen (name);
 
   (void) memcpy (data, name, length);
+  *data_length = length;
+}
 
+void
+posix_passwd_get_pw_dir (const struct posix_passwd_t *pw,
+  char *data, unsigned int *data_length)
+{
+  const char *dir           = pw->result_ptr->pw_dir;
+  const unsigned int length = strlen (dir);
+
+  (void) memcpy (data, dir, length);
+  *data_length = length;
+}
+
+void
+posix_passwd_get_pw_shell (const struct posix_passwd_t *pw,
+  char *data, unsigned int *data_length)
+{
+  const char *shell         = pw->result_ptr->pw_shell;
+  const unsigned int length = strlen (shell);
+
+  (void) memcpy (data, shell, length);
   *data_length = length;
 }

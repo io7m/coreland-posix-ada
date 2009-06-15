@@ -33,7 +33,16 @@ posix_getpwuid (uid_t uid, struct posix_passwd_t *)
 uid_t
 posix_passwd_get_uid (const struct posix_passwd_t *);
 
+gid_t
+posix_passwd_get_gid (const struct posix_passwd_t *);
+
 void
 posix_passwd_get_pw_name (const struct posix_passwd_t *, char *, unsigned int *);
+
+void
+posix_passwd_get_pw_dir (const struct posix_passwd_t *, char *, unsigned int *);
+
+void
+posix_passwd_get_pw_shell (const struct posix_passwd_t *, char *, unsigned int *);
 
 #endif

@@ -92,6 +92,20 @@ package body POSIX.User_DB is
     return C_Get_User_ID (Database_Entry);
   end Get_User_ID;
 
+  function C_Get_Group_ID (Database_Entry : in Database_Entry_t) return Group_ID_t is
+    --# hide C_Get_Group_ID
+    function C_posix_passwd_get_gid (Database_Entry : System.Address) return Group_ID_t;
+    pragma Import (C, C_posix_passwd_get_gid, "posix_passwd_get_gid");
+  begin
+    return C_posix_passwd_get_gid
+      (Database_Entry.C_Data (Database_Entry.C_Data'First)'Address);
+  end C_Get_Group_ID;
+
+  function Get_Group_ID (Database_Entry : in Database_Entry_t) return Group_ID_t is
+  begin
+    return C_Get_Group_ID (Database_Entry);
+  end Get_Group_ID;
+
   procedure C_Get_User_Name
     (Database_Entry : in Database_Entry_t;
      User_Name      : out User_Name_t;
@@ -121,5 +135,65 @@ package body POSIX.User_DB is
        User_Name      => User_Name,
        Last_Index     => Last_Index);
   end Get_User_Name;
+
+  procedure C_Get_Home_Directory
+    (Database_Entry : in Database_Entry_t;
+     Home_Directory : out Home_Directory_t;
+     Last_Index     : out Home_Directory_Index_t)
+    --# derives Home_Directory, Last_Index from Database_Entry;
+  is
+    --# hide C_Get_Home_Directory
+    procedure C_posix_passwd_get_pw_dir
+      (Database_Entry : in System.Address;
+       Home_Directory : in System.Address;
+       Last_Index     : out Home_Directory_Index_t);
+    pragma Import (C, C_posix_passwd_get_pw_dir, "posix_passwd_get_pw_dir");
+  begin
+    C_posix_passwd_get_pw_dir
+      (Database_Entry => Database_Entry.C_Data (Database_Entry.C_Data'First)'Address,
+       Home_Directory => Home_Directory (Home_Directory'First)'Address,
+       Last_Index     => Last_Index);
+  end C_Get_Home_Directory;
+
+  procedure Get_Home_Directory
+    (Database_Entry : in Database_Entry_t;
+     Home_Directory : out Home_Directory_t;
+     Last_Index     : out Home_Directory_Index_t) is
+  begin
+    C_Get_Home_Directory
+      (Database_Entry => Database_Entry,
+       Home_Directory => Home_Directory,
+       Last_Index     => Last_Index);
+  end Get_Home_Directory;
+
+  procedure C_Get_Shell
+    (Database_Entry : in Database_Entry_t;
+     Shell_Path     : out Shell_Path_t;
+     Last_Index     : out Shell_Path_Index_t)
+    --# derives Shell_Path, Last_Index from Database_Entry;
+  is
+    --# hide C_Get_Shell
+    procedure C_posix_passwd_get_pw_shell
+      (Database_Entry : in System.Address;
+       Shell_Path     : in System.Address;
+       Last_Index     : out Shell_Path_Index_t);
+    pragma Import (C, C_posix_passwd_get_pw_shell, "posix_passwd_get_pw_shell");
+  begin
+    C_posix_passwd_get_pw_shell
+      (Database_Entry => Database_Entry.C_Data (Database_Entry.C_Data'First)'Address,
+       Shell_Path     => Shell_Path (Shell_Path'First)'Address,
+       Last_Index     => Last_Index);
+  end C_Get_Shell;
+
+  procedure Get_Shell
+    (Database_Entry : in Database_Entry_t;
+     Shell_Path     : out Shell_Path_t;
+     Last_Index     : out Shell_Path_Index_t) is
+  begin
+    C_Get_Shell
+      (Database_Entry => Database_Entry,
+       Shell_Path     => Shell_Path,
+       Last_Index     => Last_Index);
+  end Get_Shell;
 
 end POSIX.User_DB;

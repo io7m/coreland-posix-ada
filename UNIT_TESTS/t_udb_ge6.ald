@@ -1,0 +1,5 @@
+t_udb_ge6.ali
+test.ali
+../posix-error.ali
+../posix-user_db.ali
+../posix-ada.a

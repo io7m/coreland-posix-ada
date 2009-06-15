@@ -4,10 +4,12 @@ cat LICENSE       || exit 1
 cat auto-warn.txt || exit 1
 cat <<EOF
 with POSIX.Error;
+with POSIX.Path;
 
 --# inherit POSIX.C_Types,
 --#         POSIX.Errno,
---#         POSIX.Error;
+--#         POSIX.Error,
+--#         POSIX.Path;
 
 package POSIX.User_DB is
 
@@ -51,11 +53,20 @@ cat <<EOF
   subtype User_Name_Index_t is Positive range 1 .. $LOGIN_NAME_MAX;
   subtype User_Name_t is String (User_Name_Index_t);
 
+  subtype Home_Directory_Index_t is Positive range 1 .. Path.Max_Length;
+  subtype Home_Directory_t is String (Home_Directory_Index_t);
+
+  subtype Shell_Path_Index_t is Positive range 1 .. Path.Max_Length;
+  subtype Shell_Path_t is String (Shell_Path_Index_t);
+
   --
   -- Accessor functions.
   --
 
   function Get_User_ID (Database_Entry : in Database_Entry_t) return User_ID_t;
+  --# pre Is_Valid (Database_Entry);
+
+  function Get_Group_ID (Database_Entry : in Database_Entry_t) return Group_ID_t;
   --# pre Is_Valid (Database_Entry);
 
   procedure Get_User_Name
@@ -65,9 +76,23 @@ cat <<EOF
   --# derives User_Name, Last_Index from Database_Entry;
   --# pre Is_Valid (Database_Entry);
 
+  procedure Get_Home_Directory
+    (Database_Entry : in Database_Entry_t;
+     Home_Directory : out Home_Directory_t;
+     Last_Index     : out Home_Directory_Index_t);
+  --# derives Home_Directory, Last_Index from Database_Entry;
+  --# pre Is_Valid (Database_Entry);
+
+  procedure Get_Shell
+    (Database_Entry : in Database_Entry_t;
+     Shell_Path     : out Shell_Path_t;
+     Last_Index     : out Shell_Path_Index_t);
+  --# derives Shell_Path, Last_Index from Database_Entry;
+  --# pre Is_Valid (Database_Entry);
+
 private
 
-  Unspecified_User  : constant User_ID_t := -1;
+  Unspecified_User  : constant User_ID_t  := -1;
   Unspecified_Group : constant Group_ID_t := -1;
 
   -- Pseudo type matching size of the system passwd structure to allow
