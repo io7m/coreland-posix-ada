@@ -4,6 +4,36 @@ with Interfaces.C;
 package body POSIX.File is
 
   --
+  -- Functions to map between flag sets and discrete types.
+  --
+
+  function Open_Flags_To_Integer (Open_Flags : in Open_Flags_t) return Open_Flag_Integer_t is
+    Return_Flags : Open_Flag_Integer_t := Internal_None;
+  begin
+    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
+      if Open_Flags (Open_Flag) then
+        Return_Flags := Return_Flags or Open_Flag_Map (Open_Flag);
+      end if;
+      --# assert (Open_Flag <= Open_Flag_t'Last) and
+      --#        (Open_Flag >= Open_Flag_t'First);
+    end loop;
+    return Return_Flags;
+  end Open_Flags_To_Integer;
+
+  function Integer_To_Open_Flags (Open_Flags : in Open_Flag_Integer_t) return Open_Flags_t is
+    Return_Flags : Open_Flags_t := Open_Flags_t'(others => False);
+  begin
+    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
+      if (Open_Flags and Open_Flag_Map (Open_Flag)) = Open_Flag_Map (Open_Flag) then
+        Return_Flags (Open_Flag) := True;
+      end if;
+      --# assert (Open_Flag <= Open_Flag_t'Last) and
+      --#        (Open_Flag >= Open_Flag_t'First);
+    end loop;
+    return Return_Flags;
+  end Integer_To_Open_Flags;
+
+  --
   -- File opening/creation.
   --
 
@@ -45,8 +75,10 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    C_Flags : Open_Flag_Integer_t := Open_Flags_To_Integer (Flags);
+    C_Flags : Open_Flag_Integer_t;
   begin
+    C_Flags := Open_Flags_To_Integer (Flags);
+
     -- Reject long filename.
     if File_Name'Last > File_Name_t'Last then
       Descriptor  := -1;
@@ -77,8 +109,8 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     Open_Flags : constant Open_Flags_t :=
-      (Read_Only => True,
-       others    => False);
+      Open_Flags_t'(Read_Only => True,
+                    others    => False);
   begin
     Open
       (File_Name    => File_Name,
@@ -96,8 +128,8 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     Open_Flags : constant Open_Flags_t :=
-      (Write_Only => True,
-       others     => False);
+      Open_Flags_t'(Write_Only => True,
+                    others     => False);
   begin
     Open
       (File_Name    => File_Name,
@@ -116,10 +148,10 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     Open_Flags : constant Open_Flags_t :=
-      (Create     => True,
-       Exclusive  => True,
-       Write_Only => True,
-       others     => False);
+      Open_Flags_t'(Create     => True,
+                    Exclusive  => True,
+                    Write_Only => True,
+                    others     => False);
   begin
     Open
       (File_Name    => File_Name,
@@ -137,10 +169,10 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     Open_Flags : constant Open_Flags_t :=
-      (Append     => True,
-       Create     => True,
-       Write_Only => True,
-       others     => False);
+      Open_Flags_t'(Append     => True,
+                    Create     => True,
+                    Write_Only => True,
+                    others     => False);
   begin
     Open
       (File_Name    => File_Name,
@@ -159,10 +191,10 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     Open_Flags : constant Open_Flags_t :=
-      (Create     => True,
-       Truncate   => True,
-       Write_Only => True,
-       others     => False);
+      Open_Flags_t'(Create     => True,
+                    Truncate   => True,
+                    Write_Only => True,
+                    others     => False);
   begin
     Open
       (File_Name    => File_Name,
@@ -180,8 +212,8 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     Open_Flags : constant Open_Flags_t :=
-      (Write_Only => True,
-       others     => False);
+      Open_Flags_t'(Write_Only => True,
+                    others     => False);
   begin
     Open
       (File_Name    => File_Name,
@@ -200,9 +232,9 @@ package body POSIX.File is
      Error_Value  : out Error.Error_t)
   is
     Open_Flags : constant Open_Flags_t :=
-      (Create     => True,
-       Write_Only => True,
-       others     => False);
+      Open_Flags_t'(Create     => True,
+                    Write_Only => True,
+                    others     => False);
   begin
     Open
       (File_Name    => File_Name,
@@ -361,35 +393,5 @@ package body POSIX.File is
       when -1 => Error_Value := Error.Get_Error;
     end case;
   end Close;
-
-  --
-  -- Functions to map between flag sets and discrete types.
-  --
-
-  function Open_Flags_To_Integer (Open_Flags : in Open_Flags_t) return Open_Flag_Integer_t is
-    Return_Flags : Open_Flag_Integer_t := Internal_None;
-  begin
-    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
-      if Open_Flags (Open_Flag) then
-        Return_Flags := Return_Flags or Open_Flag_Map (Open_Flag);
-      end if;
-      --# assert (Open_Flag <= Open_Flag_t'Last) and
-      --#        (Open_Flag >= Open_Flag_t'First);
-    end loop;
-    return Return_Flags;
-  end Open_Flags_To_Integer;
-
-  function Integer_To_Open_Flags (Open_Flags : in Open_Flag_Integer_t) return Open_Flags_t is
-    Return_Flags : Open_Flags_t := Open_Flags_t'(others => False);
-  begin
-    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
-      if (Open_Flags and Open_Flag_Map (Open_Flag)) = Open_Flag_Map (Open_Flag) then
-        Return_Flags (Open_Flag) := True;
-      end if;
-      --# assert (Open_Flag <= Open_Flag_t'Last) and
-      --#        (Open_Flag >= Open_Flag_t'First);
-    end loop;
-    return Return_Flags;
-  end Integer_To_Open_Flags;
 
 end POSIX.File;
