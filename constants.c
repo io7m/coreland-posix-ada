@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /*
  * Print compile time value of named constants.
@@ -21,8 +22,8 @@ static const struct {
   } number;
   const char *name;
 } constants[] = {
-  { SIGNED_LONG, { PATH_MAX },       "PATH_MAX" },
-  { SIGNED_LONG, { LOGIN_NAME_MAX }, "LOGIN_NAME_MAX" },
+  { SIGNED_LONG, { PATH_MAX           }, "PATH_MAX" },
+  { SIGNED_LONG, { _SC_LOGIN_NAME_MAX }, "LOGIN_NAME_MAX" },
 };
 const unsigned int constants_size = sizeof (constants) / sizeof (constants [0]);
 
