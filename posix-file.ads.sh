@@ -130,7 +130,7 @@ cat <<EOF
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
-  type Open_Operation_t is
+  type Open_Access_Mode_t is
     (Execute_Only,
      Read_Only,
      Read_Write,
@@ -153,15 +153,15 @@ cat <<EOF
   -- proc_map : open
   procedure Open
     (File_Name    : in String;
-     Operation    : in Open_Operation_t;
+     Access_Mode  : in Open_Access_Mode_t;
      Options      : in Open_Options_t;
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor  from File_Name, Non_Blocking, Mode, Operation, Options &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Operation, Options, Errno.Errno_Value;
+  --# derives Descriptor  from File_Name, Non_Blocking, Mode, Access_Mode, Options &
+  --#         Error_Value from File_Name, Non_Blocking, Mode, Access_Mode, Options, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -239,9 +239,9 @@ echo
 
 cat <<EOF
 
-  type Open_Operation_Map_t is array (Open_Operation_t) of Open_Flag_Integer_t;
+  type Open_Access_Mode_Map_t is array (Open_Access_Mode_t) of Open_Flag_Integer_t;
 
-  Open_Operation_Map : constant Open_Operation_Map_t := Open_Operation_Map_t'
+  Open_Access_Mode_Map : constant Open_Access_Mode_Map_t := Open_Access_Mode_Map_t'
     (Execute_Only => O_EXEC,
      Read_Only    => O_RDONLY,
      Read_Write   => O_RDWR,
@@ -261,8 +261,8 @@ cat <<EOF
      Truncate           => O_TRUNC,
      TTY_Initialize     => O_TTY_INIT);
 
-  -- Map Open_Operation_t to discrete type.
-  function Open_Operation_To_Integer (Open_Operation : in Open_Operation_t) return Open_Flag_Integer_t;
+  -- Map Open_Access_Mode_t to discrete type.
+  function Open_Access_Mode_To_Integer (Open_Access_Mode : in Open_Access_Mode_t) return Open_Flag_Integer_t;
 
   -- Map Open_Flag_t to discrete type.
   function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t;

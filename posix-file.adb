@@ -7,11 +7,11 @@ package body POSIX.File is
   -- Functions to map between flag sets and discrete types.
   --
 
-  function Open_Operation_To_Integer (Open_Operation : in Open_Operation_t)
+  function Open_Access_Mode_To_Integer (Open_Access_Mode : in Open_Access_Mode_t)
     return Open_Flag_Integer_t is
   begin
-    return Open_Operation_Map (Open_Operation);
-  end Open_Operation_To_Integer;
+    return Open_Access_Mode_Map (Open_Access_Mode);
+  end Open_Access_Mode_To_Integer;
 
   function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t is
     Return_Options : Open_Flag_Integer_t := 0;
@@ -62,7 +62,7 @@ package body POSIX.File is
 
   procedure Open
     (File_Name    : in String;
-     Operation    : in Open_Operation_t;
+     Access_Mode  : in Open_Access_Mode_t;
      Options      : in Open_Options_t;
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
@@ -71,7 +71,7 @@ package body POSIX.File is
   is
     C_Flags : Open_Flag_Integer_t;
   begin
-    C_Flags := Open_Operation_To_Integer (Operation) or
+    C_Flags := Open_Access_Mode_To_Integer (Access_Mode) or
                Open_Options_To_Integer (Options);
 
     -- Reject long filename.
@@ -107,7 +107,7 @@ package body POSIX.File is
   begin
     Open
       (File_Name    => File_Name,
-       Operation    => Read_Only,
+       Access_Mode  => Read_Only,
        Non_Blocking => Non_Blocking,
        Options      => Open_Options,
        Mode         => Permissions.None,
@@ -125,7 +125,7 @@ package body POSIX.File is
   begin
     Open
       (File_Name    => File_Name,
-       Operation    => Write_Only,
+       Access_Mode  => Write_Only,
        Non_Blocking => Non_Blocking,
        Options      => Open_Options,
        Mode         => Permissions.None,
@@ -147,7 +147,7 @@ package body POSIX.File is
   begin
     Open
       (File_Name    => File_Name,
-       Operation    => Write_Only,
+       Access_Mode  => Write_Only,
        Non_Blocking => Non_Blocking,
        Options      => Open_Options,
        Mode         => Mode,
@@ -168,7 +168,7 @@ package body POSIX.File is
   begin
     Open
       (File_Name    => File_Name,
-       Operation    => Write_Only,
+       Access_Mode  => Write_Only,
        Non_Blocking => Non_Blocking,
        Options      => Open_Options,
        Mode         => Permissions.None,
@@ -190,7 +190,7 @@ package body POSIX.File is
   begin
     Open
       (File_Name    => File_Name,
-       Operation    => Write_Only,
+       Access_Mode  => Write_Only,
        Non_Blocking => Non_Blocking,
        Options      => Open_Options,
        Mode         => Mode,
@@ -208,7 +208,7 @@ package body POSIX.File is
   begin
     Open
       (File_Name    => File_Name,
-       Operation    => Read_Write,
+       Access_Mode  => Read_Write,
        Non_Blocking => Non_Blocking,
        Options      => Open_Options,
        Mode         => Permissions.None,
@@ -229,7 +229,7 @@ package body POSIX.File is
   begin
     Open
       (File_Name    => File_Name,
-       Operation    => Write_Only,
+       Access_Mode  => Write_Only,
        Non_Blocking => Non_Blocking,
        Options      => Open_Options,
        Mode         => Mode,
