@@ -130,27 +130,38 @@ cat <<EOF
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
-  type Open_Flag_t is
-    (Append,
-     Create,
-     Exclusive,
+  type Open_Operation_t is
+    (Execute_Only,
      Read_Only,
-     Truncate,
+     Read_Write,
+     Search_Only,
      Write_Only);
 
-  type Open_Flags_t is array (Open_Flag_t) of Boolean;
+  type Open_Option_t is
+    (Append,
+     Close_On_Execute,
+     Create,
+     Is_Directory,
+     Exclusive,
+     No_Controlling_TTY,
+     No_Follow_Symlinks,
+     Truncate,
+     TTY_Initialize);
+
+  type Open_Options_t is array (Open_Option_t) of Boolean;
 
   -- proc_map : open
   procedure Open
     (File_Name    : in String;
+     Operation    : in Open_Operation_t;
+     Options      : in Open_Options_t;
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
-     Flags        : in Open_Flags_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking, Mode, Flags &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Flags, Errno.Errno_Value;
+  --# derives Descriptor  from File_Name, Non_Blocking, Mode, Operation, Options &
+  --#         Error_Value from File_Name, Non_Blocking, Mode, Operation, Options, Errno.Errno_Value;
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
@@ -228,28 +239,32 @@ echo
 
 cat <<EOF
 
-  Internal_None       : constant Open_Flag_Integer_t := 0;
-  Internal_Append     : constant Open_Flag_Integer_t := O_APPEND;
-  Internal_Create     : constant Open_Flag_Integer_t := O_CREAT;
-  Internal_Exclusive  : constant Open_Flag_Integer_t := O_EXCL;
-  Internal_Read_Only  : constant Open_Flag_Integer_t := O_RDONLY;
-  Internal_Truncate   : constant Open_Flag_Integer_t := O_TRUNC;
-  Internal_Write_Only : constant Open_Flag_Integer_t := O_WRONLY;
+  type Open_Operation_Map_t is array (Open_Operation_t) of Open_Flag_Integer_t;
 
-  type Open_Flag_Map_t is array (Open_Flag_t) of Open_Flag_Integer_t;
+  Open_Operation_Map : constant Open_Operation_Map_t := Open_Operation_Map_t'
+    (Execute_Only => O_EXEC,
+     Read_Only    => O_RDONLY,
+     Read_Write   => O_RDWR,
+     Search_Only  => O_SEARCH,
+     Write_Only   => O_WRONLY);
 
-  Open_Flag_Map : constant Open_Flag_Map_t := Open_Flag_Map_t'
-    (Append     => Internal_Append,
-     Create     => Internal_Create,
-     Exclusive  => Internal_Exclusive,
-     Read_Only  => Internal_Read_Only,
-     Truncate   => Internal_Truncate,
-     Write_Only => Internal_Write_Only);
+  type Open_Option_Map_t is array (Open_Option_t) of Open_Flag_Integer_t;
+
+  Open_Option_Map : constant Open_Option_Map_t := Open_Option_Map_t'
+    (Append             => O_APPEND,
+     Close_On_Execute   => O_CLOEXEC,
+     Create             => O_CREAT,
+     Is_Directory       => O_DIRECTORY,
+     Exclusive          => O_EXCL,
+     No_Controlling_TTY => O_NOCTTY,
+     No_Follow_Symlinks => O_NOFOLLOW,
+     Truncate           => O_TRUNC,
+     TTY_Initialize     => O_TTY_INIT);
+
+  -- Map Open_Operation_t to discrete type.
+  function Open_Operation_To_Integer (Open_Operation : in Open_Operation_t) return Open_Flag_Integer_t;
 
   -- Map Open_Flag_t to discrete type.
-  function Open_Flags_To_Integer (Open_Flags : in Open_Flags_t) return Open_Flag_Integer_t;
-
-  -- Map Open_Flag_Integer_t to Open_Flag_t.
-  function Integer_To_Open_Flags (Open_Flags : in Open_Flag_Integer_t) return Open_Flags_t;
+  function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t;
 
 end POSIX.File;

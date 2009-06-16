@@ -7,31 +7,24 @@ package body POSIX.File is
   -- Functions to map between flag sets and discrete types.
   --
 
-  function Open_Flags_To_Integer (Open_Flags : in Open_Flags_t) return Open_Flag_Integer_t is
-    Return_Flags : Open_Flag_Integer_t := Internal_None;
+  function Open_Operation_To_Integer (Open_Operation : in Open_Operation_t)
+    return Open_Flag_Integer_t is
   begin
-    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
-      if Open_Flags (Open_Flag) then
-        Return_Flags := Return_Flags or Open_Flag_Map (Open_Flag);
-      end if;
-      --# assert (Open_Flag <= Open_Flag_t'Last) and
-      --#        (Open_Flag >= Open_Flag_t'First);
-    end loop;
-    return Return_Flags;
-  end Open_Flags_To_Integer;
+    return Open_Operation_Map (Open_Operation);
+  end Open_Operation_To_Integer;
 
-  function Integer_To_Open_Flags (Open_Flags : in Open_Flag_Integer_t) return Open_Flags_t is
-    Return_Flags : Open_Flags_t := Open_Flags_t'(others => False);
+  function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t is
+    Return_Options : Open_Flag_Integer_t := 0;
   begin
-    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
-      if (Open_Flags and Open_Flag_Map (Open_Flag)) = Open_Flag_Map (Open_Flag) then
-        Return_Flags (Open_Flag) := True;
+    for Open_Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
+      if Open_Options (Open_Option) then
+        Return_Options := Return_Options or Open_Option_Map (Open_Option);
       end if;
-      --# assert (Open_Flag <= Open_Flag_t'Last) and
-      --#        (Open_Flag >= Open_Flag_t'First);
+      --# assert (Open_Option <= Open_Option_t'Last) and
+      --#        (Open_Option >= Open_Option_t'First);
     end loop;
-    return Return_Flags;
-  end Integer_To_Open_Flags;
+    return Return_Options;
+  end Open_Options_To_Integer;
 
   --
   -- File opening/creation.
@@ -69,15 +62,17 @@ package body POSIX.File is
 
   procedure Open
     (File_Name    : in String;
+     Operation    : in Open_Operation_t;
+     Options      : in Open_Options_t;
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
-     Flags        : in Open_Flags_t;
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
     C_Flags : Open_Flag_Integer_t;
   begin
-    C_Flags := Open_Flags_To_Integer (Flags);
+    C_Flags := Open_Operation_To_Integer (Operation) or
+               Open_Options_To_Integer (Options);
 
     -- Reject long filename.
     if File_Name'Last > File_Name_t'Last then
@@ -108,14 +103,13 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    Open_Flags : constant Open_Flags_t :=
-      Open_Flags_t'(Read_Only => True,
-                    others    => False);
+    Open_Options : constant Open_Options_t := Open_Options_t'(others => False);
   begin
     Open
       (File_Name    => File_Name,
+       Operation    => Read_Only,
        Non_Blocking => Non_Blocking,
-       Flags        => Open_Flags,
+       Options      => Open_Options,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -127,14 +121,13 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    Open_Flags : constant Open_Flags_t :=
-      Open_Flags_t'(Write_Only => True,
-                    others     => False);
+    Open_Options : constant Open_Options_t := Open_Options_t'(others => False);
   begin
     Open
       (File_Name    => File_Name,
+       Operation    => Write_Only,
        Non_Blocking => Non_Blocking,
-       Flags        => Open_Flags,
+       Options      => Open_Options,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -147,16 +140,16 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    Open_Flags : constant Open_Flags_t :=
-      Open_Flags_t'(Create     => True,
-                    Exclusive  => True,
-                    Write_Only => True,
-                    others     => False);
+    Open_Options : constant Open_Options_t :=
+      Open_Options_t'(Create     => True,
+                      Exclusive  => True,
+                      others     => False);
   begin
     Open
       (File_Name    => File_Name,
+       Operation    => Write_Only,
        Non_Blocking => Non_Blocking,
-       Flags        => Open_Flags,
+       Options      => Open_Options,
        Mode         => Mode,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -168,16 +161,16 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    Open_Flags : constant Open_Flags_t :=
-      Open_Flags_t'(Append     => True,
-                    Create     => True,
-                    Write_Only => True,
-                    others     => False);
+    Open_Options : constant Open_Options_t :=
+      Open_Options_t'(Append => True,
+                      Create => True,
+                      others => False);
   begin
     Open
       (File_Name    => File_Name,
+       Operation    => Write_Only,
        Non_Blocking => Non_Blocking,
-       Flags        => Open_Flags,
+       Options      => Open_Options,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -190,16 +183,16 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    Open_Flags : constant Open_Flags_t :=
-      Open_Flags_t'(Create     => True,
-                    Truncate   => True,
-                    Write_Only => True,
-                    others     => False);
+    Open_Options : constant Open_Options_t :=
+      Open_Options_t'(Create     => True,
+                      Truncate   => True,
+                      others     => False);
   begin
     Open
       (File_Name    => File_Name,
+       Operation    => Write_Only,
        Non_Blocking => Non_Blocking,
-       Flags        => Open_Flags,
+       Options      => Open_Options,
        Mode         => Mode,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -211,14 +204,13 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    Open_Flags : constant Open_Flags_t :=
-      Open_Flags_t'(Write_Only => True,
-                    others     => False);
+    Open_Options : constant Open_Options_t := Open_Options_t'(others => False);
   begin
     Open
       (File_Name    => File_Name,
+       Operation    => Read_Write,
        Non_Blocking => Non_Blocking,
-       Flags        => Open_Flags,
+       Options      => Open_Options,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -231,15 +223,15 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    Open_Flags : constant Open_Flags_t :=
-      Open_Flags_t'(Create     => True,
-                    Write_Only => True,
-                    others     => False);
+    Open_Options : constant Open_Options_t :=
+      Open_Options_t'(Create => True,
+                      others => False);
   begin
     Open
       (File_Name    => File_Name,
+       Operation    => Write_Only,
        Non_Blocking => Non_Blocking,
-       Flags        => Open_Flags,
+       Options      => Open_Options,
        Mode         => Mode,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
