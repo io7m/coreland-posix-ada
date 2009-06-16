@@ -135,7 +135,6 @@ cat <<EOF
      Create,
      Exclusive,
      Read_Only,
-     Read_Write,
      Truncate,
      Write_Only);
 
@@ -234,7 +233,6 @@ cat <<EOF
   Internal_Create     : constant Open_Flag_Integer_t := O_CREAT;
   Internal_Exclusive  : constant Open_Flag_Integer_t := O_EXCL;
   Internal_Read_Only  : constant Open_Flag_Integer_t := O_RDONLY;
-  Internal_Read_Write : constant Open_Flag_Integer_t := O_RDONLY or O_WRONLY;
   Internal_Truncate   : constant Open_Flag_Integer_t := O_TRUNC;
   Internal_Write_Only : constant Open_Flag_Integer_t := O_WRONLY;
 
@@ -245,7 +243,6 @@ cat <<EOF
      Create     => Internal_Create,
      Exclusive  => Internal_Exclusive,
      Read_Only  => Internal_Read_Only,
-     Read_Write => Internal_Read_Write,
      Truncate   => Internal_Truncate,
      Write_Only => Internal_Write_Only);
 
