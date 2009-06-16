@@ -1,2 +1,2 @@
 This package provides a set of SPARK-validated Ada bindings to
-the POSIX specification.
+the IEEE Std 1003.1-2008 (POSIX) specification.
