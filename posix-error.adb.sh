@@ -3,6 +3,9 @@
 cat LICENSE       || exit 1
 cat auto-warn.txt || exit 1
 cat <<EOF
+with POSIX.C_Types;
+with System;
+
 package body POSIX.Error is
 
 EOF
@@ -24,6 +27,36 @@ cat <<EOF
   begin
     Errno.Errno_Set (Ada_To_Errno (Error_Value));
   end Set_Error;
+
+  procedure C_Message
+    (Error_Value    : in Errno.Errno_Integer_t;
+     Message_Buffer : out Message_t;
+     Last_Index     : out Message_Index_t)
+    --# derives Message_Buffer, Last_Index from Error_Value;
+  is
+    --# hide C_Message
+    function C_strerror_r
+      (Error_Value : in Errno.Errno_Integer_t;
+       Buffer      : in System.Address;
+       Buffer_Size : in System.Address) return C_Types.Size_t;
+    pragma Import (C, C_strerror_r, "posix_strerror_r");
+  begin
+    Last_Index := Message_Index_t (C_strerror_r
+      (Error_Value => Error_Value,
+       Buffer      => Message_Buffer (Message_Buffer'First)'Address,
+       Buffer_Size => Last_Index'Address));
+  end C_Message;
+
+  procedure Message
+    (Error_Value    : in Error_t;
+     Message_Buffer : out Message_t;
+     Last_Index   : out Message_Index_t) is
+  begin
+    C_Message
+      (Error_Value    => Ada_To_Errno (Error_Value),
+       Message_Buffer => Message_Buffer,
+       Last_Index     => Last_Index);
+  end Message;
 
 end POSIX.Error;
 EOF

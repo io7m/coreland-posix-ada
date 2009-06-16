@@ -1,3 +1,5 @@
+#include "posix_config.h"
+
 #include <fcntl.h>
 #include <stdio.h>
 

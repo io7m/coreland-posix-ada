@@ -1,6 +1,8 @@
+#include "posix_config.h"
+#include "posix_passwd.h"
+
 #include <errno.h>
 #include <string.h>
-#include "posix_passwd.h"
 
 enum posix_passwd_result_t
 posix_getpwnam (const char *name, struct posix_passwd_t *pw)

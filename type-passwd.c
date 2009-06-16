@@ -1,6 +1,8 @@
+#include "posix_config.h"
+#include "posix_passwd.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "posix_passwd.h"
 
 int
 main (int argc, char *argv[])

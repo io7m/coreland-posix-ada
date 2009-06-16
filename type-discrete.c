@@ -1,3 +1,5 @@
+#include "posix_config.h"
+
 #include <sys/types.h>
 
 #include <limits.h>

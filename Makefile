@@ -3,7 +3,8 @@
 default: all
 
 all:\
-local UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
+local UNIT_TESTS/t_em1 UNIT_TESTS/t_em1.ali UNIT_TESTS/t_em1.o \
+UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
 UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
 UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali UNIT_TESTS/t_open2.o \
 UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
@@ -68,6 +69,19 @@ c_string-libs-S_clean \
 
 # -- SYSDEPS end
 
+
+UNIT_TESTS/t_em1:\
+ada-bind ada-link UNIT_TESTS/t_em1.ald UNIT_TESTS/t_em1.ali UNIT_TESTS/test.ali \
+test_config.ali posix-error.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_em1.ali
+	./ada-link UNIT_TESTS/t_em1 UNIT_TESTS/t_em1.ali posix-ada.a
+
+UNIT_TESTS/t_em1.ali:\
+ada-compile UNIT_TESTS/t_em1.adb
+	./ada-compile UNIT_TESTS/t_em1.adb
+
+UNIT_TESTS/t_em1.o:\
+UNIT_TESTS/t_em1.ali
 
 UNIT_TESTS/t_error1:\
 ada-bind ada-link UNIT_TESTS/t_error1.ald UNIT_TESTS/t_error1.ali \
@@ -292,11 +306,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-systype:\
@@ -308,7 +322,7 @@ cc-link constants.ld constants.o
 	./cc-link constants constants.o
 
 constants.o:\
-cc-compile constants.c
+cc-compile constants.c posix_config.h
 	./cc-compile constants.c
 
 errno_int:\
@@ -572,7 +586,7 @@ posix.o:\
 posix.ali
 
 posix_error.o:\
-cc-compile posix_error.c
+cc-compile posix_error.c posix_config.h
 	./cc-compile posix_error.c
 
 posix_file:\
@@ -580,15 +594,15 @@ cc-link posix_file.ld posix_file.o
 	./cc-link posix_file posix_file.o
 
 posix_file.o:\
-cc-compile posix_file.c
+cc-compile posix_file.c posix_config.h
 	./cc-compile posix_file.c
 
 posix_passwd.o:\
-cc-compile posix_passwd.c posix_passwd.h
+cc-compile posix_passwd.c posix_config.h posix_passwd.h
 	./cc-compile posix_passwd.c
 
 posix_stat.o:\
-cc-compile posix_stat.c
+cc-compile posix_stat.c posix_config.h
 	./cc-compile posix_stat.c
 
 spark_config:\
@@ -626,7 +640,7 @@ cc-link type-discrete.ld type-discrete.o
 	./cc-link type-discrete type-discrete.o
 
 type-discrete.o:\
-cc-compile type-discrete.c
+cc-compile type-discrete.c posix_config.h
 	./cc-compile type-discrete.c
 
 type-passwd:\
@@ -634,7 +648,7 @@ cc-link type-passwd.ld type-passwd.o
 	./cc-link type-passwd type-passwd.o
 
 type-passwd.o:\
-cc-compile type-passwd.c posix_passwd.h
+cc-compile type-passwd.c posix_config.h posix_passwd.h
 	./cc-compile type-passwd.c
 
 type-status:\
@@ -642,13 +656,14 @@ cc-link type-status.ld type-status.o
 	./cc-link type-status type-status.o
 
 type-status.o:\
-cc-compile type-status.c
+cc-compile type-status.c posix_config.h
 	./cc-compile type-status.c
 
 clean-all: sysdeps_clean tests_clean local_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
-	rm -f UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
+	rm -f UNIT_TESTS/t_em1 UNIT_TESTS/t_em1.ali UNIT_TESTS/t_em1.o \
+	UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
 	UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
 	UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali UNIT_TESTS/t_open2.o \
 	UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
@@ -662,18 +677,18 @@ obj_clean:
 	UNIT_TESTS/t_udb_ge6 UNIT_TESTS/t_udb_ge6.ali UNIT_TESTS/t_udb_ge6.o \
 	UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o constants constants.o \
-	errno_int errno_int.c errno_int.o posix-ada.a posix-c_types.ads \
-	posix-c_types.ali posix-c_types.o
-	rm -f posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb \
-	posix-error.ads posix-error.ali posix-error.o posix-file.ads posix-file.ali \
-	posix-file.o posix-file_status.ads posix-file_status.ali posix-file_status.o \
-	posix-io.ads posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o \
-	posix-permissions.ads posix-permissions.ali posix-permissions.o \
-	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
-	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-	posix_passwd.o posix_stat.o spark_config spark_config.ali spark_config.o \
-	test_config.ads test_config.ali test_config.o type-discrete type-discrete.o \
-	type-passwd type-passwd.o type-status type-status.o
+	errno_int errno_int.c errno_int.o posix-ada.a
+	rm -f posix-c_types.ads posix-c_types.ali posix-c_types.o posix-errno.ads \
+	posix-errno.ali posix-errno.o posix-error.adb posix-error.ads posix-error.ali \
+	posix-error.o posix-file.ads posix-file.ali posix-file.o posix-file_status.ads \
+	posix-file_status.ali posix-file_status.o posix-io.ads posix-io.ali posix-io.o \
+	posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
+	posix-permissions.ali posix-permissions.o posix-symlink.ali posix-symlink.o \
+	posix-user_db.ads posix-user_db.ali posix-user_db.o posix.ali posix.o \
+	posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o spark_config \
+	spark_config.ali spark_config.o test_config.ads test_config.ali test_config.o \
+	type-discrete type-discrete.o type-passwd type-passwd.o type-status \
+	type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-systype mk-ctxt
 
