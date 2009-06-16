@@ -43,7 +43,7 @@ cat <<EOF
 
   -- Filename subtype based on POSIX PATH_MAX
   subtype File_Name_Size_t  is Natural range Natural'First .. Path.Max_Length;
-  subtype File_Name_Index_t is File_Name_Size_t range File_Name_Size_t'First + 1 .. Path.Max_Length - 1;
+  subtype File_Name_Index_t is File_Name_Size_t range File_Name_Size_t'First + 1 .. Path.Max_Length;
   subtype File_Name_t       is String (File_Name_Index_t);
 
   --
