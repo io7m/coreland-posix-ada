@@ -42,7 +42,7 @@ static const struct discrete_t type_table[] = {
   { "INode",                 0,   INT_MAX, 10, sizeof (ino_t) * CHAR_BIT,   DISCRETE_RANGED },
   { "Mode_Integer",          0,    07777l,  8, sizeof (mode_t) * CHAR_BIT,  DISCRETE_MOD },
   { "Offset",                0,         0, 10, sizeof (off_t) * CHAR_BIT,   DISCRETE_MOD },
-  { "Open_Flags",            0,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_MOD },
+  { "Open_Flag_Integer",     0,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_MOD },
   { "Return_Value",         -1,         0, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
   { "Signed_Size",  -SSIZE_MAX, SSIZE_MAX, 10, sizeof (ssize_t) * CHAR_BIT, DISCRETE_RANGED },
   { "Size",                  0,         0,  0, sizeof (size_t) * CHAR_BIT,  DISCRETE_MOD },
@@ -144,7 +144,7 @@ main (int argc, char *argv[])
     }
   }
 
-  (void) fprintf (stderr, "fatal: unknown type\n");
+  (void) fprintf (stderr, "fatal: unknown type %s\n", argv[1]);
   exit (EXIT_FAILURE); 
 
   /*@notreached@*/

@@ -7,13 +7,13 @@ int
 main (void)
 {
   (void) printf (
-"  O_RDONLY   : constant Open_Flags_t := 16#%lx#;\n"
-"  O_WRONLY   : constant Open_Flags_t := 16#%lx#;\n"
-"  O_NONBLOCK : constant Open_Flags_t := 16#%lx#;\n"
-"  O_APPEND   : constant Open_Flags_t := 16#%lx#;\n"
-"  O_CREAT    : constant Open_Flags_t := 16#%lx#;\n"
-"  O_EXCL     : constant Open_Flags_t := 16#%lx#;\n"
-"  O_TRUNC    : constant Open_Flags_t := 16#%lx#;\n",
+"  O_RDONLY   : constant Open_Flag_Integer_t := 16#%lx#;\n"
+"  O_WRONLY   : constant Open_Flag_Integer_t := 16#%lx#;\n"
+"  O_NONBLOCK : constant Open_Flag_Integer_t := 16#%lx#;\n"
+"  O_APPEND   : constant Open_Flag_Integer_t := 16#%lx#;\n"
+"  O_CREAT    : constant Open_Flag_Integer_t := 16#%lx#;\n"
+"  O_EXCL     : constant Open_Flag_Integer_t := 16#%lx#;\n"
+"  O_TRUNC    : constant Open_Flag_Integer_t := 16#%lx#;\n",
   (unsigned long) O_RDONLY,
   (unsigned long) O_WRONLY,
   (unsigned long) O_NONBLOCK,

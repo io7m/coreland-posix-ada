@@ -130,19 +130,16 @@ cat <<EOF
   --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
   --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
 
-EOF
+  type Open_Flag_t is
+    (Append,
+     Create,
+     Exclusive,
+     Read_Only,
+     Read_Write,
+     Truncate,
+     Write_Only);
 
-./type-discrete Open_Flags || exit 1
-
-cat <<EOF
-
-  Append     : constant Open_Flags_t;
-  Create     : constant Open_Flags_t;
-  Exclusive  : constant Open_Flags_t;
-  Read_Only  : constant Open_Flags_t;
-  Read_Write : constant Open_Flags_t;
-  Truncate   : constant Open_Flags_t;
-  Write_Only : constant Open_Flags_t;
+  type Open_Flags_t is array (Open_Flag_t) of Boolean;
 
   -- proc_map : open
   procedure Open
@@ -226,16 +223,36 @@ private
 
 EOF
 
-./posix_file || exit 1
+./type-discrete Open_Flag_Integer || exit 1
+echo
+./posix_file                      || exit 1
 
 cat <<EOF
 
-  Append     : constant Open_Flags_t := O_APPEND;
-  Create     : constant Open_Flags_t := O_CREAT;
-  Exclusive  : constant Open_Flags_t := O_EXCL;
-  Read_Only  : constant Open_Flags_t := O_RDONLY;
-  Read_Write : constant Open_Flags_t := O_RDONLY or O_WRONLY;
-  Truncate   : constant Open_Flags_t := O_TRUNC;
-  Write_Only : constant Open_Flags_t := O_WRONLY;
+  Internal_None       : constant Open_Flag_Integer_t := 0;
+  Internal_Append     : constant Open_Flag_Integer_t := O_APPEND;
+  Internal_Create     : constant Open_Flag_Integer_t := O_CREAT;
+  Internal_Exclusive  : constant Open_Flag_Integer_t := O_EXCL;
+  Internal_Read_Only  : constant Open_Flag_Integer_t := O_RDONLY;
+  Internal_Read_Write : constant Open_Flag_Integer_t := O_RDONLY or O_WRONLY;
+  Internal_Truncate   : constant Open_Flag_Integer_t := O_TRUNC;
+  Internal_Write_Only : constant Open_Flag_Integer_t := O_WRONLY;
+
+  type Open_Flag_Map_t is array (Open_Flag_t) of Open_Flag_Integer_t;
+
+  Open_Flag_Map : constant Open_Flag_Map_t := Open_Flag_Map_t'
+    (Append     => Internal_Append,
+     Create     => Internal_Create,
+     Exclusive  => Internal_Exclusive,
+     Read_Only  => Internal_Read_Only,
+     Read_Write => Internal_Read_Write,
+     Truncate   => Internal_Truncate,
+     Write_Only => Internal_Write_Only);
+
+  -- Map Open_Flag_t to discrete type.
+  function Open_Flags_To_Integer (Open_Flags : in Open_Flags_t) return Open_Flag_Integer_t;
+
+  -- Map Open_Flag_Integer_t to Open_Flag_t.
+  function Integer_To_Open_Flags (Open_Flags : in Open_Flag_Integer_t) return Open_Flags_t;
 
 end POSIX.File;

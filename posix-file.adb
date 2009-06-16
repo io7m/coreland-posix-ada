@@ -9,12 +9,12 @@ package body POSIX.File is
 
   function C_Open_Boundary
     (File_Name : in String;
-     Flags     : in Open_Flags_t;
+     Flags     : in Open_Flag_Integer_t;
      Mode      : in Permissions.Mode_t) return Descriptor_t is
     --# hide C_Open_Boundary
     function C_Open
       (File_Name : in C_String.String_Not_Null_Ptr_t;
-       Flags     : in Open_Flags_t;
+       Flags     : in Open_Flag_Integer_t;
        Mode      : in Permissions.Mode_t) return Descriptor_t;
     pragma Import (C, C_Open, "open");
   begin
@@ -45,7 +45,7 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    C_Flags     : Open_Flags_t;
+    C_Flags : Open_Flag_Integer_t := Open_Flags_To_Integer (Flags);
   begin
     -- Reject long filename.
     if File_Name'Last > File_Name_t'Last then
@@ -54,9 +54,7 @@ package body POSIX.File is
     else
       -- Set flags for non-blocking.
       if Non_Blocking then
-        C_Flags := Flags or O_NONBLOCK;
-      else
-        C_Flags := Flags;
+        C_Flags := C_Flags or O_NONBLOCK;
       end if;
 
       -- Call system open() procedure.
@@ -76,12 +74,16 @@ package body POSIX.File is
     (File_Name    : in String;
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t) is
+     Error_Value  : out Error.Error_t)
+  is
+    Open_Flags : constant Open_Flags_t :=
+      (Read_Only => True,
+       others    => False);
   begin
     Open
       (File_Name    => File_Name,
        Non_Blocking => Non_Blocking,
-       Flags        => Read_Only,
+       Flags        => Open_Flags,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -91,12 +93,16 @@ package body POSIX.File is
     (File_Name    : in String;
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t) is
+     Error_Value  : out Error.Error_t)
+  is
+    Open_Flags : constant Open_Flags_t :=
+      (Write_Only => True,
+       others     => False);
   begin
     Open
       (File_Name    => File_Name,
        Non_Blocking => Non_Blocking,
-       Flags        => Write_Only,
+       Flags        => Open_Flags,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -107,12 +113,18 @@ package body POSIX.File is
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
      Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t) is
+     Error_Value  : out Error.Error_t)
+  is
+    Open_Flags : constant Open_Flags_t :=
+      (Create     => True,
+       Exclusive  => True,
+       Write_Only => True,
+       others     => False);
   begin
     Open
       (File_Name    => File_Name,
        Non_Blocking => Non_Blocking,
-       Flags        => Create or Exclusive or Write_Only,
+       Flags        => Open_Flags,
        Mode         => Mode,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -122,12 +134,18 @@ package body POSIX.File is
     (File_Name    : in String;
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t) is
+     Error_Value  : out Error.Error_t)
+  is
+    Open_Flags : constant Open_Flags_t :=
+      (Append     => True,
+       Create     => True,
+       Write_Only => True,
+       others     => False);
   begin
     Open
       (File_Name    => File_Name,
        Non_Blocking => Non_Blocking,
-       Flags        => Append or Create or Write_Only,
+       Flags        => Open_Flags,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -138,12 +156,18 @@ package body POSIX.File is
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
      Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t) is
+     Error_Value  : out Error.Error_t)
+  is
+    Open_Flags : constant Open_Flags_t :=
+      (Create     => True,
+       Truncate   => True,
+       Write_Only => True,
+       others     => False);
   begin
     Open
       (File_Name    => File_Name,
        Non_Blocking => Non_Blocking,
-       Flags        => Write_Only or Truncate or Create,
+       Flags        => Open_Flags,
        Mode         => Mode,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -153,12 +177,16 @@ package body POSIX.File is
     (File_Name    : in String;
      Non_Blocking : in Boolean;
      Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t) is
+     Error_Value  : out Error.Error_t)
+  is
+    Open_Flags : constant Open_Flags_t :=
+      (Write_Only => True,
+       others     => False);
   begin
     Open
       (File_Name    => File_Name,
        Non_Blocking => Non_Blocking,
-       Flags        => Read_Write,
+       Flags        => Open_Flags,
        Mode         => Permissions.None,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -169,12 +197,17 @@ package body POSIX.File is
      Non_Blocking : in Boolean;
      Mode         : in Permissions.Mode_t;
      Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t) is
+     Error_Value  : out Error.Error_t)
+  is
+    Open_Flags : constant Open_Flags_t :=
+      (Create     => True,
+       Write_Only => True,
+       others     => False);
   begin
     Open
       (File_Name    => File_Name,
        Non_Blocking => Non_Blocking,
-       Flags        => Write_Only or Create,
+       Flags        => Open_Flags,
        Mode         => Mode,
        Descriptor   => Descriptor,
        Error_Value  => Error_Value);
@@ -328,5 +361,35 @@ package body POSIX.File is
       when -1 => Error_Value := Error.Get_Error;
     end case;
   end Close;
+
+  --
+  -- Functions to map between flag sets and discrete types.
+  --
+
+  function Open_Flags_To_Integer (Open_Flags : in Open_Flags_t) return Open_Flag_Integer_t is
+    Return_Flags : Open_Flag_Integer_t := Internal_None;
+  begin
+    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
+      if Open_Flags (Open_Flag) then
+        Return_Flags := Return_Flags or Open_Flag_Map (Open_Flag);
+      end if;
+      --# assert (Open_Flag <= Open_Flag_t'Last) and
+      --#        (Open_Flag >= Open_Flag_t'First);
+    end loop;
+    return Return_Flags;
+  end Open_Flags_To_Integer;
+
+  function Integer_To_Open_Flags (Open_Flags : in Open_Flag_Integer_t) return Open_Flags_t is
+    Return_Flags : Open_Flags_t := Open_Flags_t'(others => False);
+  begin
+    for Open_Flag in Open_Flag_t range Open_Flag_t'First .. Open_Flag_t'Last loop
+      if (Open_Flags and Open_Flag_Map (Open_Flag)) = Open_Flag_Map (Open_Flag) then
+        Return_Flags (Open_Flag) := True;
+      end if;
+      --# assert (Open_Flag <= Open_Flag_t'Last) and
+      --#        (Open_Flag >= Open_Flag_t'First);
+    end loop;
+    return Return_Flags;
+  end Integer_To_Open_Flags;
 
 end POSIX.File;
