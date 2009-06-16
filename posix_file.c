@@ -4,9 +4,9 @@
 #include <stdio.h>
 
 /*
- * Hack: For platforms that don't fully implement IEEE 1003.1-2008
- *       yet, define an invalid value that will cause Open to return
- *       an error at runtime.
+ * XXX: For platforms that don't fully implement IEEE 1003.1-2008
+ *      yet, define an invalid value that will cause Open to return
+ *      an error at runtime.
  */
 
 #define O_INVALID_FLAG 0xffffffffL
