@@ -18,17 +18,19 @@ UNIT_TESTS/t_udb_ge5 UNIT_TESTS/t_udb_ge5.ali UNIT_TESTS/t_udb_ge5.o \
 UNIT_TESTS/t_udb_ge6 UNIT_TESTS/t_udb_ge6.ali UNIT_TESTS/t_udb_ge6.o \
 UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o constants constants.o \
-deinstaller deinstaller.o errno_int errno_int.o install-core.o install-error.o \
-install-posix.o install-win32.o install.a installer installer.o instchk \
-instchk.o insthier.o posix-ada-conf posix-ada-conf.o posix-ada.a \
-posix-c_types.ali posix-c_types.o posix-errno.ali posix-errno.o posix-error.ali \
-posix-error.o posix-file.ali posix-file.o posix-file_status.ali \
-posix-file_status.o posix-io.ali posix-io.o posix-path.ali posix-path.o \
-posix-permissions.ali posix-permissions.o posix-symlink.ali posix-symlink.o \
-posix-user_db.ali posix-user_db.o posix.ali posix.o posix_error.o posix_file \
-posix_file.o posix_passwd.o posix_stat.o spark_config spark_config.ali \
-spark_config.o test_config.ali test_config.o type-discrete type-discrete.o \
-type-passwd type-passwd.o type-status type-status.o
+ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.o ctxt/fakeroot.o ctxt/incdir.o \
+ctxt/repos.o ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o errno_int \
+errno_int.o install-core.o install-error.o install-posix.o install-win32.o \
+install.a installer installer.o instchk instchk.o insthier.o posix-ada-conf \
+posix-ada-conf.o posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali \
+posix-errno.o posix-error.ali posix-error.o posix-file.ali posix-file.o \
+posix-file_status.ali posix-file_status.o posix-io.ali posix-io.o \
+posix-path.ali posix-path.o posix-permissions.ali posix-permissions.o \
+posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
+posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
+spark_config spark_config.ali spark_config.o test_config.ali test_config.o \
+type-discrete type-discrete.o type-passwd type-passwd.o type-status \
+type-status.o
 
 # Mkf-deinstall
 deinstall: deinstaller conf-sosuffix
@@ -345,12 +347,16 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
+
+conf-sosuffix:\
+mk-sosuffix
+	./mk-sosuffix > conf-sosuffix.tmp && mv conf-sosuffix.tmp conf-sosuffix
 
 conf-systype:\
 mk-systype
@@ -364,9 +370,78 @@ constants.o:\
 cc-compile constants.c posix_config.h
 	./cc-compile constants.c
 
+# ctxt/bindir.c.mff
+ctxt/bindir.c: mk-ctxt conf-bindir
+	rm -f ctxt/bindir.c
+	./mk-ctxt ctxt_bindir < conf-bindir > ctxt/bindir.c
+
+ctxt/bindir.o:\
+cc-compile ctxt/bindir.c
+	./cc-compile ctxt/bindir.c
+
+ctxt/ctxt.a:\
+cc-slib ctxt/ctxt.sld ctxt/bindir.o ctxt/dlibdir.o ctxt/incdir.o ctxt/repos.o \
+ctxt/slibdir.o ctxt/version.o ctxt/fakeroot.o
+	./cc-slib ctxt/ctxt ctxt/bindir.o ctxt/dlibdir.o ctxt/incdir.o ctxt/repos.o \
+	ctxt/slibdir.o ctxt/version.o ctxt/fakeroot.o
+
+# ctxt/dlibdir.c.mff
+ctxt/dlibdir.c: mk-ctxt conf-dlibdir
+	rm -f ctxt/dlibdir.c
+	./mk-ctxt ctxt_dlibdir < conf-dlibdir > ctxt/dlibdir.c
+
+ctxt/dlibdir.o:\
+cc-compile ctxt/dlibdir.c
+	./cc-compile ctxt/dlibdir.c
+
+# ctxt/fakeroot.c.mff
+ctxt/fakeroot.c: mk-ctxt conf-fakeroot
+	rm -f ctxt/fakeroot.c
+	./mk-ctxt ctxt_fakeroot < conf-fakeroot > ctxt/fakeroot.c
+
+ctxt/fakeroot.o:\
+cc-compile ctxt/fakeroot.c
+	./cc-compile ctxt/fakeroot.c
+
+# ctxt/incdir.c.mff
+ctxt/incdir.c: mk-ctxt conf-incdir
+	rm -f ctxt/incdir.c
+	./mk-ctxt ctxt_incdir < conf-incdir > ctxt/incdir.c
+
+ctxt/incdir.o:\
+cc-compile ctxt/incdir.c
+	./cc-compile ctxt/incdir.c
+
+# ctxt/repos.c.mff
+ctxt/repos.c: mk-ctxt conf-repos
+	rm -f ctxt/repos.c
+	./mk-ctxt ctxt_repos < conf-repos > ctxt/repos.c
+
+ctxt/repos.o:\
+cc-compile ctxt/repos.c
+	./cc-compile ctxt/repos.c
+
+# ctxt/slibdir.c.mff
+ctxt/slibdir.c: mk-ctxt conf-slibdir
+	rm -f ctxt/slibdir.c
+	./mk-ctxt ctxt_slibdir < conf-slibdir > ctxt/slibdir.c
+
+ctxt/slibdir.o:\
+cc-compile ctxt/slibdir.c
+	./cc-compile ctxt/slibdir.c
+
+# ctxt/version.c.mff
+ctxt/version.c: mk-ctxt VERSION
+	rm -f ctxt/version.c
+	./mk-ctxt ctxt_version < VERSION > ctxt/version.c
+
+ctxt/version.o:\
+cc-compile ctxt/version.c
+	./cc-compile ctxt/version.c
+
 deinstaller:\
 cc-link deinstaller.ld deinstaller.o insthier.o install.a ctxt/ctxt.a
-	./cc-link deinstaller deinstaller.o insthier.o install.a
+	./cc-link deinstaller deinstaller.o insthier.o install.a ctxt/ctxt.a
 
 deinstaller.o:\
 cc-compile deinstaller.c install.h ctxt.h
@@ -422,7 +497,7 @@ install_os.h
 
 installer:\
 cc-link installer.ld installer.o insthier.o install.a ctxt/ctxt.a
-	./cc-link installer installer.o insthier.o install.a
+	./cc-link installer installer.o insthier.o install.a ctxt/ctxt.a
 
 installer.o:\
 cc-compile installer.c ctxt.h install.h
@@ -430,7 +505,7 @@ cc-compile installer.c ctxt.h install.h
 
 instchk:\
 cc-link instchk.ld instchk.o insthier.o install.a ctxt/ctxt.a
-	./cc-link instchk instchk.o insthier.o install.a
+	./cc-link instchk instchk.o insthier.o install.a ctxt/ctxt.a
 
 instchk.o:\
 cc-compile instchk.c ctxt.h install.h
@@ -456,12 +531,15 @@ conf-ld conf-systype conf-cctype
 mk-mk-ctxt:\
 conf-cc conf-ld
 
+mk-sosuffix:\
+conf-systype
+
 mk-systype:\
 conf-cc conf-ld
 
 posix-ada-conf:\
 cc-link posix-ada-conf.ld posix-ada-conf.o ctxt/ctxt.a
-	./cc-link posix-ada-conf posix-ada-conf.o
+	./cc-link posix-ada-conf posix-ada-conf.o ctxt/ctxt.a
 
 posix-ada-conf.o:\
 cc-compile posix-ada-conf.c ctxt.h _sysinfo.h
@@ -777,22 +855,26 @@ obj_clean:
 	UNIT_TESTS/t_udb_ge6 UNIT_TESTS/t_udb_ge6.ali UNIT_TESTS/t_udb_ge6.o \
 	UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
 	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o constants constants.o \
-	deinstaller deinstaller.o errno_int errno_int.c
-	rm -f errno_int.o install-core.o install-error.o install-posix.o \
-	install-win32.o install.a installer installer.o instchk instchk.o insthier.o \
-	posix-ada-conf posix-ada-conf.o posix-ada.a posix-c_types.ads posix-c_types.ali \
-	posix-c_types.o posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb \
-	posix-error.ads posix-error.ali posix-error.o posix-file.ads posix-file.ali \
-	posix-file.o posix-file_status.ads posix-file_status.ali posix-file_status.o \
-	posix-io.ads posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o \
-	posix-permissions.ads posix-permissions.ali posix-permissions.o \
-	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
-	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-	posix_passwd.o posix_stat.o spark_config spark_config.ali spark_config.o \
-	test_config.ads test_config.ali test_config.o type-discrete type-discrete.o \
-	type-passwd type-passwd.o type-status type-status.o
+	ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a
+	rm -f ctxt/dlibdir.c ctxt/dlibdir.o ctxt/fakeroot.c ctxt/fakeroot.o \
+	ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o ctxt/slibdir.c \
+	ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller deinstaller.o \
+	errno_int errno_int.c errno_int.o install-core.o install-error.o \
+	install-posix.o install-win32.o install.a installer installer.o instchk \
+	instchk.o insthier.o posix-ada-conf posix-ada-conf.o posix-ada.a \
+	posix-c_types.ads posix-c_types.ali posix-c_types.o posix-errno.ads \
+	posix-errno.ali posix-errno.o posix-error.adb posix-error.ads posix-error.ali \
+	posix-error.o posix-file.ads posix-file.ali posix-file.o posix-file_status.ads \
+	posix-file_status.ali posix-file_status.o posix-io.ads posix-io.ali posix-io.o \
+	posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
+	posix-permissions.ali posix-permissions.o posix-symlink.ali posix-symlink.o \
+	posix-user_db.ads posix-user_db.ali posix-user_db.o posix.ali posix.o \
+	posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o spark_config \
+	spark_config.ali spark_config.o test_config.ads test_config.ali test_config.o \
+	type-discrete
+	rm -f type-discrete.o type-passwd type-passwd.o type-status type-status.o
 ext_clean:
-	rm -f conf-adatype conf-cctype conf-ldtype conf-systype mk-ctxt
+	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 
 regen:\
 ada-srcmap ada-srcmap-all
