@@ -7,10 +7,10 @@ package body POSIX.File is
   -- Functions to map between flag sets and discrete types.
   --
 
-  function Open_Access_Mode_To_Integer (Open_Access_Mode : in Open_Access_Mode_t)
+  function Open_Access_Mode_To_Integer (Access_Mode : in Open_Access_Mode_t)
     return Open_Flag_Integer_t is
   begin
-    return Open_Access_Mode_Map (Open_Access_Mode);
+    return Open_Access_Mode_Map (Access_Mode);
   end Open_Access_Mode_To_Integer;
 
   function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t is

@@ -269,9 +269,10 @@ cat <<EOF
      TTY_Initialize     => O_TTY_INIT);
 
   -- Map Open_Access_Mode_t to discrete type.
-  function Open_Access_Mode_To_Integer (Open_Access_Mode : in Open_Access_Mode_t) return Open_Flag_Integer_t;
+  function Open_Access_Mode_To_Integer (Access_Mode : in Open_Access_Mode_t) return Open_Flag_Integer_t;
+  --# return Open_Access_Mode_Map (Access_Mode);
 
-  -- Map Open_Flag_t to discrete type.
+  -- Map Open_Options_t to discrete type.
   function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t;
 
   -- Check access mode is valid.
