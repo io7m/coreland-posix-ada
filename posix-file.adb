@@ -35,23 +35,23 @@ package body POSIX.File is
     (Access_Mode : in Open_Access_Mode_t;
      Options     : in Open_Options_t) return Boolean
   is
-    Any_Unsupported : Boolean := False;
+    All_Supported : Boolean := True;
   begin
     if Open_Access_Mode_Map (Access_Mode) = Unsupported then
-      Any_Unsupported := True;
+      All_Supported := False;
     end if;
-    if not Any_Unsupported then
-      for Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
-        if Options (Option) then
-          if Open_Option_Map (Option) = Unsupported then
-            Any_Unsupported := True;
-          end if;
+
+    for Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
+      if Options (Option) then
+        if Open_Option_Map (Option) = Unsupported then
+          All_Supported := False;
         end if;
-        --# assert (Option <= Open_Option_t'Last) and
-        --#        (Option >= Open_Option_t'First);
-      end loop;
-    end if;
-    return Any_Unsupported;
+      end if;
+      --# assert (Option <= Open_Option_t'Last) and
+      --#        (Option >= Open_Option_t'First);
+    end loop;
+
+    return All_Supported;
   end Check_Support;
 
   --

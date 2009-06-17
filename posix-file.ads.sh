@@ -270,4 +270,9 @@ cat <<EOF
   -- Map Open_Flag_t to discrete type.
   function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t;
 
+  -- Check invalid flags.
+  function Check_Support
+    (Access_Mode : in Open_Access_Mode_t;
+     Options     : in Open_Options_t) return Boolean;
+
 end POSIX.File;
