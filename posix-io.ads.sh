@@ -34,6 +34,7 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Buffer, Elements_Read, Error_Value from Descriptor, Element_Limit, Errno.Errno_Value;
   --# pre Element_Limit <= Buffer'Length;
+  --# post Elements_Read <= Element_Limit;
 
   -- proc_map : write
   procedure Write
@@ -45,6 +46,7 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Elements_Written, Error_Value from Descriptor, Buffer, Element_Limit, Errno.Errno_Value;
   --# pre Element_Limit <= Buffer'Length;
+  --# post Elements_Written <= Element_Limit;
 
 end POSIX.IO;
 EOF
