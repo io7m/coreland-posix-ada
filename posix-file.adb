@@ -27,31 +27,43 @@ package body POSIX.File is
   end Open_Options_To_Integer;
 
   --
+  -- Return True if the selected access mode is valid on the current platform.
+  --
+
+  function Check_Access_Mode (Access_Mode : in Open_Access_Mode_t) return Boolean is
+  begin
+    return Open_Access_Mode_Map (Access_Mode) /= Unsupported;
+  end Check_Access_Mode;
+
+  --
+  -- Return True if all of the selected options are valid on the current platform.
+  --
+
+  function Check_Options (Options : in Open_Options_t) return Boolean is
+    Supported : Boolean := True;
+  begin
+    for Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
+      if Options (Option) then
+        if Open_Option_Map (Option) = Unsupported then
+          Supported := False;
+        end if;
+      end if;
+      --# assert (Option <= Open_Option_t'Last) and
+      --#        (Option >= Open_Option_t'First);
+    end loop;
+    return Supported;
+  end Check_Options;
+
+  --
   -- Return False if any of the selected flags have been defined as invalid
   -- on the current platform.
   --
 
   function Check_Support
     (Access_Mode : in Open_Access_Mode_t;
-     Options     : in Open_Options_t) return Boolean
-  is
-    All_Supported : Boolean := True;
+     Options     : in Open_Options_t) return Boolean is
   begin
-    if Open_Access_Mode_Map (Access_Mode) = Unsupported then
-      All_Supported := False;
-    end if;
-
-    for Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
-      if Options (Option) then
-        if Open_Option_Map (Option) = Unsupported then
-          All_Supported := False;
-        end if;
-      end if;
-      --# assert (Option <= Open_Option_t'Last) and
-      --#        (Option >= Open_Option_t'First);
-    end loop;
-
-    return All_Supported;
+    return Check_Access_Mode (Access_Mode) and Check_Options (Options);
   end Check_Support;
 
   --

@@ -270,9 +270,18 @@ cat <<EOF
   -- Map Open_Flag_t to discrete type.
   function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t;
 
+  -- Check access mode is valid.
+  function Check_Access_Mode (Access_Mode : in Open_Access_Mode_t) return Boolean;
+  --# return for some Mode in Index => (Open_Access_Mode_Map (Mode) /= Unsupported);
+
+  -- Check no options have invalid values.
+  function Check_Options (Options : in Open_Options_t) return Boolean;
+
   -- Check invalid flags.
   function Check_Support
     (Access_Mode : in Open_Access_Mode_t;
      Options     : in Open_Options_t) return Boolean;
+  --# return Check_Access_Mode (Access_Mode) and
+  --#        Check_Options (Options);
 
 end POSIX.File;
