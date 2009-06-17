@@ -234,13 +234,17 @@ private
 EOF
 
 ./type-discrete Open_Flag_Integer || exit 1
-echo
-./posix_file                      || exit 1
 
 cat <<EOF
 
-  -- Integer value for unsupporte flag values on the current platform.
+  -- Integer value for unsupported flag values on the current platform.
   Unsupported : constant Open_Flag_Integer_t := 16#ffff_ffff#;
+
+EOF
+
+./posix_file                      || exit 1
+
+cat <<EOF
 
   type Open_Access_Mode_Map_t is array (Open_Access_Mode_t) of Open_Flag_Integer_t;
 
@@ -272,8 +276,7 @@ cat <<EOF
 
   -- Check access mode is valid.
   function Check_Access_Mode (Access_Mode : in Open_Access_Mode_t) return Boolean;
-  --# return for some Mode in Open_Access_Mode_t =>
-  --#   (Open_Access_Mode_Map (Mode) /= Unsupported);
+  --# return Open_Access_Mode_Map (Access_Mode) /= Unsupported;
 
   -- Check no options have invalid values.
   function Check_Options (Options : in Open_Options_t) return Boolean;
