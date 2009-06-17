@@ -27,6 +27,32 @@ package body POSIX.File is
   end Open_Options_To_Integer;
 
   --
+  -- Return False if any of the selected flags have been defined as invalid
+  -- on the current platform.
+  --
+
+  function Check_Support
+    (Access_Mode : in Open_Access_Mode_t;
+     Options     : in Open_Options_t) return Boolean
+  is
+    Any_Unsupported : Boolean := False;
+  begin
+    if Open_Access_Mode_Map (Access_Mode) = Unsupported then
+      Any_Unsupported := True;
+    end if;
+    if not Any_Unsupported then
+      for Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
+        if Options (Option) then
+          if Open_Option_Map (Option) = Unsupported then
+            Any_Unsupported := True;
+          end if;
+        end if;
+      end loop;
+    end if;
+    return Any_Unsupported;
+  end Check_Support;
+
+  --
   -- File opening/creation.
   --
 
@@ -69,31 +95,42 @@ package body POSIX.File is
      Descriptor   : out Descriptor_t;
      Error_Value  : out Error.Error_t)
   is
-    C_Flags : Open_Flag_Integer_t;
+    C_Flags   : Open_Flag_Integer_t;
+    Supported : Boolean;
   begin
-    C_Flags := Open_Access_Mode_To_Integer (Access_Mode) or
-               Open_Options_To_Integer (Options);
+    Supported := Check_Support
+      (Access_Mode => Access_Mode,
+       Options     => Options);
 
-    -- Reject long filename.
-    if File_Name'Last > File_Name_t'Last then
-      Descriptor  := -1;
-      Error_Value := Error.Error_Name_Too_Long;
-    else
-      -- Set flags for non-blocking.
-      if Non_Blocking then
-        C_Flags := C_Flags or O_NONBLOCK;
-      end if;
-
-      -- Call system open() procedure.
-      Descriptor := C_Open_Boundary
-        (File_Name => File_Name,
-         Flags     => C_Flags,
-         Mode      => Mode);
-      if Descriptor = -1 then
-        Error_Value := Error.Get_Error;
+    -- Access mode and all options supported?
+    if Supported then
+      C_Flags := Open_Access_Mode_To_Integer (Access_Mode) or
+                 Open_Options_To_Integer (Options);
+      -- Reject long filename.
+      if File_Name'Last > File_Name_t'Last then
+        Descriptor  := -1;
+        Error_Value := Error.Error_Name_Too_Long;
       else
-        Error_Value := Error.Error_None;
+        -- Set flags for non-blocking.
+        if Non_Blocking then
+          C_Flags := C_Flags or O_NONBLOCK;
+        end if;
+
+        -- Call system open() procedure.
+        Descriptor := C_Open_Boundary
+          (File_Name => File_Name,
+           Flags     => C_Flags,
+           Mode      => Mode);
+        if Descriptor = -1 then
+          Error_Value := Error.Get_Error;
+        else
+          Error_Value := Error.Error_None;
+        end if;
       end if;
+    else
+      -- Unsupported options/access mode.
+      Error_Value := Error.Error_Invalid_Argument;
+      Descriptor  := -1;
     end if;
   end Open;
 

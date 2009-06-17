@@ -239,6 +239,9 @@ echo
 
 cat <<EOF
 
+  -- Integer value for unsupporte flag values on the current platform.
+  Unsupported : constant Open_Flag_Integer_t := 16#ffff_ffff#;
+
   type Open_Access_Mode_Map_t is array (Open_Access_Mode_t) of Open_Flag_Integer_t;
 
   Open_Access_Mode_Map : constant Open_Access_Mode_Map_t := Open_Access_Mode_Map_t'

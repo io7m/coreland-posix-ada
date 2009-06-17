@@ -1,5 +1,14 @@
 #include "posix_config.h"
 
+/*
+ * XXX: GNU libc violates IEEE 1003.1-2008 by requiring __USE_GNU
+ *      to get access to many constants. This define cannot appear
+ *      project-wide as it also causes many standardized functions
+ *      to be redefined as incompatible, proprietary GNU versions.
+ */
+
+#define __USE_GNU 1
+
 #include <fcntl.h>
 #include <stdio.h>
 
@@ -29,6 +38,10 @@
 
 #ifndef O_TTY_INIT
 #  define O_TTY_INIT O_INVALID_FLAG
+#endif
+
+#ifndef O_NOFOLLOW
+#  define O_NOFOLLOW O_INVALID_FLAG
 #endif
 
 int
