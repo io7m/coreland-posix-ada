@@ -47,6 +47,8 @@ package body POSIX.File is
             Any_Unsupported := True;
           end if;
         end if;
+        --# assert (Option <= Open_Option_t'Last) and
+        --#        (Option >= Open_Option_t'First);
       end loop;
     end if;
     return Any_Unsupported;
