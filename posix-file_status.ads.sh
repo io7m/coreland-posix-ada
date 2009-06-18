@@ -30,9 +30,9 @@ package POSIX.File_Status is
 
   -- proc_map : stat
   procedure Get_Status
-    (File_Name   : in String;
-     Status      : out Status_t;
-     Error_Value : out Error.Error_t);
+    (File_Name   : in     String;
+     Status      :    out Status_t;
+     Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Status, Error_Value from File_Name, Errno.Errno_Value;
   --# post ((Is_Valid (Status))     and (Error_Value = Error.Error_None)) or
@@ -40,9 +40,9 @@ package POSIX.File_Status is
 
   -- proc_map : fstat
   procedure Get_Descriptor_Status
-    (Descriptor  : in File.Valid_Descriptor_t;
-     Status      : out Status_t;
-     Error_Value : out Error.Error_t);
+    (Descriptor  : in     File.Valid_Descriptor_t;
+     Status      :    out Status_t;
+     Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Status      from Descriptor &
   --#         Error_Value from Descriptor, Errno.Errno_Value;

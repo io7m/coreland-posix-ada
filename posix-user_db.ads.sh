@@ -36,10 +36,10 @@ cat <<EOF
 
   -- proc_map : getpwnam_r
   procedure Get_Entry_By_Name
-    (User_Name      : in String;
-     Database_Entry : out Database_Entry_t;
-     Found_Entry    : out Boolean;
-     Error_Value    : out Error.Error_t);
+    (User_Name      : in     String;
+     Database_Entry :    out Database_Entry_t;
+     Found_Entry    :    out Boolean;
+     Error_Value    :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Database_Entry, Found_Entry from User_Name &
   --#         Error_Value                 from User_Name, Errno.Errno_Value;
@@ -70,23 +70,23 @@ cat <<EOF
   --# pre Is_Valid (Database_Entry);
 
   procedure Get_User_Name
-    (Database_Entry : in Database_Entry_t;
-     User_Name      : out User_Name_t;
-     Last_Index     : out User_Name_Index_t);
+    (Database_Entry : in     Database_Entry_t;
+     User_Name      :    out User_Name_t;
+     Last_Index     :    out User_Name_Index_t);
   --# derives User_Name, Last_Index from Database_Entry;
   --# pre Is_Valid (Database_Entry);
 
   procedure Get_Home_Directory
-    (Database_Entry : in Database_Entry_t;
-     Home_Directory : out Home_Directory_t;
-     Last_Index     : out Home_Directory_Index_t);
+    (Database_Entry : in     Database_Entry_t;
+     Home_Directory :    out Home_Directory_t;
+     Last_Index     :    out Home_Directory_Index_t);
   --# derives Home_Directory, Last_Index from Database_Entry;
   --# pre Is_Valid (Database_Entry);
 
   procedure Get_Shell
-    (Database_Entry : in Database_Entry_t;
-     Shell_Path     : out Shell_Path_t;
-     Last_Index     : out Shell_Path_Index_t);
+    (Database_Entry : in     Database_Entry_t;
+     Shell_Path     :    out Shell_Path_t;
+     Last_Index     :    out Shell_Path_Index_t);
   --# derives Shell_Path, Last_Index from Database_Entry;
   --# pre Is_Valid (Database_Entry);
 

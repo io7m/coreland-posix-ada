@@ -62,9 +62,9 @@ cat <<EOF
   --
 
   procedure Message
-    (Error_Value    : in Error_t;
-     Message_Buffer : out Message_t;
-     Last_Index     : out Message_Index_t);
+    (Error_Value    : in     Error_t;
+     Message_Buffer :    out Message_t;
+     Last_Index     :    out Message_Index_t);
   --# derives Message_Buffer, Last_Index from Error_Value;
 
 end POSIX.Error;
