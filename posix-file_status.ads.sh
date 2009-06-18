@@ -35,6 +35,8 @@ package POSIX.File_Status is
      Error_Value : out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Status, Error_Value from File_Name, Errno.Errno_Value;
+  --# post ((Is_Valid (Status))     and (Error_Value = Error.Error_None)) or
+  --#      ((not Is_Valid (Status)) and (Error_Value /= Error.Error_None));
 
   -- proc_map : fstat
   procedure Get_Descriptor_Status
@@ -44,6 +46,8 @@ package POSIX.File_Status is
   --# global in Errno.Errno_Value;
   --# derives Status      from Descriptor &
   --#         Error_Value from Descriptor, Errno.Errno_Value;
+  --# post ((Is_Valid (Status))     and (Error_Value = Error.Error_None)) or
+  --#      ((not Is_Valid (Status)) and (Error_Value /= Error.Error_None));
 
 EOF
 
