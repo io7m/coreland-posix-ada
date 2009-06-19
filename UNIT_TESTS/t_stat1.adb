@@ -1,6 +1,9 @@
 with POSIX.Error;
 use type POSIX.Error.Error_t;
 
+with POSIX.File;
+use type POSIX.File.Offset_t;
+
 with POSIX.File_Status;
 with Test;
 

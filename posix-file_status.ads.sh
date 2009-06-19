@@ -94,7 +94,7 @@ cat <<EOF
 
   type Status_t is record
     Valid  : Boolean;
-    C_Data : C_Status_t;
+    C_Data : aliased C_Status_t;
   end record;
 
 end POSIX.File_Status;
