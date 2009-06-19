@@ -14,6 +14,10 @@
  * Print compile time value of named constants.
  */
 
+/*
+ * Compile-time constants.
+ */
+
 static const struct {
   enum number_type_t {
     SIGNED_LONG,
@@ -24,17 +28,8 @@ static const struct {
     unsigned long ulo;
   } number;
   const char *name;
-} constants[] = {
+} compile_time_constants[] = {
   { SIGNED_LONG,   { PATH_MAX }, "PATH_MAX" },
-
-  /* XXX: Platforms rarely provide a compile-time constant for this.
-   *      However, the constant is used in these bindings to specify
-   *      a buffer size for getpwnam_r which corresponds directly to
-   *      the length of a single line in /etc/passwd.
-   */
-
-  { SIGNED_LONG,   { LINE_MAX }, "LOGIN_NAME_MAX" },
-
   { UNSIGNED_LONG, { S_IRUSR }, "S_IRUSR" },
   { UNSIGNED_LONG, { S_IWUSR }, "S_IWUSR" },
   { UNSIGNED_LONG, { S_IXUSR }, "S_IXUSR" },
@@ -47,7 +42,21 @@ static const struct {
   { UNSIGNED_LONG, { S_ISUID }, "S_ISUID" },
   { UNSIGNED_LONG, { S_ISGID }, "S_ISGID" },
 };
-const unsigned int constants_size = sizeof (constants) / sizeof (constants [0]);
+const unsigned int compile_time_constants_size =
+  sizeof (compile_time_constants) / sizeof (compile_time_constants [0]);
+
+/*
+ * Run-time constants.
+ */
+
+static const struct {
+  unsigned int constant;
+  const char *name;
+} run_time_constants[] = {
+  { _SC_LOGIN_NAME_MAX, "LOGIN_NAME_MAX" },
+};
+const unsigned int run_time_constants_size =
+  sizeof (run_time_constants) / sizeof (run_time_constants [0]);
 
 int
 main (int argc, char *argv[])
@@ -57,13 +66,24 @@ main (int argc, char *argv[])
 
   if (argc < 2) return EXIT_FAILURE;
 
-  for (index = 0; index < constants_size; ++index) {
-    if (strcmp (constants [index].name, argv [1]) == 0) {
-      switch (constants [index].number_type) {
-        case SIGNED_LONG: (void) printf ("%ld", constants [index].number.lo); break;
-        case UNSIGNED_LONG: (void) printf ("%lu", constants [index].number.ulo); break;
+  /* Check for compile-time constant by name. */
+  for (index = 0; index < compile_time_constants_size; ++index) {
+    if (strcmp (compile_time_constants [index].name, argv [1]) == 0) {
+      switch (compile_time_constants [index].number_type) {
+        case SIGNED_LONG: (void) printf ("%ld", compile_time_constants [index].number.lo); break;
+        case UNSIGNED_LONG: (void) printf ("%lu", compile_time_constants [index].number.ulo); break;
       }
       exit_code = EXIT_SUCCESS;
+    }
+  }
+
+  /* Check for run-time constant by name. */
+  if (exit_code != EXIT_SUCCESS) {
+    for (index = 0; index < run_time_constants_size; ++index) {
+      if (strcmp (run_time_constants [index].name, argv [1]) == 0) {
+        (void) printf ("%ld", sysconf (run_time_constants [index].constant));
+        exit_code = EXIT_SUCCESS;
+      }
     }
   }
 

@@ -12,8 +12,16 @@ enum posix_passwd_result_t {
   POSIX_PASSWD_RESULT_ERROR   = 2,
 };
 
+/* XXX: Platforms rarely provide a compile-time constant for this.
+ *      However, the constant is used in these bindings to specify
+ *      a buffer size for getpwnam_r which corresponds directly to
+ *      the length of a single line in /etc/passwd.
+ */
+
+#define POSIX_PASSWD_BUFFER_SIZE LINE_MAX
+
 struct posix_passwd_t {
-  char string_buffer [_SC_GETPW_R_SIZE_MAX];
+  char string_buffer [POSIX_PASSWD_BUFFER_SIZE];
   struct passwd storage;
   struct passwd *result_ptr;
 };
