@@ -47,8 +47,6 @@ package body POSIX.IO is
      Elements_Read :    out Storage_Element_Array_Size_t;
      Error_Value   :    out Error.Error_t) is
   begin
-    Error.Set_Error (Error.Error_None);
-
     C_Read_Boundary
       (Descriptor    => Descriptor,
        Buffer        => Buffer,
@@ -99,8 +97,6 @@ package body POSIX.IO is
      Elements_Written :    out Storage_Element_Array_Size_t;
      Error_Value      :    out Error.Error_t) is
   begin
-    Error.Set_Error (Error.Error_None);
-
     C_Write_Boundary
       (Descriptor       => Descriptor,
        Buffer           => Buffer,
