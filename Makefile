@@ -172,11 +172,11 @@ UNIT_TESTS/t_stat1.o:\
 UNIT_TESTS/t_stat1.ali
 
 UNIT_TESTS/t_stat2:\
-ada-bind ada-link UNIT_TESTS/t_stat2.ald UNIT_TESTS/t_stat1.ali \
+ada-bind ada-link UNIT_TESTS/t_stat2.ald UNIT_TESTS/t_stat2.ali \
 UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file_status.ali \
 posix-file.ali posix-permissions.ali posix-ada.a
-	./ada-bind UNIT_TESTS/t_stat1.ali
-	./ada-link UNIT_TESTS/t_stat2 UNIT_TESTS/t_stat1.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_stat2.ali
+	./ada-link UNIT_TESTS/t_stat2 UNIT_TESTS/t_stat2.ali posix-ada.a
 
 UNIT_TESTS/t_stat2.ali:\
 ada-compile UNIT_TESTS/t_stat2.adb posix-error.ali posix-file.ali \
@@ -379,11 +379,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
