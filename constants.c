@@ -1,5 +1,8 @@
 #include "posix_config.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include <err.h>
 #include <limits.h>
 #include <stdio.h>
@@ -22,8 +25,20 @@ static const struct {
   } number;
   const char *name;
 } constants[] = {
-  { SIGNED_LONG, { PATH_MAX           }, "PATH_MAX" },
-  { SIGNED_LONG, { _SC_LOGIN_NAME_MAX }, "LOGIN_NAME_MAX" },
+  { SIGNED_LONG,   { PATH_MAX           }, "PATH_MAX" },
+  { SIGNED_LONG,   { _SC_LOGIN_NAME_MAX }, "LOGIN_NAME_MAX" },
+
+  { UNSIGNED_LONG, { S_IRUSR }, "S_IRUSR" },
+  { UNSIGNED_LONG, { S_IWUSR }, "S_IWUSR" },
+  { UNSIGNED_LONG, { S_IXUSR }, "S_IXUSR" },
+  { UNSIGNED_LONG, { S_IRGRP }, "S_IRGRP" },
+  { UNSIGNED_LONG, { S_IWGRP }, "S_IWGRP" },
+  { UNSIGNED_LONG, { S_IXGRP }, "S_IXGRP" },
+  { UNSIGNED_LONG, { S_IROTH }, "S_IROTH" },
+  { UNSIGNED_LONG, { S_IWOTH }, "S_IWOTH" },
+  { UNSIGNED_LONG, { S_IXOTH }, "S_IXOTH" },
+  { UNSIGNED_LONG, { S_ISUID }, "S_ISUID" },
+  { UNSIGNED_LONG, { S_ISGID }, "S_ISGID" },
 };
 const unsigned int constants_size = sizeof (constants) / sizeof (constants [0]);
 

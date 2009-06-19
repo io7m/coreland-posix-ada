@@ -73,12 +73,12 @@ package body POSIX.File is
   function C_Open_Boundary
     (File_Name : in String;
      Flags     : in Open_Flag_Integer_t;
-     Mode      : in Permissions.Mode_t) return Descriptor_t is
+     Mode      : in Permissions.Mode_Integer_t) return Descriptor_t is
     --# hide C_Open_Boundary
     function C_Open
       (File_Name : in C_String.String_Not_Null_Ptr_t;
        Flags     : in Open_Flag_Integer_t;
-       Mode      : in Permissions.Mode_t) return Descriptor_t;
+       Mode      : in Permissions.Mode_Integer_t) return Descriptor_t;
     pragma Import (C, C_Open, "open");
   begin
     declare
@@ -134,7 +134,7 @@ package body POSIX.File is
         Descriptor := C_Open_Boundary
           (File_Name => File_Name,
            Flags     => C_Flags,
-           Mode      => Mode);
+           Mode      => Permissions.Mode_To_Integer (Mode));
         if Descriptor = -1 then
           Error_Value := Error.Get_Error;
         else

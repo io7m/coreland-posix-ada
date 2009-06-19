@@ -1,0 +1,5 @@
+t_perm1.ali
+test.ali
+../test_config.ali
+../posix-permissions.ali
+../posix-ada.a

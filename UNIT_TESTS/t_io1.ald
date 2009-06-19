@@ -1,0 +1,8 @@
+t_io1.ali
+test.ali
+../test_config.ali
+../posix-error.ali
+../posix-file.ali
+../posix-io.ali
+../posix-permissions.ali
+../posix-ada.a

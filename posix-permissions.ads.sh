@@ -50,20 +50,38 @@ cat <<EOF
 
 private
 
-  Internal_User_Read    : constant Mode_Integer_t := 8#0400#;
-  Internal_User_Write   : constant Mode_Integer_t := 8#0200#;
-  Internal_User_Exec    : constant Mode_Integer_t := 8#0100#;
+EOF
 
-  Internal_Group_Read   : constant Mode_Integer_t := 8#0040#;
-  Internal_Group_Write  : constant Mode_Integer_t := 8#0020#;
-  Internal_Group_Exec   : constant Mode_Integer_t := 8#0010#;
+S_IRUSR=`./constants S_IRUSR` || exit 1
+S_IWUSR=`./constants S_IWUSR` || exit 1
+S_IXUSR=`./constants S_IXUSR` || exit 1
 
-  Internal_World_Read   : constant Mode_Integer_t := 8#0004#;
-  Internal_World_Write  : constant Mode_Integer_t := 8#0002#;
-  Internal_World_Exec   : constant Mode_Integer_t := 8#0001#;
+S_IRGRP=`./constants S_IRGRP` || exit 1
+S_IWGRP=`./constants S_IWGRP` || exit 1
+S_IXGRP=`./constants S_IXGRP` || exit 1
 
-  Internal_Set_User_ID  : constant Mode_Integer_t := 8#4000#;
-  Internal_Set_Group_ID : constant Mode_Integer_t := 8#2000#;
+S_IROTH=`./constants S_IROTH` || exit 1
+S_IWOTH=`./constants S_IWOTH` || exit 1
+S_IXOTH=`./constants S_IXOTH` || exit 1
+
+S_ISUID=`./constants S_ISUID` || exit 1
+S_ISGID=`./constants S_ISGID` || exit 1
+
+cat <<EOF
+  Internal_User_Read    : constant Mode_Integer_t := ${S_IRUSR};
+  Internal_User_Write   : constant Mode_Integer_t := ${S_IWUSR};
+  Internal_User_Exec    : constant Mode_Integer_t := ${S_IXUSR};
+
+  Internal_Group_Read   : constant Mode_Integer_t := ${S_IRGRP};
+  Internal_Group_Write  : constant Mode_Integer_t := ${S_IWGRP};
+  Internal_Group_Exec   : constant Mode_Integer_t := ${S_IXGRP};
+
+  Internal_World_Read   : constant Mode_Integer_t := ${S_IROTH};
+  Internal_World_Write  : constant Mode_Integer_t := ${S_IWOTH};
+  Internal_World_Exec   : constant Mode_Integer_t := ${S_IXOTH};
+
+  Internal_Set_User_ID  : constant Mode_Integer_t := ${S_ISUID};
+  Internal_Set_Group_ID : constant Mode_Integer_t := ${S_ISGID};
 
   Mode_Map : constant Mode_Map_t := Mode_Map_t'
     (User_Read     => Internal_User_Read,
