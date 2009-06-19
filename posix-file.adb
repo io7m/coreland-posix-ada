@@ -13,15 +13,17 @@ package body POSIX.File is
     return Open_Access_Mode_Map (Access_Mode);
   end Open_Access_Mode_To_Integer;
 
-  function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t is
+  function Open_Options_To_Integer (Options : in Open_Options_t) return Open_Flag_Integer_t is
     Return_Options : Open_Flag_Integer_t := 0;
   begin
-    for Open_Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
-      if Open_Options (Open_Option) then
-        Return_Options := Return_Options or Open_Option_Map (Open_Option);
+    for Option in Open_Option_t range Open_Option_t'First .. Open_Option_t'Last loop
+      --# assert Option <= Open_Option_t'Last
+      --#    and Option >= Open_Option_t'First
+      --#    and Open_Option_Map (Option) <= Open_Flag_Integer_t'Last
+      --#    and Open_Option_Map (Option) >= Open_Flag_Integer_t'First;
+      if Options (Option) then
+        Return_Options := Return_Options or Open_Option_Map (Option);
       end if;
-      --# assert (Open_Option <= Open_Option_t'Last) and
-      --#        (Open_Option >= Open_Option_t'First);
     end loop;
     return Return_Options;
   end Open_Options_To_Integer;
@@ -48,8 +50,8 @@ package body POSIX.File is
           Supported := False;
         end if;
       end if;
-      --# assert (Option <= Open_Option_t'Last) and
-      --#        (Option >= Open_Option_t'First);
+      --# assert Option <= Open_Option_t'Last
+      --#    and Option >= Open_Option_t'First;
     end loop;
     return Supported;
   end Check_Options;

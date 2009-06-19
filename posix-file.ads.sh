@@ -273,7 +273,7 @@ cat <<EOF
   --# return Open_Access_Mode_Map (Access_Mode);
 
   -- Map Open_Options_t to discrete type.
-  function Open_Options_To_Integer (Open_Options : in Open_Options_t) return Open_Flag_Integer_t;
+  function Open_Options_To_Integer (Options : in Open_Options_t) return Open_Flag_Integer_t;
 
   -- Check access mode is valid.
   function Check_Access_Mode (Access_Mode : in Open_Access_Mode_t) return Boolean;
