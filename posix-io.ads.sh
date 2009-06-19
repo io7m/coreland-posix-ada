@@ -32,7 +32,8 @@ cat <<EOF
      Elements_Read :    out Storage_Element_Array_Size_t;
      Error_Value   :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Buffer, Elements_Read, Error_Value from Descriptor, Element_Limit, Errno.Errno_Value;
+  --# derives Buffer, Elements_Read from Descriptor, Element_Limit &
+  --#         Error_Value           from Errno.Errno_Value, Descriptor, Element_Limit;
   --# pre Element_Limit <= Buffer'Length;
   --# post Elements_Read <= Element_Limit;
 
@@ -44,7 +45,8 @@ cat <<EOF
      Elements_Written :    out Storage_Element_Array_Size_t;
      Error_Value      :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Elements_Written, Error_Value from Descriptor, Buffer, Element_Limit, Errno.Errno_Value;
+  --# derives Elements_Written from Descriptor, Buffer, Element_Limit &
+  --#         Error_Value      from Descriptor, Buffer, Element_Limit, Errno.Errno_Value;
   --# pre Element_Limit <= Buffer'Length;
   --# post Elements_Written <= Element_Limit;
 
