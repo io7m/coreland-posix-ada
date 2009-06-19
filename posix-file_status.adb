@@ -1,3 +1,6 @@
+with POSIX.C_Types;
+use type POSIX.C_Types.Int_t;
+
 with System;
 
 package body POSIX.File_Status is
@@ -113,15 +116,15 @@ package body POSIX.File_Status is
     return Permissions.Mode_Integer_To_Mode (C_Get_Mode (Status));
   end Get_Mode;
 
-  function C_Get_Number_Of_Links (Status : in Status_t) return Positive is
+  function C_Get_Number_Of_Links (Status : in Status_t) return Link_Count_t is
     --# hide C_Get_Number_Of_Links
-    function C_posix_stat_st_nlink (Status : in System.Address) return Positive;
+    function C_posix_stat_st_nlink (Status : in System.Address) return Link_Count_t;
     pragma Import (C, C_posix_stat_st_nlink, "posix_stat_st_nlink");
   begin
     return C_posix_stat_st_nlink (Status.C_Data (Status.C_Data'First)'Address);
   end C_Get_Number_Of_Links;
 
-  function Get_Number_Of_Links (Status : in Status_t) return Positive is
+  function Get_Number_Of_Links (Status : in Status_t) return Link_Count_t is
   begin
     return C_Get_Number_Of_Links (Status);
   end Get_Number_Of_Links;

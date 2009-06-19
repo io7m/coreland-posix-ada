@@ -51,9 +51,11 @@ package POSIX.File_Status is
 
 EOF
 
-./type-discrete Device_ID || exit 1
+./type-discrete Device_ID  || exit 1
 echo
-./type-discrete INode || exit 1
+./type-discrete INode      || exit 1
+echo
+./type-discrete Link_Count || exit 1
 
 cat <<EOF
 
@@ -70,7 +72,7 @@ cat <<EOF
   function Get_Mode (Status : in Status_t) return Permissions.Mode_t;
   --# pre Is_Valid (Status);
 
-  function Get_Number_Of_Links (Status : in Status_t) return Positive;
+  function Get_Number_Of_Links (Status : in Status_t) return Link_Count_t;
   --# pre Is_Valid (Status);
 
   function Get_User_ID (Status : in Status_t) return User_DB.User_ID_t;

@@ -48,6 +48,7 @@ static const struct discrete_t type_table[] = {
   { "Size",                  0,         0,  0, sizeof (size_t) * CHAR_BIT,  DISCRETE_MOD },
   { "Storage_Element",       0,         0, 10, sizeof (unsigned char) * CHAR_BIT, DISCRETE_MOD },
   { "User_ID",              -1,   INT_MAX, 10, sizeof (uid_t) * CHAR_BIT,   DISCRETE_RANGED },
+  { "Link_Count",            0,         0, 10, sizeof (nlink_t) * CHAR_BIT, DISCRETE_MOD },
 };
 static const size_t type_table_size = sizeof (type_table) / sizeof (struct discrete_t);
 

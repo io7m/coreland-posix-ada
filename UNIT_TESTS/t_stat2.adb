@@ -5,6 +5,8 @@ with POSIX.File;
 use type POSIX.File.Offset_t;
 
 with POSIX.File_Status;
+use type POSIX.File_Status.Link_Count_t;
+
 with Test;
 
 procedure T_Stat2 is
