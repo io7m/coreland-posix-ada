@@ -7,8 +7,9 @@ package body POSIX.Symlink is
   procedure C_Readlink_Boundary
     (File_Name       : in String;
      Modified_Buffer : out File.File_Name_t;
-     Modified_Size   : out C_Types.Signed_Size_t)
-    --# derives Modified_Buffer, Modified_Size from File_Name;
+     Modified_Size   : out File.File_Name_Size_t;
+     Read_Error      : out Boolean)
+    --# derives Modified_Buffer, Modified_Size, Read_Error from File_Name;
   is
     --# hide C_Readlink_Boundary
     function C_Readlink
@@ -29,23 +30,34 @@ package body POSIX.Symlink is
         (Path        => C_String.To_C_String (C_File_Name_Buffer'Unchecked_Access),
          Buffer      => C_String.To_C_Char_Array (C_Buffer'Unchecked_Access),
          Buffer_Size => C_Buffer'Length);
-      if C_Size > 0 then
-        Modified_Buffer (File.File_Name_Index_t'First .. Positive (C_Size)) := C_String.To_String
-          (Item => C_String.To_C_Char_Array (C_Buffer'Unchecked_Access),
-           Size => Interfaces.C.size_t (C_Size));
-        Modified_Size := C_Size;
-      else
-        Modified_Size := -1;
-      end if;
+      case C_Size is
+        when -1 =>
+          Modified_Size := 0;
+          Read_Error    := True;
+        when C_Types.Signed_Size_t (File.File_Name_Index_t'First) ..
+             C_Types.Signed_Size_t (File.File_Name_Index_t'Last) =>
+          Modified_Buffer (File.File_Name_Index_t'First .. Positive (C_Size)) :=
+            C_String.To_String
+              (Item => C_String.To_C_Char_Array (C_Buffer'Unchecked_Access),
+               Size => Interfaces.C.size_t (C_Size));
+          Modified_Size := File.File_Name_Size_t (C_Size);
+          Read_Error    := False;
+        when others =>
+          Error.Set_Error (Error.Error_Out_Of_Range);
+          Modified_Size := 0;
+          Read_Error    := False;
+      end case;
     end;
   exception
     -- Do not propagate exceptions.
     when Storage_Error =>
       Error.Set_Error (Error.Error_Out_Of_Memory);
-      Modified_Size := -1;
+      Modified_Size := 0;
+      Read_Error    := True;
     when others =>
       Error.Set_Error (Error.Error_Unknown);
-      Modified_Size := -1;
+      Modified_Size := 0;
+      Read_Error    := True;
   end C_Readlink_Boundary;
 
   procedure Read_Link
@@ -55,7 +67,8 @@ package body POSIX.Symlink is
      Error_Value : out Error.Error_t)
   is
     Returned_Buffer : File.File_Name_t;
-    Returned_Size   : C_Types.Signed_Size_t;
+    Returned_Size   : File.File_Name_Size_t;
+    Read_Error      : Boolean;
   begin
     if File_Name'Last > Path.Max_Length then
       Error_Value := Error.Error_Name_Too_Long;
@@ -66,15 +79,16 @@ package body POSIX.Symlink is
       C_Readlink_Boundary
         (File_Name       => File_Name,
          Modified_Buffer => Returned_Buffer,
-         Modified_Size   => Returned_Size);
-      if Returned_Size = -1 then
+         Modified_Size   => Returned_Size,
+         Read_Error      => Read_Error);
+      if Read_Error then
         Error_Value := Error.Get_Error;
         Buffer      := File.File_Name_t'(File.File_Name_Index_t => Character'Val (0));
         Buffer_Size := 0;
       else
         Error_Value := Error.Error_None;
         Buffer      := Returned_Buffer;
-        Buffer_Size := File.File_Name_Size_t (Returned_Size);
+        Buffer_Size := Returned_Size;
       end if;
     end if;
   end Read_Link;
