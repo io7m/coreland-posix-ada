@@ -1,7 +1,9 @@
 posix-permissions.ads:   \
 auto-warn.txt            \
+constants                \
 posix-permissions.ads.sh \
 type-discrete            \
+type-mode                \
 LICENSE
 	./posix-permissions.ads.sh > posix-permissions.ads.tmp
 	mv posix-permissions.ads.tmp posix-permissions.ads

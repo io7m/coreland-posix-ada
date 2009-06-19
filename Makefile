@@ -33,8 +33,8 @@ posix-path.ali posix-path.o posix-permissions.ali posix-permissions.o \
 posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
 posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
 spark_config spark_config.ali spark_config.o test_config.ali test_config.o \
-type-discrete type-discrete.o type-passwd type-passwd.o type-status \
-type-status.o
+type-discrete type-discrete.o type-mode type-mode.o type-passwd type-passwd.o \
+type-status type-status.o
 
 # Mkf-deinstall
 deinstall: deinstaller conf-sosuffix
@@ -409,11 +409,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -767,8 +767,10 @@ posix-path.ali
 # posix-permissions.ads.mff
 posix-permissions.ads:   \
 auto-warn.txt            \
+constants                \
 posix-permissions.ads.sh \
 type-discrete            \
+type-mode                \
 LICENSE
 	./posix-permissions.ads.sh > posix-permissions.ads.tmp
 	mv posix-permissions.ads.tmp posix-permissions.ads
@@ -883,6 +885,14 @@ type-discrete.o:\
 cc-compile type-discrete.c posix_config.h
 	./cc-compile type-discrete.c
 
+type-mode:\
+cc-link type-mode.ld type-mode.o
+	./cc-link type-mode type-mode.o
+
+type-mode.o:\
+cc-compile type-mode.c posix_config.h
+	./cc-compile type-mode.c
+
 type-passwd:\
 cc-link type-passwd.ld type-passwd.o
 	./cc-link type-passwd type-passwd.o
@@ -936,8 +946,8 @@ obj_clean:
 	rm -f posix-symlink.o posix-user_db.ads posix-user_db.ali posix-user_db.o \
 	posix.ali posix.o posix_error.o posix_file posix_file.o posix_passwd.o \
 	posix_stat.o spark_config spark_config.ali spark_config.o test_config.ads \
-	test_config.ali test_config.o type-discrete type-discrete.o type-passwd \
-	type-passwd.o type-status type-status.o
+	test_config.ali test_config.o type-discrete type-discrete.o type-mode \
+	type-mode.o type-passwd type-passwd.o type-status type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 

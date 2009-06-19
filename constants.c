@@ -30,6 +30,7 @@ static const struct {
   const char *name;
 } compile_time_constants[] = {
   { SIGNED_LONG,   { PATH_MAX }, "PATH_MAX" },
+
   { UNSIGNED_LONG, { S_IRUSR }, "S_IRUSR" },
   { UNSIGNED_LONG, { S_IWUSR }, "S_IWUSR" },
   { UNSIGNED_LONG, { S_IXUSR }, "S_IXUSR" },
@@ -41,6 +42,12 @@ static const struct {
   { UNSIGNED_LONG, { S_IXOTH }, "S_IXOTH" },
   { UNSIGNED_LONG, { S_ISUID }, "S_ISUID" },
   { UNSIGNED_LONG, { S_ISGID }, "S_ISGID" },
+
+  /* Maximum value for ORd mode */
+  { UNSIGNED_LONG, { S_IRUSR | S_IWUSR | S_IXUSR |
+                     S_IRGRP | S_IWGRP | S_IXGRP |
+                     S_IROTH | S_IWOTH | S_IXOTH |
+                     S_ISUID | S_ISGID }, "S_IMAX" },
 };
 const unsigned int compile_time_constants_size =
   sizeof (compile_time_constants) / sizeof (compile_time_constants [0]);

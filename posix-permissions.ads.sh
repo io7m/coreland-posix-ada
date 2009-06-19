@@ -32,9 +32,10 @@ package POSIX.Permissions is
   -- Null mode set.
   None : constant Mode_t := Mode_t'(others => False);
 
+  -- Mode integer type.
 EOF
 
-./type-discrete Mode_Integer || exit 1
+./type-mode || exit 1
 
 cat <<EOF
 
@@ -66,6 +67,8 @@ S_IXOTH=`./constants S_IXOTH` || exit 1
 
 S_ISUID=`./constants S_ISUID` || exit 1
 S_ISGID=`./constants S_ISGID` || exit 1
+
+S_IMAX=`./constants S_IMAX` || exit 1
 
 cat <<EOF
   Internal_User_Read    : constant Mode_Integer_t := ${S_IRUSR};
