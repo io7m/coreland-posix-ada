@@ -25,8 +25,15 @@ static const struct {
   } number;
   const char *name;
 } constants[] = {
-  { SIGNED_LONG,   { PATH_MAX           }, "PATH_MAX" },
-  { SIGNED_LONG,   { _SC_LOGIN_NAME_MAX }, "LOGIN_NAME_MAX" },
+  { SIGNED_LONG,   { PATH_MAX }, "PATH_MAX" },
+
+  /* XXX: Platforms rarely provide a compile-time constant for this.
+   *      However, the constant is used in these bindings to specify
+   *      a buffer size for getpwnam_r which corresponds directly to
+   *      the length of a single line in /etc/passwd.
+   */
+
+  { SIGNED_LONG,   { LINE_MAX }, "LOGIN_NAME_MAX" },
 
   { UNSIGNED_LONG, { S_IRUSR }, "S_IRUSR" },
   { UNSIGNED_LONG, { S_IWUSR }, "S_IWUSR" },
