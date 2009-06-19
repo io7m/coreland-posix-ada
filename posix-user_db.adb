@@ -49,6 +49,8 @@ package body POSIX.User_DB is
   is
     Returned_Value : C_Passwd_Return_Type_t;
   begin
+    Error.Set_Error (Error.Error_None);
+
     C_Get_Entry_By_Name_Boundary
       (User_Name      => User_Name,
        Database_Entry => Database_Entry,

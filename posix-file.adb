@@ -112,6 +112,8 @@ package body POSIX.File is
     C_Flags   : Open_Flag_Integer_t;
     Supported : Boolean;
   begin
+    Error.Set_Error (Error.Error_None);
+
     Supported := Check_Support
       (Access_Mode => Access_Mode,
        Options     => Options);
@@ -304,6 +306,8 @@ package body POSIX.File is
        Mode       : in Permissions.Mode_t) return Error.Return_Value_t;
     pragma Import (C, C_fchmod, "fchmod");
   begin
+    Error.Set_Error (Error.Error_None);
+
     Return_Value := C_fchmod
       (Descriptor => Descriptor,
        Mode       => Mode);
@@ -320,6 +324,8 @@ package body POSIX.File is
   is
     Descriptor : Descriptor_t;
   begin
+    Error.Set_Error (Error.Error_None);
+
     Open_Read_Only
       (File_Name    => File_Name,
        Non_Blocking => False,
@@ -351,6 +357,8 @@ package body POSIX.File is
        Group      : in User_DB.Group_ID_t) return Error.Return_Value_t;
     pragma Import (C, C_fchown, "fchown");
   begin
+    Error.Set_Error (Error.Error_None);
+
     Return_Value := C_fchown
       (Descriptor => Descriptor,
        Owner      => Owner,
@@ -369,6 +377,8 @@ package body POSIX.File is
   is
     Descriptor : Descriptor_t;
   begin
+    Error.Set_Error (Error.Error_None);
+
     Open_Read_Only
       (File_Name    => File_Name,
        Non_Blocking => False,
@@ -414,6 +424,8 @@ package body POSIX.File is
     (File_Name   : in String;
      Error_Value : out Error.Error_t) is
   begin
+    Error.Set_Error (Error.Error_None);
+
     case Unlink_Boundary (File_Name) is
       when  0 => Error_Value := Error.Error_None;
       when -1 => Error_Value := Error.Get_Error;
@@ -431,6 +443,8 @@ package body POSIX.File is
     function C_Close (Descriptor : in Valid_Descriptor_t) return Error.Return_Value_t;
     pragma Import (C, C_Close, "close");
   begin
+    Error.Set_Error (Error.Error_None);
+
     case C_Close (Descriptor) is
       when  0 => Error_Value := Error.Error_None;
       when -1 => Error_Value := Error.Get_Error;

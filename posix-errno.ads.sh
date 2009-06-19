@@ -30,5 +30,13 @@ cat <<EOF
   --# derives Errno_Value from Code;
   pragma Import (C, Errno_Set, "posix_errno_set");
 
+  --
+  -- Reset POSIX errno.
+  --
+
+  procedure Errno_Reset;
+  --# global out Errno_Value;
+  pragma Import (C, Errno_Reset, "posix_errno_reset");
+
 end POSIX.Errno;
 EOF

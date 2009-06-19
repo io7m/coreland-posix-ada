@@ -18,7 +18,7 @@ begin
      Found_Entry    => Found_Entry,
      Error_Value    => Error_Value);
   Test.Assert (Found_Entry = False);
-  Test.Assert (Error_Value /= POSIX.Error.Error_None);
+  Test.Assert (Error_Value = POSIX.Error.Error_None);
   Test.Assert (POSIX.User_DB.Is_Valid (Database_Entry) = False);
 
 end T_UDB_GE2;

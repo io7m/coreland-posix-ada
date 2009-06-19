@@ -57,6 +57,8 @@ package body POSIX.Symlink is
     Returned_Buffer : File.File_Name_t;
     Returned_Size   : C_Types.Signed_Size_t;
   begin
+    Error.Set_Error (Error.Error_None);
+
     if File_Name'Last > Path.Max_Length then
       Error_Value := Error.Error_Name_Too_Long;
       Buffer      := File.File_Name_t'(File.File_Name_Index_t => Character'Val (0));
@@ -116,6 +118,8 @@ package body POSIX.Symlink is
     Names_OK     : Boolean;
     Return_Value : Error.Return_Value_t;
   begin
+    Error.Set_Error (Error.Error_None);
+
     Error_Value := Error.Error_None;
     Names_OK    := True;
 

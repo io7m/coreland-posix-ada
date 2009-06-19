@@ -34,6 +34,8 @@ package body POSIX.File_Status is
   is
     Return_Value : Error.Return_Value_t;
   begin
+    Error.Set_Error (Error.Error_None);
+
     C_FStat_Boundary
       (Descriptor   => Descriptor,
        Status       => Status,
@@ -55,6 +57,8 @@ package body POSIX.File_Status is
   is
     Descriptor : File.Descriptor_t;
   begin
+    Error.Set_Error (Error.Error_None);
+
     File.Open_Read_Only
       (File_Name    => File_Name,
        Non_Blocking => False,
