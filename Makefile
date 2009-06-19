@@ -8,6 +8,7 @@ UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali UNIT_TESTS/t_error1.o \
 UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
 UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali UNIT_TESTS/t_open2.o \
 UNIT_TESTS/t_stat1 UNIT_TESTS/t_stat1.ali UNIT_TESTS/t_stat1.o \
+UNIT_TESTS/t_stat2 UNIT_TESTS/t_stat2.ali UNIT_TESTS/t_stat2.o \
 UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali UNIT_TESTS/t_symlink2.o \
 UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali UNIT_TESTS/t_symlink3.o \
@@ -163,12 +164,27 @@ posix-file.ali posix-permissions.ali posix-ada.a
 	./ada-link UNIT_TESTS/t_stat1 UNIT_TESTS/t_stat1.ali posix-ada.a
 
 UNIT_TESTS/t_stat1.ali:\
-ada-compile UNIT_TESTS/t_stat1.adb posix-error.ali posix-file_status.ali \
-UNIT_TESTS/test.ali
+ada-compile UNIT_TESTS/t_stat1.adb posix-error.ali posix-file.ali \
+posix-file_status.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_stat1.adb
 
 UNIT_TESTS/t_stat1.o:\
 UNIT_TESTS/t_stat1.ali
+
+UNIT_TESTS/t_stat2:\
+ada-bind ada-link UNIT_TESTS/t_stat2.ald UNIT_TESTS/t_stat1.ali \
+UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file_status.ali \
+posix-file.ali posix-permissions.ali posix-ada.a
+	./ada-bind UNIT_TESTS/t_stat1.ali
+	./ada-link UNIT_TESTS/t_stat2 UNIT_TESTS/t_stat1.ali posix-ada.a
+
+UNIT_TESTS/t_stat2.ali:\
+ada-compile UNIT_TESTS/t_stat2.adb posix-error.ali posix-file.ali \
+posix-file_status.ali UNIT_TESTS/test.ali
+	./ada-compile UNIT_TESTS/t_stat2.adb
+
+UNIT_TESTS/t_stat2.o:\
+UNIT_TESTS/t_stat2.ali
 
 UNIT_TESTS/t_symlink1:\
 ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/t_symlink1.ali \
@@ -363,11 +379,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc conf-cc mk-cctype
+conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld conf-ld mk-ldtype
+conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -861,6 +877,7 @@ obj_clean:
 	UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali UNIT_TESTS/t_open1.o \
 	UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali UNIT_TESTS/t_open2.o \
 	UNIT_TESTS/t_stat1 UNIT_TESTS/t_stat1.ali UNIT_TESTS/t_stat1.o \
+	UNIT_TESTS/t_stat2 UNIT_TESTS/t_stat2.ali UNIT_TESTS/t_stat2.o \
 	UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali UNIT_TESTS/t_symlink1.o \
 	UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali UNIT_TESTS/t_symlink2.o \
 	UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali UNIT_TESTS/t_symlink3.o \
@@ -870,9 +887,9 @@ obj_clean:
 	UNIT_TESTS/t_udb_ge4 UNIT_TESTS/t_udb_ge4.ali UNIT_TESTS/t_udb_ge4.o \
 	UNIT_TESTS/t_udb_ge5 UNIT_TESTS/t_udb_ge5.ali UNIT_TESTS/t_udb_ge5.o \
 	UNIT_TESTS/t_udb_ge6 UNIT_TESTS/t_udb_ge6.ali UNIT_TESTS/t_udb_ge6.o \
-	UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali UNIT_TESTS/t_unlink1.o \
-	UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o
-	rm -f constants constants.o ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a \
+	UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali
+	rm -f UNIT_TESTS/t_unlink1.o UNIT_TESTS/test.a UNIT_TESTS/test.ali \
+	UNIT_TESTS/test.o constants constants.o ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a \
 	ctxt/dlibdir.c ctxt/dlibdir.o ctxt/fakeroot.c ctxt/fakeroot.o ctxt/incdir.c \
 	ctxt/incdir.o ctxt/repos.c ctxt/repos.o ctxt/slibdir.c ctxt/slibdir.o \
 	ctxt/version.c ctxt/version.o deinstaller deinstaller.o errno_int errno_int.c \
@@ -885,9 +902,9 @@ obj_clean:
 	posix-io.ads posix-io.ali posix-io.o posix-path.ads posix-path.ali posix-path.o \
 	posix-permissions.ads posix-permissions.ali posix-permissions.o \
 	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
-	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-	posix_passwd.o posix_stat.o spark_config spark_config.ali spark_config.o
-	rm -f test_config.ads test_config.ali test_config.o type-discrete \
+	posix-user_db.o posix.ali posix.o posix_error.o posix_file
+	rm -f posix_file.o posix_passwd.o posix_stat.o spark_config spark_config.ali \
+	spark_config.o test_config.ads test_config.ali test_config.o type-discrete \
 	type-discrete.o type-passwd type-passwd.o type-status type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
