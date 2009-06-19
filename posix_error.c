@@ -15,12 +15,6 @@ posix_errno_set (int e)
   errno = e;
 }
 
-void
-posix_errno_reset (void)
-{
-  errno = 0;
-}
-
 size_t
 posix_strerror_r (int error_code, char *buffer, size_t buffer_size)
 {
