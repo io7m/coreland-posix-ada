@@ -26,6 +26,9 @@ cat <<EOF
   Unspecified_User  : constant User_ID_t;
   Unspecified_Group : constant Group_ID_t;
 
+  subtype Valid_User_ID_t is User_ID_t range 0 .. User_ID_t'Last;
+  subtype Valid_Group_ID_t is Group_ID_t range 0 .. Group_ID_t'Last;
+
   type Database_Entry_t is limited private;
 
   --
