@@ -3,5 +3,6 @@ posix-file.adb
 posix-file_status.adb
 posix-io.adb
 posix-permissions.adb
+posix-process_info.adb
 posix-symlink.adb
 posix-user_db.adb

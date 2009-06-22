@@ -30,11 +30,11 @@ posix-ada-conf.o posix-ada.a posix-c_types.ali posix-c_types.o posix-errno.ali \
 posix-errno.o posix-error.ali posix-error.o posix-file.ali posix-file.o \
 posix-file_status.ali posix-file_status.o posix-io.ali posix-io.o \
 posix-path.ali posix-path.o posix-permissions.ali posix-permissions.o \
-posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
-posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
-spark_config spark_config.ali spark_config.o test_config.ali test_config.o \
-type-discrete type-discrete.o type-mode type-mode.o type-passwd type-passwd.o \
-type-status type-status.o
+posix-process_info.ali posix-process_info.o posix-symlink.ali posix-symlink.o \
+posix-user_db.ali posix-user_db.o posix.ali posix.o posix_error.o posix_file \
+posix_file.o posix_passwd.o posix_stat.o spark_config spark_config.ali \
+spark_config.o test_config.ali test_config.o type-discrete type-discrete.o \
+type-mode type-mode.o type-passwd type-passwd.o type-status type-status.o
 
 # Mkf-deinstall
 deinstall: deinstaller conf-sosuffix
@@ -409,11 +409,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc conf-cc mk-cctype
+conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld conf-ld mk-ldtype
+conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -608,12 +608,14 @@ cc-compile posix-ada-conf.c ctxt.h _sysinfo.h
 	./cc-compile posix-ada-conf.c
 
 posix-ada.a:\
-cc-slib posix-ada.sld posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-posix-file.o posix-file_status.o posix-io.o posix.o posix_passwd.o posix-path.o \
-posix-permissions.o posix_stat.o posix-symlink.o posix-user_db.o
-	./cc-slib posix-ada posix-c_types.o posix-errno.o posix_error.o posix-error.o \
-	posix-file.o posix-file_status.o posix-io.o posix.o posix_passwd.o posix-path.o \
-	posix-permissions.o posix_stat.o posix-symlink.o posix-user_db.o
+cc-slib posix-ada.sld posix-c_types.o posix-errno.o posix-error.o posix-file.o \
+posix-file_status.o posix-io.o posix-path.o posix-permissions.o \
+posix-process_info.o posix-symlink.o posix-user_db.o posix.o posix_error.o \
+posix_passwd.o posix_stat.o
+	./cc-slib posix-ada posix-c_types.o posix-errno.o posix-error.o posix-file.o \
+	posix-file_status.o posix-io.o posix-path.o posix-permissions.o \
+	posix-process_info.o posix-symlink.o posix-user_db.o posix.o posix_error.o \
+	posix_passwd.o posix_stat.o
 
 # posix-c_types.ads.mff
 posix-c_types.ads:   \
@@ -782,6 +784,26 @@ ada-compile posix-permissions.adb posix.ali posix-permissions.ads
 posix-permissions.o:\
 posix-permissions.ali
 
+# posix-process_info.ads.mff
+posix-process_info.ads:   \
+auto-warn.txt             \
+posix-error.ads           \
+posix-error.adb           \
+posix-user_db.ads         \
+posix-user_db.adb         \
+posix-process_info.ads.sh \
+type-discrete             \
+LICENSE
+	./posix-process_info.ads.sh > posix-process_info.ads.tmp
+	mv posix-process_info.ads.tmp posix-process_info.ads
+
+posix-process_info.ali:\
+ada-compile posix-process_info.adb posix-process_info.ads
+	./ada-compile posix-process_info.adb
+
+posix-process_info.o:\
+posix-process_info.ali
+
 # posix-symlink.ads.mff
 posix-symlink.ads:    \
 auto-warn.txt         \
@@ -942,12 +964,13 @@ obj_clean:
 	posix-error.o posix-file.ads posix-file.ali posix-file.o posix-file_status.ads \
 	posix-file_status.ali posix-file_status.o posix-io.ads posix-io.ali posix-io.o \
 	posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
-	posix-permissions.ali posix-permissions.o posix-symlink.ali
-	rm -f posix-symlink.o posix-user_db.ads posix-user_db.ali posix-user_db.o \
-	posix.ali posix.o posix_error.o posix_file posix_file.o posix_passwd.o \
-	posix_stat.o spark_config spark_config.ali spark_config.o test_config.ads \
-	test_config.ali test_config.o type-discrete type-discrete.o type-mode \
-	type-mode.o type-passwd type-passwd.o type-status type-status.o
+	posix-permissions.ali posix-permissions.o
+	rm -f posix-process_info.ads posix-process_info.ali posix-process_info.o \
+	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
+	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
+	posix_passwd.o posix_stat.o spark_config spark_config.ali spark_config.o \
+	test_config.ads test_config.ali test_config.o type-discrete type-discrete.o \
+	type-mode type-mode.o type-passwd type-passwd.o type-status type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 

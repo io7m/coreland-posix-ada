@@ -1,0 +1,11 @@
+posix-process_info.ads:   \
+auto-warn.txt             \
+posix-error.ads           \
+posix-error.adb           \
+posix-user_db.ads         \
+posix-user_db.adb         \
+posix-process_info.ads.sh \
+type-discrete             \
+LICENSE
+	./posix-process_info.ads.sh > posix-process_info.ads.tmp
+	mv posix-process_info.ads.tmp posix-process_info.ads
