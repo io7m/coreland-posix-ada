@@ -4,6 +4,9 @@ cat LICENSE       || exit 1
 cat auto-warn.txt || exit 1
 cat <<EOF
 with POSIX.Error;
+
+use type POSIX.Error.Return_Value_t;
+
 with POSIX.User_DB;
 
 use type POSIX.User_DB.User_ID_t;
