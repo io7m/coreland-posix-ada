@@ -33,29 +33,29 @@ package POSIX.Process_Info is
 
   -- proc_map : setuid
   procedure Set_User_ID
-    (User_ID     : in User_DB.Valid_User_ID_t;
-     Error_Value : out Error.Error_t);
+    (User_ID     : in     User_DB.Valid_User_ID_t;
+     Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from User_ID, Errno.Errno_Value;
 
   -- proc_map : seteuid
   procedure Set_Effective_User_ID
-    (User_ID     : in User_DB.Valid_User_ID_t;
-     Error_Value : out Error.Error_t);
+    (User_ID     : in     User_DB.Valid_User_ID_t;
+     Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from User_ID, Errno.Errno_Value;
 
   -- proc_map : setgid
   procedure Set_Group_ID
-    (Group_ID    : in User_DB.Valid_Group_ID_t;
-     Error_Value : out Error.Error_t);
+    (Group_ID    : in     User_DB.Valid_Group_ID_t;
+     Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Group_ID, Errno.Errno_Value;
 
   -- proc_map : setegid
   procedure Set_Effective_Group_ID
-    (Group_ID    : in User_DB.Valid_Group_ID_t;
-     Error_Value : out Error.Error_t);
+    (Group_ID    : in     User_DB.Valid_Group_ID_t;
+     Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Group_ID, Errno.Errno_Value;
 
