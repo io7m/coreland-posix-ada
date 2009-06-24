@@ -418,11 +418,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc conf-cc mk-cctype
+conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld conf-ld mk-ldtype
+conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -438,7 +438,7 @@ cc-link constants.ld constants.o
 	./cc-link constants constants.o
 
 constants.o:\
-cc-compile constants.c posix_config.h posix_ioctl.h
+cc-compile constants.c posix_config.h posix_streams.h
 	./cc-compile constants.c
 
 # ctxt/bindir.c.mff
@@ -774,8 +774,7 @@ LICENSE
 	mv posix-io-control.ads.tmp posix-io-control.ads
 
 posix-io-control.ali:\
-ada-compile posix-io-control.adb posix-io.ali posix-io-control.ads \
-posix-c_types.ali
+ada-compile posix-io-control.adb posix-io.ali posix-io-control.ads
 	./ada-compile posix-io-control.adb
 
 posix-io-control.o:\
@@ -912,9 +911,6 @@ posix_file.o:\
 cc-compile posix_file.c posix_config.h
 	./cc-compile posix_file.c
 
-posix_ioctl.h:\
-_sd_streams.h
-
 posix_passwd.o:\
 cc-compile posix_passwd.c posix_config.h posix_passwd.h
 	./cc-compile posix_passwd.c
@@ -922,6 +918,9 @@ cc-compile posix_passwd.c posix_config.h posix_passwd.h
 posix_stat.o:\
 cc-compile posix_stat.c posix_config.h
 	./cc-compile posix_stat.c
+
+posix_streams.h:\
+_sd_streams.h
 
 spark_config:\
 ada-bind ada-link spark_config.ald spark_config.ali

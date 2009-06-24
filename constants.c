@@ -1,5 +1,5 @@
 #include "posix_config.h"
-#include "posix_ioctl.h"
+#include "posix_streams.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
