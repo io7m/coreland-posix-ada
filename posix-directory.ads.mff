@@ -1,0 +1,10 @@
+posix-directory.ads:   \
+auto-warn.txt          \
+posix-error.ads        \
+posix-error.adb        \
+posix-file.ads         \
+posix-file.adb         \
+posix-directory.ads.sh \
+LICENSE
+	./posix-directory.ads.sh > posix-directory.ads.tmp
+	mv posix-directory.ads.tmp posix-directory.ads

@@ -1,3 +1,4 @@
+posix-directory.adb
 posix-error.adb
 posix-file.adb
 posix-file_status.adb

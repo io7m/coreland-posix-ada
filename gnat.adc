@@ -2,6 +2,10 @@
 -- ./posix-c_types.apk
 pragma source_file_name(POSIX.C_Types, spec_file_name => "posix-c_types.ads");
 
+-- ./posix-directory.apk
+pragma source_file_name(POSIX.Directory, spec_file_name => "posix-directory.ads");
+pragma source_file_name(POSIX.Directory, body_file_name => "posix-directory.adb");
+
 -- ./posix-errno.apk
 pragma source_file_name(POSIX.Errno, spec_file_name => "posix-errno.ads");
 
