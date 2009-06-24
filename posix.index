@@ -11,6 +11,8 @@ POSIX.File_Status  body is in posix-file_status.adb
 POSIX.File_Status  spec is in posix-file_status.ads
 POSIX.IO           body is in posix-io.adb
 POSIX.IO           spec is in posix-io.ads
+POSIX.IO.Control   body is in posix-io-control.adb
+POSIX.IO.Control   spec is in posix-io-control.ads
 POSIX.Path         spec is in posix-path.ads
 POSIX.Permissions  spec is in posix-permissions.ads
 POSIX.Process_Info body is in posix-process_info.adb
