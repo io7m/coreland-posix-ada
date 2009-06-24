@@ -28,7 +28,7 @@ package POSIX.File_Status is
   -- Status is valid?
   function Is_Valid (Status : in Status_t) return Boolean;
 
-  -- proc_map : stat
+  -- subprogram_map : stat
   procedure Get_Status
     (File_Name   : in     String;
      Status      :    out Status_t;
@@ -38,7 +38,7 @@ package POSIX.File_Status is
   --# post ((Is_Valid (Status))     and (Error_Value = Error.Error_None)) or
   --#      ((not Is_Valid (Status)) and (Error_Value /= Error.Error_None));
 
-  -- proc_map : fstat
+  -- subprogram_map : fstat
   procedure Get_Descriptor_Status
     (Descriptor  : in     File.Valid_Descriptor_t;
      Status      :    out Status_t;

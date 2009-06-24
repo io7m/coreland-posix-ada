@@ -24,7 +24,7 @@ cat <<EOF
   subtype Storage_Element_Array_Index_t is Storage_Element_Array_Size_t range 1 .. Natural'Last;
   type Storage_Element_Array_t is array (Storage_Element_Array_Index_t range <>) of Storage_Element_t;
 
-  -- proc_map : read
+  -- subprogram_map : read
   procedure Read
     (Descriptor    : in     File.Valid_Descriptor_t;
      Buffer        :    out Storage_Element_Array_t;
@@ -37,7 +37,7 @@ cat <<EOF
   --# pre Element_Limit <= Buffer'Length;
   --# post Elements_Read <= Element_Limit;
 
-  -- proc_map : write
+  -- subprogram_map : write
   procedure Write
     (Descriptor       : in     File.Valid_Descriptor_t;
      Buffer           : in     Storage_Element_Array_t;

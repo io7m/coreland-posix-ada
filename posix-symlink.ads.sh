@@ -19,7 +19,7 @@ with POSIX.File;
 
 package POSIX.Symlink is
 
-  -- proc_map : readlink
+  -- subprogram_map : readlink
   procedure Read_Link
     (File_Name   : in     String;
      Buffer      :    out File.File_Name_t;
@@ -29,7 +29,7 @@ package POSIX.Symlink is
   --# derives Buffer, Buffer_Size from File_Name &
   --#         Error_Value         from File_Name, Errno.Errno_Value;
 
-  -- proc_map : symlink
+  -- subprogram_map : symlink
   procedure Create
     (File_Name   : in     String;
      Target      : in     String;

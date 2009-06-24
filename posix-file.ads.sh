@@ -150,7 +150,7 @@ cat <<EOF
 
   type Open_Options_t is array (Open_Option_t) of Boolean;
 
-  -- proc_map : open
+  -- subprogram_map : open
   procedure Open
     (File_Name    : in     String;
      Access_Mode  : in     Open_Access_Mode_t;
@@ -169,7 +169,7 @@ cat <<EOF
   -- File permissions.
   --
 
-  -- proc_map : chmod
+  -- subprogram_map : chmod
   procedure Change_Mode
     (File_Name   : in     String;
      Mode        : in     Permissions.Mode_t;
@@ -177,7 +177,7 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from File_Name, Mode, Errno.Errno_Value;
 
-  -- proc_map : fchmod
+  -- subprogram_map : fchmod
   procedure Change_Descriptor_Mode
     (Descriptor  : in     Valid_Descriptor_t;
      Mode        : in     Permissions.Mode_t;
@@ -189,7 +189,7 @@ cat <<EOF
   -- File ownership.
   --
 
-  -- proc_map : chown
+  -- subprogram_map : chown
   procedure Change_Ownership
     (File_Name   : in     String;
      Owner       : in     User_DB.User_ID_t;
@@ -198,7 +198,7 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from File_Name, Owner, Group, Errno.Errno_Value;
 
-  -- proc_map : fchown
+  -- subprogram_map : fchown
   procedure Change_Descriptor_Ownership
     (Descriptor  : in     Valid_Descriptor_t;
      Owner       : in     User_DB.User_ID_t;
@@ -211,7 +211,7 @@ cat <<EOF
   -- File removal.
   --
 
-  -- proc_map : unlink
+  -- subprogram_map : unlink
   procedure Unlink
     (File_Name   : in     String;
      Error_Value :    out Error.Error_t);
@@ -222,7 +222,7 @@ cat <<EOF
   -- File closing.
   --
 
-  -- proc_map : close
+  -- subprogram_map : close
   procedure Close
     (Descriptor  : in     Valid_Descriptor_t;
      Error_Value :    out Error.Error_t);
@@ -233,7 +233,7 @@ cat <<EOF
   -- File seeking.
   --
 
-  -- proc_map : lseek
+  -- subprogram_map : lseek
   procedure Seek_Relative
     (Descriptor  : in     Valid_Descriptor_t;
      Offset      : in     Offset_t;
@@ -241,7 +241,7 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
 
-  -- proc_map : lseek
+  -- subprogram_map : lseek
   procedure Seek_Absolute
     (Descriptor  : in     Valid_Descriptor_t;
      Offset      : in     Offset_t;
@@ -249,7 +249,7 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
 
-  -- proc_map : lseek
+  -- subprogram_map : lseek
   procedure Seek_To_Start
     (Descriptor  : in     Valid_Descriptor_t;
      Offset      : in     Offset_t;
@@ -257,7 +257,7 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
 
-  -- proc_map : lseek
+  -- subprogram_map : lseek
   procedure Seek_To_End
     (Descriptor  : in     Valid_Descriptor_t;
      Offset      : in     Offset_t;

@@ -37,7 +37,7 @@ cat <<EOF
 
   function Is_Valid (Database_Entry : in Database_Entry_t) return Boolean;
 
-  -- proc_map : getpwnam_r
+  -- subprogram_map : getpwnam_r
   procedure Get_Entry_By_Name
     (User_Name      : in     String;
      Database_Entry :    out Database_Entry_t;
