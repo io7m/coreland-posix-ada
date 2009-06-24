@@ -255,7 +255,7 @@ cat <<EOF
      Offset      : in     Offset_t;
      Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Error_Value from Descriptor, Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
 
   -- proc_map : lseek
   procedure Seek_To_End
@@ -263,7 +263,7 @@ cat <<EOF
      Offset      : in     Offset_t;
      Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Error_Value from Descriptor, Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
 
 private
 
