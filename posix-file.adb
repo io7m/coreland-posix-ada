@@ -439,4 +439,86 @@ package body POSIX.File is
     end case;
   end Close;
 
+  --
+  -- File seeking.
+  --
+
+  function C_Seek
+    (Descriptor : in Valid_Descriptor_t;
+     Offset     : in Offset_t;
+     Whence     : in Seek_Whence_t) return Offset_t;
+  pragma Import (C, C_Seek, "lseek");
+
+  procedure Seek_Relative
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t)
+  is
+    Result_Value : Offset_t;
+  begin
+    Result_Value := C_Seek
+      (Descriptor => Descriptor,
+       Offset     => Offset,
+       Whence     => Seek_Cur);
+    if Result_Value <= -1 then
+      Error_Value := Error.Get_Error;
+    else
+      Error_Value := Error.Error_None;
+    end if;
+  end Seek_Relative;
+
+  procedure Seek_Absolute
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t)
+  is
+    Result_Value : Offset_t;
+  begin
+    Result_Value := C_Seek
+      (Descriptor => Descriptor,
+       Offset     => Offset,
+       Whence     => Seek_Set);
+    if Result_Value <= -1 then
+      Error_Value := Error.Get_Error;
+    else
+      Error_Value := Error.Error_None;
+    end if;
+  end Seek_Absolute;
+
+  procedure Seek_To_Start
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t)
+  is
+    Result_Value : Offset_t;
+  begin
+    Result_Value := C_Seek
+      (Descriptor => Descriptor,
+       Offset     => Offset,
+       Whence     => Seek_Set);
+    if Result_Value <= -1 then
+      Error_Value := Error.Get_Error;
+    else
+      Error_Value := Error.Error_None;
+    end if;
+  end Seek_To_Start;
+
+  procedure Seek_To_End
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t)
+  is
+    Result_Value : Offset_t;
+  begin
+    Result_Value := C_Seek
+      (Descriptor => Descriptor,
+       Offset     => Offset,
+       Whence     => Seek_End);
+    if Result_Value <= -1 then
+      Error_Value := Error.Get_Error;
+    else
+      Error_Value := Error.Error_None;
+    end if;
+  end Seek_To_End;
+
 end POSIX.File;

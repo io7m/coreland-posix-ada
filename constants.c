@@ -31,6 +31,10 @@ static const struct {
 } compile_time_constants[] = {
   { SIGNED_LONG,   { PATH_MAX }, "PATH_MAX" },
 
+  { SIGNED_LONG,   { SEEK_SET }, "SEEK_SET" },
+  { SIGNED_LONG,   { SEEK_CUR }, "SEEK_CUR" },
+  { SIGNED_LONG,   { SEEK_END }, "SEEK_END" },
+
   { UNSIGNED_LONG, { S_IRUSR }, "S_IRUSR" },
   { UNSIGNED_LONG, { S_IWUSR }, "S_IWUSR" },
   { UNSIGNED_LONG, { S_IXUSR }, "S_IXUSR" },

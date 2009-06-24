@@ -9,6 +9,7 @@ posix-path.ads        \
 posix-permissions.adb \
 posix-permissions.ads \
 posix-user_db.ads     \
-type-discrete
+type-discrete         \
+type-offset
 	./posix-file.ads.sh > posix-file.ads.tmp
 	mv posix-file.ads.tmp posix-file.ads

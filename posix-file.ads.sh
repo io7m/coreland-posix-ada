@@ -37,7 +37,7 @@ cat << EOF
   -- File offset/size.
 EOF
 
-./type-discrete Offset || exit 1
+./type-offset || exit 1
 
 cat <<EOF
 
@@ -229,7 +229,47 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Errno.Errno_Value;
 
+  --
+  -- File seeking.
+  --
+
+  -- proc_map : lseek
+  procedure Seek_Relative
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
+
+  -- proc_map : lseek
+  procedure Seek_Absolute
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
+
+  -- proc_map : lseek
+  procedure Seek_To_Start
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Errno.Errno_Value;
+
+  -- proc_map : lseek
+  procedure Seek_To_End
+    (Descriptor  : in     Valid_Descriptor_t;
+     Offset      : in     Offset_t;
+     Error_Value :    out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Errno.Errno_Value;
+
 private
+
+  --
+  -- Implementation details for Open.
+  --
 
 EOF
 
@@ -290,5 +330,29 @@ cat <<EOF
      Options     : in Open_Options_t) return Boolean;
   --# return Check_Access_Mode (Access_Mode) and
   --#        Check_Options (Options);
+
+EOF
+
+seek_set=`./constants SEEK_SET` || exit 1
+seek_cur=`./constants SEEK_CUR` || exit 1
+seek_end=`./constants SEEK_END` || exit 1
+
+cat <<EOF
+  --
+  -- Implementation details for Seek.
+  --
+
+  type Seek_Whence_t is
+    (Seek_Set,
+     Seek_Cur,
+     Seek_End);
+
+  for Seek_Whence_t use
+    (Seek_Set => $seek_set,
+     Seek_Cur => $seek_cur,
+     Seek_End => $seek_end);
+
+  for Seek_Whence_t'Size use C_Types.Int_Size;
+  pragma Convention (C, Seek_Whence_t);
 
 end POSIX.File;
