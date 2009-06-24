@@ -29,14 +29,14 @@ installer installer.o instchk instchk.o insthier.o posix-ada-conf \
 posix-ada-conf.o posix-ada.a posix-c_types.ali posix-c_types.o \
 posix-directory.ali posix-directory.o posix-errno.ali posix-errno.o \
 posix-error.ali posix-error.o posix-file.ali posix-file.o posix-file_status.ali \
-posix-file_status.o posix-io.ali posix-io.o posix-path.ali posix-path.o \
-posix-permissions.ali posix-permissions.o posix-process_info.ali \
-posix-process_info.o posix-symlink.ali posix-symlink.o posix-user_db.ali \
-posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-posix_passwd.o posix_stat.o spark_config spark_config.ali spark_config.o \
-test_config.ali test_config.o type-discrete type-discrete.o type-mode \
-type-mode.o type-offset type-offset.o type-passwd type-passwd.o type-status \
-type-status.o
+posix-file_status.o posix-io-control.ali posix-io-control.o posix-io.ali \
+posix-io.o posix-path.ali posix-path.o posix-permissions.ali \
+posix-permissions.o posix-process_info.ali posix-process_info.o \
+posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
+posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
+spark_config spark_config.ali spark_config.o test_config.ali test_config.o \
+type-discrete type-discrete.o type-mode type-mode.o type-offset type-offset.o \
+type-passwd type-passwd.o type-status type-status.o
 
 # Mkf-deinstall
 deinstall: deinstaller conf-sosuffix
@@ -80,6 +80,9 @@ flags-c_string:
 libs-c_string-S:
 	@echo SYSDEPS c_string-libs-S run create libs-c_string-S 
 	@(cd SYSDEPS/modules/c_string-libs-S && ./run)
+_sd_streams.h:
+	@echo SYSDEPS sd-streams run create _sd_streams.h 
+	@(cd SYSDEPS/modules/sd-streams && ./run)
 _sysinfo.h:
 	@echo SYSDEPS sysinfo run create _sysinfo.h 
 	@(cd SYSDEPS/modules/sysinfo && ./run)
@@ -91,6 +94,9 @@ c_string-flags_clean:
 c_string-libs-S_clean:
 	@echo SYSDEPS c_string-libs-S clean libs-c_string-S 
 	@(cd SYSDEPS/modules/c_string-libs-S && ./clean)
+sd-streams_clean:
+	@echo SYSDEPS sd-streams clean _sd_streams.h 
+	@(cd SYSDEPS/modules/sd-streams && ./clean)
 sysinfo_clean:
 	@echo SYSDEPS sysinfo clean _sysinfo.h 
 	@(cd SYSDEPS/modules/sysinfo && ./clean)
@@ -99,6 +105,7 @@ sysinfo_clean:
 sysdeps_clean:\
 c_string-flags_clean \
 c_string-libs-S_clean \
+sd-streams_clean \
 sysinfo_clean \
 
 
@@ -411,11 +418,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -431,7 +438,7 @@ cc-link constants.ld constants.o
 	./cc-link constants constants.o
 
 constants.o:\
-cc-compile constants.c posix_config.h
+cc-compile constants.c posix_config.h posix_ioctl.h
 	./cc-compile constants.c
 
 # ctxt/bindir.c.mff
@@ -611,13 +618,13 @@ cc-compile posix-ada-conf.c ctxt.h _sysinfo.h
 
 posix-ada.a:\
 cc-slib posix-ada.sld posix-c_types.o posix-directory.o posix-errno.o \
-posix-error.o posix-file.o posix-file_status.o posix-io.o posix-path.o \
-posix-permissions.o posix-process_info.o posix-symlink.o posix-user_db.o \
-posix.o posix_error.o posix_passwd.o posix_stat.o
+posix-error.o posix-file.o posix-file_status.o posix-io-control.o posix-io.o \
+posix-path.o posix-permissions.o posix-process_info.o posix-symlink.o \
+posix-user_db.o posix.o posix_error.o posix_passwd.o posix_stat.o
 	./cc-slib posix-ada posix-c_types.o posix-directory.o posix-errno.o \
-	posix-error.o posix-file.o posix-file_status.o posix-io.o posix-path.o \
-	posix-permissions.o posix-process_info.o posix-symlink.o posix-user_db.o \
-	posix.o posix_error.o posix_passwd.o posix_stat.o
+	posix-error.o posix-file.o posix-file_status.o posix-io-control.o posix-io.o \
+	posix-path.o posix-permissions.o posix-process_info.o posix-symlink.o \
+	posix-user_db.o posix.o posix_error.o posix_passwd.o posix_stat.o
 
 # posix-c_types.ads.mff
 posix-c_types.ads:   \
@@ -752,6 +759,28 @@ ada-compile posix-file_status.adb posix-file_status.ads posix-c_types.ali
 posix-file_status.o:\
 posix-file_status.ali
 
+# posix-io-control.ads.mff
+posix-io-control.ads:   \
+auto-warn.txt           \
+constants               \
+posix-error.ads         \
+posix-error.adb         \
+posix-file.ads          \
+posix-io.ads            \
+posix-io-control.ads.sh \
+type-discrete           \
+LICENSE
+	./posix-io-control.ads.sh > posix-io-control.ads.tmp
+	mv posix-io-control.ads.tmp posix-io-control.ads
+
+posix-io-control.ali:\
+ada-compile posix-io-control.adb posix-io.ali posix-io-control.ads \
+posix-c_types.ali
+	./ada-compile posix-io-control.adb
+
+posix-io-control.o:\
+posix-io-control.ali
+
 # posix-io.ads.mff
 posix-io.ads:   \
 auto-warn.txt   \
@@ -883,6 +912,9 @@ posix_file.o:\
 cc-compile posix_file.c posix_config.h
 	./cc-compile posix_file.c
 
+posix_ioctl.h:\
+_sd_streams.h
+
 posix_passwd.o:\
 cc-compile posix_passwd.c posix_config.h posix_passwd.h
 	./cc-compile posix_passwd.c
@@ -993,9 +1025,10 @@ obj_clean:
 	posix-directory.ali posix-directory.o posix-errno.ads posix-errno.ali \
 	posix-errno.o posix-error.adb posix-error.ads posix-error.ali posix-error.o \
 	posix-file.ads posix-file.ali posix-file.o posix-file_status.ads \
-	posix-file_status.ali posix-file_status.o posix-io.ads posix-io.ali posix-io.o \
-	posix-path.ads posix-path.ali posix-path.o posix-permissions.ads
-	rm -f posix-permissions.ali posix-permissions.o posix-process_info.ads \
+	posix-file_status.ali posix-file_status.o posix-io-control.ads \
+	posix-io-control.ali posix-io-control.o posix-io.ads posix-io.ali posix-io.o
+	rm -f posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
+	posix-permissions.ali posix-permissions.o posix-process_info.ads \
 	posix-process_info.ali posix-process_info.o posix-symlink.ali posix-symlink.o \
 	posix-user_db.ads posix-user_db.ali posix-user_db.o posix.ali posix.o \
 	posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o spark_config \

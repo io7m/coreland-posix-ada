@@ -4,6 +4,7 @@ posix-errno.o
 posix-error.o
 posix-file.o
 posix-file_status.o
+posix-io-control.o
 posix-io.o
 posix-path.o
 posix-permissions.o

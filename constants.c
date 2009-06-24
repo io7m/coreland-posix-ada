@@ -1,4 +1,5 @@
 #include "posix_config.h"
+#include "posix_ioctl.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -52,6 +53,37 @@ static const struct {
                      S_IRGRP | S_IWGRP | S_IXGRP |
                      S_IROTH | S_IWOTH | S_IXOTH |
                      S_ISUID | S_ISGID }, "S_IMAX" },
+
+  /* ioctl constants */
+  { SIGNED_LONG, { I_PUSH      }, "I_PUSH" },
+  { SIGNED_LONG, { I_POP       }, "I_POP" },
+  { SIGNED_LONG, { I_LOOK      }, "I_LOOK" },
+  { SIGNED_LONG, { I_FLUSH     }, "I_FLUSH" },
+  { SIGNED_LONG, { I_FLUSHBAND }, "I_FLUSHBAND" },
+  { SIGNED_LONG, { I_SETSIG    }, "I_SETSIG" },
+  { SIGNED_LONG, { I_GETSIG    }, "I_GETSIG" },
+  { SIGNED_LONG, { I_FIND      }, "I_FIND" },
+  { SIGNED_LONG, { I_PEEK      }, "I_PEEK" },
+  { SIGNED_LONG, { I_SRDOPT    }, "I_SRDOPT" },
+  { SIGNED_LONG, { I_GRDOPT    }, "I_GRDOPT" },
+  { SIGNED_LONG, { I_NREAD     }, "I_NREAD" },
+  { SIGNED_LONG, { I_FDINSERT  }, "I_FDINSERT" },
+  { SIGNED_LONG, { I_STR       }, "I_STR" },
+  { SIGNED_LONG, { I_SWROPT    }, "I_SWROPT" },
+  { SIGNED_LONG, { I_GWROPT    }, "I_GWROPT" },
+  { SIGNED_LONG, { I_SENDFD    }, "I_SENDFD" },
+  { SIGNED_LONG, { I_RECVFD    }, "I_RECVFD" },
+  { SIGNED_LONG, { I_LIST      }, "I_LIST" },
+  { SIGNED_LONG, { I_ATMARK    }, "I_ATMARK" },
+  { SIGNED_LONG, { I_CKBAND    }, "I_CKBAND" },
+  { SIGNED_LONG, { I_GETBAND   }, "I_GETBAND" },
+  { SIGNED_LONG, { I_CANPUT    }, "I_CANPUT" },
+  { SIGNED_LONG, { I_SETCLTIME }, "I_SETCLTIME" },
+  { SIGNED_LONG, { I_GETCLTIME }, "I_GETCLTIME" },
+  { SIGNED_LONG, { I_LINK      }, "I_LINK" },
+  { SIGNED_LONG, { I_UNLINK    }, "I_UNLINK" },
+  { SIGNED_LONG, { I_PLINK     }, "I_PLINK" },
+  { SIGNED_LONG, { I_PUNLINK   }, "I_PUNLINK" },
 };
 const unsigned int compile_time_constants_size =
   sizeof (compile_time_constants) / sizeof (compile_time_constants [0]);

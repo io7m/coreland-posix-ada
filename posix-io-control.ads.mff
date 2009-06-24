@@ -1,0 +1,12 @@
+posix-io-control.ads:   \
+auto-warn.txt           \
+constants               \
+posix-error.ads         \
+posix-error.adb         \
+posix-file.ads          \
+posix-io.ads            \
+posix-io-control.ads.sh \
+type-discrete           \
+LICENSE
+	./posix-io-control.ads.sh > posix-io-control.ads.tmp
+	mv posix-io-control.ads.tmp posix-io-control.ads

@@ -50,7 +50,7 @@ cat <<EOF
   procedure Message
     (Error_Value    : in Error_t;
      Message_Buffer : out Message_t;
-     Last_Index   : out Message_Index_t) is
+     Last_Index     : out Message_Index_t) is
   begin
     C_Message
       (Error_Value    => Ada_To_Errno (Error_Value),
