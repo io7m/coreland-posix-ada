@@ -26,6 +26,7 @@ package body POSIX.IO.Control is
     (Descriptor : in File.Valid_Descriptor_t;
      Name       : in String) return Ioctl_Return_Value_t
   is
+    --# hide Push_Module_Boundary
     function Ioctl
       (Descriptor : in File.Valid_Descriptor_t;
        Request    : in Request_t;
