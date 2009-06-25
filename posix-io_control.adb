@@ -1,7 +1,7 @@
 with C_String;
 with Interfaces.C;
 
-package body POSIX.IO.Control is
+package body POSIX.IO_Control is
 
   --
   -- Return value type.
@@ -57,7 +57,9 @@ package body POSIX.IO.Control is
   is
     Return_Value : Request_t;
   begin
+    --# accept Flow, 22, "Value is implementation-defined.";
     if Check_Request_Support (I_PUSH) then
+    --# end accept;
       Return_Value := Push_Module_Boundary
         (Descriptor => Descriptor,
          Name       => Name);
@@ -71,4 +73,4 @@ package body POSIX.IO.Control is
     end if;
   end Push_Module;
 
-end POSIX.IO.Control;
+end POSIX.IO_Control;

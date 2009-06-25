@@ -21,13 +21,13 @@ pragma source_file_name(POSIX.File, body_file_name => "posix-file.adb");
 pragma source_file_name(POSIX.File_Status, spec_file_name => "posix-file_status.ads");
 pragma source_file_name(POSIX.File_Status, body_file_name => "posix-file_status.adb");
 
--- ./posix-io-control.apk
-pragma source_file_name(POSIX.IO.Control, spec_file_name => "posix-io-control.ads");
-pragma source_file_name(POSIX.IO.Control, body_file_name => "posix-io-control.adb");
-
 -- ./posix-io.apk
 pragma source_file_name(POSIX.IO, spec_file_name => "posix-io.ads");
 pragma source_file_name(POSIX.IO, body_file_name => "posix-io.adb");
+
+-- ./posix-io_control.apk
+pragma source_file_name(POSIX.IO_Control, spec_file_name => "posix-io_control.ads");
+pragma source_file_name(POSIX.IO_Control, body_file_name => "posix-io_control.adb");
 
 -- ./posix-path.apk
 pragma source_file_name(POSIX.Path, spec_file_name => "posix-path.ads");

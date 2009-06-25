@@ -14,7 +14,7 @@ with POSIX.File;
 --#         POSIX.Errno,
 --#         POSIX.File;
 
-package POSIX.IO.Control is
+package POSIX.IO_Control is
 
   -- subprogram_map : ioctl
   procedure Push_Module
@@ -22,7 +22,7 @@ package POSIX.IO.Control is
      Name        : in     String;
      Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derive Error_Value from Descriptor, Name, Errno.Errno_Value;
+  --# derives Error_Value from Descriptor, Name, Errno.Errno_Value;
 
 private
 
@@ -97,5 +97,5 @@ cat <<EOF
   function Check_Request_Support (Request : in Request_t) return Boolean;
   --# return Request = -1;
 
-end POSIX.IO.Control;
+end POSIX.IO_Control;
 EOF

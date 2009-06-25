@@ -29,8 +29,8 @@ installer installer.o instchk instchk.o insthier.o posix-ada-conf \
 posix-ada-conf.o posix-ada.a posix-c_types.ali posix-c_types.o \
 posix-directory.ali posix-directory.o posix-errno.ali posix-errno.o \
 posix-error.ali posix-error.o posix-file.ali posix-file.o posix-file_status.ali \
-posix-file_status.o posix-io-control.ali posix-io-control.o posix-io.ali \
-posix-io.o posix-path.ali posix-path.o posix-permissions.ali \
+posix-file_status.o posix-io.ali posix-io.o posix-io_control.ali \
+posix-io_control.o posix-path.ali posix-path.o posix-permissions.ali \
 posix-permissions.o posix-process_info.ali posix-process_info.o \
 posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
 posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
@@ -618,11 +618,11 @@ cc-compile posix-ada-conf.c ctxt.h _sysinfo.h
 
 posix-ada.a:\
 cc-slib posix-ada.sld posix-c_types.o posix-directory.o posix-errno.o \
-posix-error.o posix-file.o posix-file_status.o posix-io-control.o posix-io.o \
+posix-error.o posix-file.o posix-file_status.o posix-io_control.o posix-io.o \
 posix-path.o posix-permissions.o posix-process_info.o posix-symlink.o \
 posix-user_db.o posix.o posix_error.o posix_passwd.o posix_stat.o
 	./cc-slib posix-ada posix-c_types.o posix-directory.o posix-errno.o \
-	posix-error.o posix-file.o posix-file_status.o posix-io-control.o posix-io.o \
+	posix-error.o posix-file.o posix-file_status.o posix-io_control.o posix-io.o \
 	posix-path.o posix-permissions.o posix-process_info.o posix-symlink.o \
 	posix-user_db.o posix.o posix_error.o posix_passwd.o posix_stat.o
 
@@ -759,27 +759,6 @@ ada-compile posix-file_status.adb posix-file_status.ads posix-c_types.ali
 posix-file_status.o:\
 posix-file_status.ali
 
-# posix-io-control.ads.mff
-posix-io-control.ads:   \
-auto-warn.txt           \
-constants               \
-posix-error.ads         \
-posix-error.adb         \
-posix-file.ads          \
-posix-io.ads            \
-posix-io-control.ads.sh \
-type-discrete           \
-LICENSE
-	./posix-io-control.ads.sh > posix-io-control.ads.tmp
-	mv posix-io-control.ads.tmp posix-io-control.ads
-
-posix-io-control.ali:\
-ada-compile posix-io-control.adb posix-io.ali posix-io-control.ads
-	./ada-compile posix-io-control.adb
-
-posix-io-control.o:\
-posix-io-control.ali
-
 # posix-io.ads.mff
 posix-io.ads:   \
 auto-warn.txt   \
@@ -799,6 +778,27 @@ ada-compile posix-io.adb posix.ali posix-io.ads posix-c_types.ali
 
 posix-io.o:\
 posix-io.ali
+
+# posix-io_control.ads.mff
+posix-io_control.ads:   \
+auto-warn.txt           \
+constants               \
+posix-error.ads         \
+posix-error.adb         \
+posix-file.ads          \
+posix-io.ads            \
+posix-io_control.ads.sh \
+type-discrete           \
+LICENSE
+	./posix-io_control.ads.sh > posix-io_control.ads.tmp
+	mv posix-io_control.ads.tmp posix-io_control.ads
+
+posix-io_control.ali:\
+ada-compile posix-io_control.adb posix-io_control.ads
+	./ada-compile posix-io_control.adb
+
+posix-io_control.o:\
+posix-io_control.ali
 
 # posix-path.ads.mff
 posix-path.ads:  \
@@ -1024,8 +1024,8 @@ obj_clean:
 	posix-directory.ali posix-directory.o posix-errno.ads posix-errno.ali \
 	posix-errno.o posix-error.adb posix-error.ads posix-error.ali posix-error.o \
 	posix-file.ads posix-file.ali posix-file.o posix-file_status.ads \
-	posix-file_status.ali posix-file_status.o posix-io-control.ads \
-	posix-io-control.ali posix-io-control.o posix-io.ads posix-io.ali posix-io.o
+	posix-file_status.ali posix-file_status.o posix-io.ads posix-io.ali posix-io.o \
+	posix-io_control.ads posix-io_control.ali posix-io_control.o
 	rm -f posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
 	posix-permissions.ali posix-permissions.o posix-process_info.ads \
 	posix-process_info.ali posix-process_info.o posix-symlink.ali posix-symlink.o \
