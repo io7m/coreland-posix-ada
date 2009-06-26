@@ -258,6 +258,18 @@ cat <<EOF
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Descriptor, Offset, Errno.Errno_Value;
 
+  --
+  -- Renaming.
+  --
+
+  -- subprogram_map : rename
+  procedure Rename
+    (Old_Name    : in     String;
+     New_Name    : in     String;
+     Error_Value :    out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Error_Value from Old_Name, New_Name, Errno.Errno_Value;
+
 private
 
   --

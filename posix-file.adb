@@ -145,11 +145,10 @@ package body POSIX.File is
            Flags      => C_Flags,
            Mode       => Permissions.Mode_To_Integer (Mode),
            Descriptor => Descriptor);
-        if Descriptor = -1 then
-          Error_Value := Error.Get_Error;
-        else
-          Error_Value := Error.Error_None;
-        end if;
+        case Descriptor is
+          when     -1 => Error_Value := Error.Get_Error;
+          when others => Error_Value := Error.Error_None;
+        end case;
       end if;
     else
       -- Unsupported options/access mode.
@@ -319,7 +318,7 @@ package body POSIX.File is
        Mode       => Mode);
     case Return_Value is
       when -1 => Error_Value := Error.Get_Error;
-      when 0  => Error_Value := Error.Error_None;
+      when  0 => Error_Value := Error.Error_None;
     end case;
   end Change_Descriptor_Mode;
 
@@ -468,7 +467,7 @@ package body POSIX.File is
       (Descriptor => Descriptor,
        Offset     => Offset,
        Whence     => Seek_Cur);
-    if Result_Value <= -1 then
+    if Result_Value = -1 then
       Error_Value := Error.Get_Error;
     else
       Error_Value := Error.Error_None;
@@ -486,7 +485,7 @@ package body POSIX.File is
       (Descriptor => Descriptor,
        Offset     => Offset,
        Whence     => Seek_Set);
-    if Result_Value <= -1 then
+    if Result_Value = -1 then
       Error_Value := Error.Get_Error;
     else
       Error_Value := Error.Error_None;
@@ -504,7 +503,7 @@ package body POSIX.File is
       (Descriptor => Descriptor,
        Offset     => Offset,
        Whence     => Seek_Set);
-    if Result_Value <= -1 then
+    if Result_Value = -1 then
       Error_Value := Error.Get_Error;
     else
       Error_Value := Error.Error_None;
@@ -522,11 +521,63 @@ package body POSIX.File is
       (Descriptor => Descriptor,
        Offset     => Offset,
        Whence     => Seek_End);
-    if Result_Value <= -1 then
+    if Result_Value = -1 then
       Error_Value := Error.Get_Error;
     else
       Error_Value := Error.Error_None;
     end if;
   end Seek_To_End;
+
+  --
+  -- Renaming.
+  --
+
+  procedure Rename_Boundary
+    (Old_Name     : in     String;
+     New_Name     : in     String;
+     Return_Value :    out Error.Return_Value_t)
+    --# global in Errno.Errno_Value;
+    --# derives Return_Value from Old_Name, New_Name, Errno.Errno_Value;
+    --# post ((Return_Value = -1) -> (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None))
+    --#   or ((Return_Value =  0) -> (Error.Get_Error (Errno.Errno_Value)  = Error.Error_None));
+  is
+    --# hide Rename_Boundary
+    C_Old_Name : aliased Interfaces.C.char_array := Interfaces.C.To_C (Old_Name);
+    C_New_Name : aliased Interfaces.C.char_array := Interfaces.C.To_C (New_Name);
+
+    function C_Rename
+      (Old_Name : in C_String.String_Not_Null_Ptr_t;
+       New_Name : in C_String.String_Not_Null_Ptr_t) return Error.Return_Value_t;
+    pragma Import (C, C_Rename, "rename");
+  begin
+    Return_Value := C_Rename
+      (Old_Name => C_String.To_C_String (C_Old_Name'Unchecked_Access),
+       New_Name => C_String.To_C_String (C_New_Name'Unchecked_Access));
+  exception
+    -- Do not propagate exceptions.
+    when Storage_Error =>
+      Error.Set_Error (Error.Error_Out_Of_Memory);
+      Return_Value := -1;
+    when others =>
+      Error.Set_Error (Error.Error_Unknown);
+      Return_Value := -1;
+  end Rename_Boundary;
+
+  procedure Rename
+    (Old_Name    : in     String;
+     New_Name    : in     String;
+     Error_Value :    out Error.Error_t)
+  is
+    Return_Value : Error.Return_Value_t;
+  begin
+    Rename_Boundary
+      (Old_Name     => Old_Name,
+       New_Name     => New_Name,
+       Return_Value => Return_Value);
+    case Return_Value is
+      when -1 => Error_Value := Error.Get_Error;
+      when  0 => Error_Value := Error.Error_None;
+    end case;
+  end Rename;
 
 end POSIX.File;
