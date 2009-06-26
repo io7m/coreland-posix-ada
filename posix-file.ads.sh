@@ -56,10 +56,9 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   procedure Open_Write_Only
     (File_Name    : in     String;
@@ -67,10 +66,9 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   procedure Open_Exclusive
     (File_Name    : in     String;
@@ -79,10 +77,9 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking, Mode &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   procedure Open_Append
     (File_Name    : in     String;
@@ -90,10 +87,9 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   procedure Open_Truncate
     (File_Name    : in     String;
@@ -102,10 +98,9 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking, Mode &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   procedure Open_Read_Write
     (File_Name    : in     String;
@@ -113,10 +108,9 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking &
-  --#         Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from File_Name, Non_Blocking, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   procedure Open_Create
     (File_Name    : in     String;
@@ -125,10 +119,9 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor from File_Name, Non_Blocking, Mode &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from File_Name, Non_Blocking, Mode, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   type Open_Access_Mode_t is
     (Execute_Only,
@@ -160,10 +153,10 @@ cat <<EOF
      Descriptor   :    out Descriptor_t;
      Error_Value  :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Descriptor  from File_Name, Non_Blocking, Mode, Access_Mode, Options &
-  --#         Error_Value from File_Name, Non_Blocking, Mode, Access_Mode, Options, Errno.Errno_Value;
-  --# post ((Descriptor >= 0) and (Error_Value = Error.Error_None)) or
-  --#      ((Descriptor = -1) and (Error_Value /= Error.Error_None));
+  --# derives Descriptor, Error_Value from
+  --#   File_Name, Non_Blocking, Mode, Access_Mode, Options, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and (Descriptor >= 0)) or
+  --#      ((Error_Value /= Error.Error_None) and (Descriptor = -1));
 
   --
   -- File permissions.

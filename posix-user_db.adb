@@ -15,7 +15,14 @@ package body POSIX.User_DB is
     (User_Name      : in String;
      Database_Entry : out Database_Entry_t;
      Return_Value   : out C_Passwd_Return_Type_t)
-    --# derives Database_Entry, Return_Value from User_Name;
+    --# global in Errno.Errno_Value;
+    --# derives Database_Entry, Return_Value from User_Name, Errno.Errno_Value;
+    --# post
+    --#   ((Return_Value = Passwd_Result_Error) and
+    --#     (Error.Get_Error (Errno.Errno_Value) = Error.Error_None))
+    --#   or
+    --#   ((Return_Value /= Passwd_Result_Error) and
+    --#     (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None));
   is
     --# hide C_Get_Entry_By_Name_Boundary
     function C_posix_getpwnam
