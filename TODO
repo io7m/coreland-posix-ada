@@ -1,0 +1,26 @@
+POSIX.Process_Control
+  Fork
+  Execute
+
+POSIX.IO_Control
+  Peek_Message                      I_PEEK
+  Set_Read_Mode                     I_SRDOPT
+  Get_Read_Mode                     I_GRDOPT
+  Read_Message_Size                 I_NREAD
+  Send_Message                      I_FDINSERT
+  Send_Internal_Message             I_STR
+  Set_Write_Mode                    I_SWROPT
+  Get_Write_Mode                    I_GWROPT
+  Send_File_Descriptor              I_SENDFD
+  Receive_File_Descriptor           I_RECVFD
+  List_Modules                      I_LIST
+  Message_Is_Marked                 I_ATMARK
+  Check_Band                        I_CKBAND
+  Get_Band                          I_GETBAND
+  Can_Write_On_Band                 I_CANPUT
+  Set_Close_Time                    I_SETCLTIME
+  Get_Close_Time                    I_GETCLTIME
+  Connect_Streams                   I_LINK
+  Disconnect_Streams                I_UNLINK
+  Create_Persistent_Connection      I_PLINK
+  Disconnect_Persistent_Connection  I_PUNLINK
