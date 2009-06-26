@@ -75,8 +75,11 @@ package body POSIX.File is
   function C_Open_Boundary
     (File_Name : in String;
      Flags     : in Open_Flag_Integer_t;
-     Mode      : in Permissions.Mode_Integer_t) return Descriptor_t is
+     Mode      : in Permissions.Mode_Integer_t) return Descriptor_t
+  is
     --# hide C_Open_Boundary
+    --# return D => (D  = -1 -> Error.Get_Error /= Error.Error_None) or
+    --#             (D /= -1 -> Error.Get_Error  = Error.Error_None);
     function C_Open
       (File_Name : in C_String.String_Not_Null_Ptr_t;
        Flags     : in Open_Flag_Integer_t;

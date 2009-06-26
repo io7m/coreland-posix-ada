@@ -321,8 +321,6 @@ cat <<EOF
 
   -- Check no options have invalid values.
   function Check_Options (Options : in Open_Options_t) return Boolean;
-  --# return for some Option in Open_Option_t =>
-  --#   ((Open_Option_Map (Option) /= Unsupported) and (Options (Option)));
 
   -- Check invalid flags.
   function Check_Support
