@@ -72,14 +72,17 @@ package body POSIX.File is
   -- File opening/creation.
   --
 
-  function C_Open_Boundary
-    (File_Name : in String;
-     Flags     : in Open_Flag_Integer_t;
-     Mode      : in Permissions.Mode_Integer_t) return Descriptor_t
+  procedure C_Open_Boundary
+    (File_Name  : in     String;
+     Flags      : in     Open_Flag_Integer_t;
+     Mode       : in     Permissions.Mode_Integer_t;
+     Descriptor :    out Descriptor_t)
+    --# global in Errno.Errno_Value;
+    --# derives Descriptor from File_Name, Flags, Mode, Errno.Errno_Value;
+    --# post ((Descriptor  = -1) and (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None)) or
+    --#      ((Descriptor /= -1) and (Error.Get_Error (Errno.Errno_Value)  = Error.Error_None));
   is
     --# hide C_Open_Boundary
-    --# return D => (D  = -1 -> Error.Get_Error /= Error.Error_None) or
-    --#             (D /= -1 -> Error.Get_Error  = Error.Error_None);
     function C_Open
       (File_Name : in C_String.String_Not_Null_Ptr_t;
        Flags     : in Open_Flag_Integer_t;
@@ -90,7 +93,7 @@ package body POSIX.File is
       C_File_Name_Buffer : aliased Interfaces.C.char_array :=
         Interfaces.C.To_C (File_Name, Append_Nul => True);
     begin
-      return C_Open
+      Descriptor := C_Open
         (File_Name => C_String.To_C_String (C_File_Name_Buffer'Unchecked_Access),
          Flags     => Flags,
          Mode      => Mode);
@@ -99,20 +102,20 @@ package body POSIX.File is
     -- Do not propagate exceptions.
     when Storage_Error =>
       Error.Set_Error (Error.Error_Out_Of_Memory);
-      return -1;
+      Descriptor := -1;
     when others =>
       Error.Set_Error (Error.Error_Unknown);
-      return -1;
+      Descriptor := -1;
   end C_Open_Boundary;
 
   procedure Open
-    (File_Name    : in String;
-     Access_Mode  : in Open_Access_Mode_t;
-     Options      : in Open_Options_t;
-     Non_Blocking : in Boolean;
-     Mode         : in Permissions.Mode_t;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Access_Mode  : in     Open_Access_Mode_t;
+     Options      : in     Open_Options_t;
+     Non_Blocking : in     Boolean;
+     Mode         : in     Permissions.Mode_t;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     C_Flags   : Open_Flag_Integer_t;
     Supported : Boolean;
@@ -125,6 +128,7 @@ package body POSIX.File is
     if Supported then
       C_Flags := Open_Access_Mode_To_Integer (Access_Mode) or
                  Open_Options_To_Integer (Options);
+
       -- Reject long filename.
       if File_Name'Last > File_Name_t'Last then
         Descriptor  := -1;
@@ -136,10 +140,11 @@ package body POSIX.File is
         end if;
 
         -- Call system open() procedure.
-        Descriptor := C_Open_Boundary
-          (File_Name => File_Name,
-           Flags     => C_Flags,
-           Mode      => Permissions.Mode_To_Integer (Mode));
+        C_Open_Boundary
+          (File_Name  => File_Name,
+           Flags      => C_Flags,
+           Mode       => Permissions.Mode_To_Integer (Mode),
+           Descriptor => Descriptor);
         if Descriptor = -1 then
           Error_Value := Error.Get_Error;
         else
@@ -154,10 +159,10 @@ package body POSIX.File is
   end Open;
 
   procedure Open_Read_Only
-    (File_Name    : in String;
-     Non_Blocking : in Boolean;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Non_Blocking : in     Boolean;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     Open_Options : constant Open_Options_t := Open_Options_t'(others => False);
   begin
@@ -172,10 +177,10 @@ package body POSIX.File is
   end Open_Read_Only;
 
   procedure Open_Write_Only
-    (File_Name    : in String;
-     Non_Blocking : in Boolean;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Non_Blocking : in     Boolean;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     Open_Options : constant Open_Options_t := Open_Options_t'(others => False);
   begin
@@ -190,11 +195,11 @@ package body POSIX.File is
   end Open_Write_Only;
 
   procedure Open_Exclusive
-    (File_Name    : in String;
-     Non_Blocking : in Boolean;
-     Mode         : in Permissions.Mode_t;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Non_Blocking : in     Boolean;
+     Mode         : in     Permissions.Mode_t;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     Open_Options : constant Open_Options_t :=
       Open_Options_t'(Create     => True,
@@ -212,10 +217,10 @@ package body POSIX.File is
   end Open_Exclusive;
 
   procedure Open_Append
-    (File_Name    : in String;
-     Non_Blocking : in Boolean;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Non_Blocking : in     Boolean;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     Open_Options : constant Open_Options_t :=
       Open_Options_t'(Append => True,
@@ -233,11 +238,11 @@ package body POSIX.File is
   end Open_Append;
 
   procedure Open_Truncate
-    (File_Name    : in String;
-     Non_Blocking : in Boolean;
-     Mode         : in Permissions.Mode_t;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Non_Blocking : in     Boolean;
+     Mode         : in     Permissions.Mode_t;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     Open_Options : constant Open_Options_t :=
       Open_Options_t'(Create     => True,
@@ -255,10 +260,10 @@ package body POSIX.File is
   end Open_Truncate;
 
   procedure Open_Read_Write
-    (File_Name    : in String;
-     Non_Blocking : in Boolean;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Non_Blocking : in     Boolean;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     Open_Options : constant Open_Options_t := Open_Options_t'(others => False);
   begin
@@ -273,11 +278,11 @@ package body POSIX.File is
   end Open_Read_Write;
 
   procedure Open_Create
-    (File_Name    : in String;
-     Non_Blocking : in Boolean;
-     Mode         : in Permissions.Mode_t;
-     Descriptor   : out Descriptor_t;
-     Error_Value  : out Error.Error_t)
+    (File_Name    : in     String;
+     Non_Blocking : in     Boolean;
+     Mode         : in     Permissions.Mode_t;
+     Descriptor   :    out Descriptor_t;
+     Error_Value  :    out Error.Error_t)
   is
     Open_Options : constant Open_Options_t :=
       Open_Options_t'(Create => True,
@@ -298,9 +303,9 @@ package body POSIX.File is
   --
 
   procedure Change_Descriptor_Mode
-    (Descriptor  : in Valid_Descriptor_t;
-     Mode        : in Permissions.Mode_t;
-     Error_Value : out Error.Error_t)
+    (Descriptor  : in     Valid_Descriptor_t;
+     Mode        : in     Permissions.Mode_t;
+     Error_Value :    out Error.Error_t)
   is
     Return_Value : Error.Return_Value_t;
 
@@ -319,9 +324,9 @@ package body POSIX.File is
   end Change_Descriptor_Mode;
 
   procedure Change_Mode
-    (File_Name   : in String;
-     Mode        : in Permissions.Mode_t;
-     Error_Value : out Error.Error_t)
+    (File_Name   : in     String;
+     Mode        : in     Permissions.Mode_t;
+     Error_Value :    out Error.Error_t)
   is
     Descriptor : Descriptor_t;
   begin
@@ -343,10 +348,10 @@ package body POSIX.File is
   --
 
   procedure Change_Descriptor_Ownership
-    (Descriptor  : in Valid_Descriptor_t;
-     Owner       : in User_DB.User_ID_t;
-     Group       : in User_DB.Group_ID_t;
-     Error_Value : out Error.Error_t)
+    (Descriptor  : in     Valid_Descriptor_t;
+     Owner       : in     User_DB.User_ID_t;
+     Group       : in     User_DB.Group_ID_t;
+     Error_Value :    out Error.Error_t)
   is
     Return_Value : Error.Return_Value_t;
 
@@ -367,10 +372,10 @@ package body POSIX.File is
   end Change_Descriptor_Ownership;
 
   procedure Change_Ownership
-    (File_Name   : in String;
-     Owner       : in User_DB.User_ID_t;
-     Group       : in User_DB.Group_ID_t;
-     Error_Value : out Error.Error_t)
+    (File_Name   : in     String;
+     Owner       : in     User_DB.User_ID_t;
+     Group       : in     User_DB.Group_ID_t;
+     Error_Value :    out Error.Error_t)
   is
     Descriptor : Descriptor_t;
   begin
@@ -416,8 +421,8 @@ package body POSIX.File is
   end Unlink_Boundary;
 
   procedure Unlink
-    (File_Name   : in String;
-     Error_Value : out Error.Error_t) is
+    (File_Name   : in     String;
+     Error_Value :    out Error.Error_t) is
   begin
     case Unlink_Boundary (File_Name) is
       when  0 => Error_Value := Error.Error_None;
@@ -430,8 +435,8 @@ package body POSIX.File is
   --
 
   procedure Close
-    (Descriptor  : in Valid_Descriptor_t;
-     Error_Value : out Error.Error_t)
+    (Descriptor  : in     Valid_Descriptor_t;
+     Error_Value :    out Error.Error_t)
   is
     function C_Close (Descriptor : in Valid_Descriptor_t) return Error.Return_Value_t;
     pragma Import (C, C_Close, "close");

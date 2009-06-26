@@ -11,10 +11,13 @@ package body POSIX.File_Status is
   end Is_Valid;
 
   procedure C_FStat_Boundary
-    (Descriptor   : in File.Valid_Descriptor_t;
-     Status       : out Status_t;
-     Return_Value : out Error.Return_Value_t)
-    --# derives Status, Return_Value from Descriptor;
+    (Descriptor   : in     File.Valid_Descriptor_t;
+     Status       :    out Status_t;
+     Return_Value :    out Error.Return_Value_t)
+    --# global in Errno.Errno_Value;
+    --# derives Status, Return_Value from Descriptor, Errno.Errno_Value;
+    --# post ((Return_Value = -1) -> (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None))
+    --#   or ((Return_Value =  0) -> (Error.Get_Error (Errno.Errno_Value)  = Error.Error_None));
   is
     --# hide C_FStat_Boundary
     function C_fstat
@@ -28,9 +31,9 @@ package body POSIX.File_Status is
   end C_FStat_Boundary;
 
   procedure Get_Descriptor_Status
-    (Descriptor  : in File.Valid_Descriptor_t;
-     Status      : out Status_t;
-     Error_Value : out Error.Error_t)
+    (Descriptor  : in     File.Valid_Descriptor_t;
+     Status      :    out Status_t;
+     Error_Value :    out Error.Error_t)
   is
     Return_Value : Error.Return_Value_t;
   begin
@@ -49,9 +52,9 @@ package body POSIX.File_Status is
   end Get_Descriptor_Status;
 
   procedure Get_Status
-    (File_Name   : in String;
-     Status      : out Status_t;
-     Error_Value : out Error.Error_t)
+    (File_Name   : in     String;
+     Status      :    out Status_t;
+     Error_Value :    out Error.Error_t)
   is
     Descriptor : File.Descriptor_t;
   begin

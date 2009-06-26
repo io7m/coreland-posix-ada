@@ -44,9 +44,8 @@ cat <<EOF
      Found_Entry    :    out Boolean;
      Error_Value    :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Database_Entry, Found_Entry from User_Name &
-  --#         Error_Value                 from User_Name, Errno.Errno_Value;
-  --# post ((Error_Value = Error.Error_None)  and (Is_Valid (Database_Entry))) or
+  --# derives Database_Entry, Found_Entry, Error_Value from User_Name, Errno.Errno_Value;
+  --# post ((Error_Value  = Error.Error_None) and      Is_Valid (Database_Entry)) or
   --#      ((Error_Value /= Error.Error_None) and (not Is_Valid (Database_Entry)));
 
   --
