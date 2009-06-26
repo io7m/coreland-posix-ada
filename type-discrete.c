@@ -38,17 +38,19 @@ static const struct discrete_t type_table[] = {
   { "Descriptor",           -1,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
   { "Device_ID",             0,   INT_MAX, 10, sizeof (dev_t) * CHAR_BIT,   DISCRETE_RANGED },
   { "Errno_Integer",  -INT_MAX,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
+  { "Event_Value",           0,         0, 10, sizeof (unsigned int) * CHAR_BIT, DISCRETE_MOD },
   { "Group_ID",             -1,   INT_MAX, 10, sizeof (gid_t) * CHAR_BIT,   DISCRETE_RANGED },
   { "INode",                 0,   INT_MAX, 10, sizeof (ino_t) * CHAR_BIT,   DISCRETE_RANGED },
+  { "Link_Count",            0,         0, 10, sizeof (nlink_t) * CHAR_BIT, DISCRETE_MOD },
   { "Mode_Integer",          0,    07777l,  8, sizeof (mode_t) * CHAR_BIT,  DISCRETE_MOD },
   { "Offset",                0,         0, 10, sizeof (off_t) * CHAR_BIT,   DISCRETE_MOD },
   { "Open_Flag_Integer",     0,   INT_MAX, 10, sizeof (int) * CHAR_BIT,     DISCRETE_MOD },
+  { "Priority_Band",         0,         0, 10, sizeof (unsigned char) * CHAR_BIT, DISCRETE_MOD },
   { "Return_Value",         -1,         0, 10, sizeof (int) * CHAR_BIT,     DISCRETE_RANGED },
   { "Signed_Size",  -SSIZE_MAX, SSIZE_MAX, 10, sizeof (ssize_t) * CHAR_BIT, DISCRETE_RANGED },
   { "Size",                  0,         0,  0, sizeof (size_t) * CHAR_BIT,  DISCRETE_MOD },
   { "Storage_Element",       0,         0, 10, sizeof (unsigned char) * CHAR_BIT, DISCRETE_MOD },
   { "User_ID",              -1,   INT_MAX, 10, sizeof (uid_t) * CHAR_BIT,   DISCRETE_RANGED },
-  { "Link_Count",            0,         0, 10, sizeof (nlink_t) * CHAR_BIT, DISCRETE_MOD },
 };
 static const size_t type_table_size = sizeof (type_table) / sizeof (struct discrete_t);
 

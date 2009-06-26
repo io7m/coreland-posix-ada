@@ -1,0 +1,577 @@
+           *******************************************************
+                            Listing of SPARK Text
+ SPARK Examiner GPL Edition, Version 8.1.1, Build Date 20090505, Build 13202
+      Copyright (C) 2009 Praxis High Integrity Systems Ltd., Bath, U.K.
+           *******************************************************
+
+
+                        DATE : 26-JUN-2009 07:58:51.19
+
+Line
+   1  with C_String;
+           ^1
+--- (  1)  Warning           :  1: The identifier C_String is either undeclared or 
+           not visible at this point.
+
+   2  with Interfaces.C;
+           ^2
+--- (  2)  Warning           :  1: The identifier Interfaces is either undeclared 
+           or not visible at this point.
+
+   3  with System;
+           ^3
+--- (  3)  Warning           :  1: The identifier System is either undeclared or 
+           not visible at this point.
+
+   4  
+   5  package body POSIX.IO_Control is
+   6  
+   7    --
+   8    -- Return value type.
+   9    --
+  10  
+  11    subtype Ioctl_Return_Value_t is C_Types.Int_t range -1 .. C_Types.Int_t'Last;
+  12  
+  13    --
+  14    -- Return true if request type is supported.
+  15    --
+  16  
+  17    function Check_Request_Support (Request : in Request_t) return Boolean is
+  18    begin
+  19      return Request /= Unsupported;
+  20    end Check_Request_Support;
+
++++        Flow analysis of subprogram 
+           Check_Request_Support performed: no errors found.
+
+  21  
+  22    --
+  23    -- Push module.
+  24    --
+  25  
+  26    function Push_Module_Boundary
+  27      (Descriptor : in File.Valid_Descriptor_t;
+  28       Name       : in String) return Ioctl_Return_Value_t
+  29    is
+  30      --# hide Push_Module_Boundary
+  31      function Ioctl
+  32        (Descriptor : in File.Valid_Descriptor_t;
+  33         Request    : in Request_t;
+  34         Name       : in C_String.String_Not_Null_Ptr_t)
+  35        return Ioctl_Return_Value_t;
+  36      pragma Import (C, Ioctl, "ioctl");
+  37  
+  38      Name_Buffer : aliased Interfaces.C.char_array := Interfaces.C.To_C (Name);
+  39    begin
+  40      return Ioctl
+  41        (Descriptor => Descriptor,
+  42         Request    => I_PUSH,
+  43         Name       => C_String.To_C_String (Name_Buffer'Unchecked_Access));
+  44    exception
+  45      -- Do not propagate exceptions.
+  46      when Storage_Error =>
+  47        Error.Set_Error (Error.Error_Out_Of_Memory);
+  48        return -1;
+  49      when others =>
+  50        Error.Set_Error (Error.Error_Unknown);
+  51        return -1;
+  52    end Push_Module_Boundary;
+
+--- (  4)  Warning           : 10: The body of subprogram Push_Module_Boundary is 
+           hidden - hidden text is ignored by the SPARK Examiner.
+
+  53  
+  54    procedure Push_Module
+  55      (Descriptor  : in     File.Valid_Descriptor_t;
+  56       Name        : in     String;
+  57       Error_Value :    out Error.Error_t)
+  58    is
+  59      Return_Value : Request_t;
+  60    begin
+  61      --# accept Flow, 22, "Value is implementation-defined.";
+  62      if Check_Request_Support (I_PUSH) then
+  63      --# end accept;
+  64        Return_Value := Push_Module_Boundary
+  65          (Descriptor => Descriptor,
+  66           Name       => Name);
+  67        if Return_Value = -1 then
+  68          Error_Value := Error.Get_Error;
+  69        else
+  70          Error_Value := Error.Error_None;
+  71        end if;
+  72      else
+  73        Error_Value := Error.Error_Not_Supported;
+  74      end if;
+  75    end Push_Module;
+
++++        Flow analysis of subprogram Push_Module 
+           performed: no errors found.
+
+  76  
+  77    --
+  78    -- Pop module.
+  79    --
+  80  
+  81    procedure Pop_Module
+  82      (Descriptor  : in     File.Valid_Descriptor_t;
+  83       Error_Value :    out Error.Error_t)
+  84    is
+  85      Return_Value : Ioctl_Return_Value_t;
+  86  
+  87      function Ioctl
+  88        (Descriptor : in File.Valid_Descriptor_t;
+  89         Request    : in Request_t;
+  90         Arg        : in C_Types.Int_t) return Ioctl_Return_Value_t;
+  91      pragma Import (C, Ioctl, "ioctl");
+  92    begin
+  93      --# accept Flow, 22, "Value is implementation-defined.";
+  94      if Check_Request_Support (I_POP) then
+  95      --# end accept;
+  96        Return_Value := Ioctl
+  97          (Descriptor => Descriptor,
+  98           Request    => I_POP,
+  99           Arg        => 0);
+ 100        if Return_Value = -1 then
+ 101          Error_Value := Error.Get_Error;
+ 102        else
+ 103          Error_Value := Error.Error_None;
+ 104        end if;
+ 105      else
+ 106        Error_Value := Error.Error_Not_Supported;
+ 107      end if;
+ 108    end Pop_Module;
+
++++        Flow analysis of subprogram Pop_Module 
+           performed: no errors found.
+
+ 109  
+ 110    --
+ 111    -- Look module.
+ 112    --
+ 113  
+ 114    procedure Look_Module_Boundary
+ 115      (Descriptor   : in     File.Valid_Descriptor_t;
+ 116       Name_Buffer  :    out Name_Buffer_t;
+ 117       Return_Value :    out Ioctl_Return_Value_t)
+ 118      --# derives Name_Buffer, Return_Value from Descriptor;
+ 119    is
+ 120      --# hide Look_Module_Boundary
+ 121  
+ 122      C_Buffer : aliased Interfaces.C.char_array :=
+ 123        (Interfaces.C.size_t (Name_Buffer'First) ..
+ 124         Interfaces.C.size_t (Name_Buffer'Last) => Interfaces.C.nul);
+ 125  
+ 126      function Ioctl
+ 127        (Descriptor : in File.Valid_Descriptor_t;
+ 128         Request    : in Request_t;
+ 129         Arg        : in System.Address) return Ioctl_Return_Value_t;
+ 130      pragma Import (C, Ioctl, "ioctl");
+ 131    begin
+ 132      if Ioctl
+ 133        (Descriptor => Descriptor,
+ 134         Request    => I_LOOK,
+ 135         Arg        => C_Buffer (C_Buffer'First)'Address) /= -1 then
+ 136        for Index in C_Buffer'Range loop
+ 137          Name_Buffer (Positive (Index)) := Interfaces.C.To_Ada (C_Buffer (Index));
+ 138        end loop;
+ 139        Return_Value := 0;
+ 140      else
+ 141        Return_Value := -1;
+ 142      end if;
+ 143    end Look_Module_Boundary;
+
+--- (  5)  Warning           : 10: The body of subprogram Look_Module_Boundary is 
+           hidden - hidden text is ignored by the SPARK Examiner.
+
+ 144  
+ 145    procedure Look_Module
+ 146      (Descriptor  : in     File.Valid_Descriptor_t;
+ 147       Name_Buffer :    out Name_Buffer_t;
+ 148       Name_Last   :    out Name_Buffer_Index_t;
+ 149       Error_Value :    out Error.Error_t)
+ 150    is
+ 151      Return_Value : Ioctl_Return_Value_t;
+ 152      Done         : Boolean;
+ 153    begin
+ 154      --# accept Flow, 22, "Value is implementation-defined.";
+ 155      if Check_Request_Support (I_LOOK) then
+ 156      --# end accept;
+ 157        Look_Module_Boundary
+ 158          (Descriptor   => Descriptor,
+ 159           Name_Buffer  => Name_Buffer,
+ 160           Return_Value => Return_Value);
+ 161        if Return_Value = 0 then
+ 162          Error_Value := Error.Error_None;
+ 163          Name_Last   := Name_Buffer_Index_t'First;
+ 164          Done        := False;
+ 165          for Index in Name_Buffer_Index_t range Name_Buffer'First .. Name_Buffer'Last loop
+ 166            --# assert Index <= Name_Buffer'Last
+ 167            --#    and Index >= Name_Buffer'First;
+ 168            if Name_Buffer (Index) = Character'Val (0) then
+ 169              Name_Last := Index;
+ 170              Done      := True;
+ 171            end if;
+ 172            exit when Done;
+ 173          end loop;
+ 174        else
+ 175          Name_Last   := Name_Buffer_Index_t'First;
+ 176          Error_Value := Error.Get_Error;
+ 177        end if;
+ 178      else
+ 179        Name_Buffer := Name_Buffer_t'(others => Character'Val (0));
+ 180        Name_Last   := Name_Buffer_Index_t'First;
+ 181        Error_Value := Error.Error_Not_Supported;
+ 182      end if;
+ 183    end Look_Module;
+
++++        Flow analysis of subprogram Look_Module 
+           performed: no errors found.
+
+ 184  
+ 185    --
+ 186    -- Flush.
+ 187    --
+ 188  
+ 189    procedure Flush
+ 190      (Descriptor  : in     File.Valid_Descriptor_t;
+ 191       Queues      : in     Queue_Type_t;
+ 192       Error_Value :    out Error.Error_t)
+ 193    is
+ 194      function Ioctl
+ 195        (Descriptor : in File.Valid_Descriptor_t;
+ 196         Request    : in Request_t;
+ 197         Arg        : in Queue_Value_t) return Ioctl_Return_Value_t;
+ 198      pragma Import (C, Ioctl, "ioctl");
+ 199    begin
+ 200      --# accept Flow, 22, "Value is implementation-defined.";
+ 201      if Check_Request_Support (I_FLUSH) then
+ 202      --# end accept;
+ 203        if Ioctl
+ 204          (Descriptor => Descriptor,
+ 205           Request    => I_FLUSH,
+ 206           Arg        => Queue_Map (Queues)) = -1 then
+ 207          Error_Value := Error.Get_Error;
+ 208        else
+ 209          Error_Value := Error.Error_None;
+ 210        end if;
+ 211      else
+ 212        Error_Value := Error.Error_Not_Supported;
+ 213      end if;
+ 214    end Flush;
+
++++        Flow analysis of subprogram Flush performed: no 
+           errors found.
+
+ 215  
+ 216    --
+ 217    -- Flush_Band.
+ 218    --
+ 219  
+ 220    function Flush_Band_Boundary
+ 221      (Descriptor  : in File.Valid_Descriptor_t;
+ 222       Priority    : in Priority_Band_t;
+ 223       Queues      : in Queue_Type_t) return Ioctl_Return_Value_t
+ 224    is
+ 225      --# hide Flush_Band_Boundary
+ 226      Band_Info : aliased Band_Info_t :=
+ 227        (Priority => Priority,
+ 228         Queue    => Queue_Map (Queues));
+ 229  
+ 230      function Ioctl
+ 231        (Descriptor : in File.Valid_Descriptor_t;
+ 232         Request    : in Request_t;
+ 233         Arg        : in System.Address) return Ioctl_Return_Value_t;
+ 234      pragma Import (C, Ioctl, "ioctl");
+ 235    begin
+ 236      return Ioctl
+ 237        (Descriptor => Descriptor,
+ 238         Request    => I_FLUSHBAND,
+ 239         Arg        => Band_Info'Address);
+ 240    end Flush_Band_Boundary;
+
+--- (  6)  Warning           : 10: The body of subprogram Flush_Band_Boundary is 
+           hidden - hidden text is ignored by the SPARK Examiner.
+
+ 241  
+ 242    procedure Flush_Band
+ 243      (Descriptor  : in     File.Valid_Descriptor_t;
+ 244       Priority    : in     Priority_Band_t;
+ 245       Queues      : in     Queue_Type_t;
+ 246       Error_Value :    out Error.Error_t) is
+ 247    begin
+ 248      --# accept Flow, 22, "Value is implementation-defined.";
+ 249      if Check_Request_Support (I_FLUSHBAND) then
+ 250      --# end accept;
+ 251        if Flush_Band_Boundary
+ 252          (Descriptor => Descriptor,
+ 253           Priority   => Priority,
+ 254           Queues     => Queues) = -1 then
+ 255          Error_Value := Error.Get_Error;
+ 256        else
+ 257          Error_Value := Error.Error_None;
+ 258        end if;
+ 259      else
+ 260        Error_Value := Error.Error_Not_Supported;
+ 261      end if;
+ 262    end Flush_Band;
+
++++        Flow analysis of subprogram Flush_Band 
+           performed: no errors found.
+
+ 263  
+ 264    --
+ 265    -- Set_Signal_Events.
+ 266    --
+ 267  
+ 268    --
+ 269    -- Return True if all of the selected options are valid on the current platform.
+ 270    --
+ 271  
+ 272    function Check_Signal_Events (Events : in Events_t) return Boolean is
+ 273      Supported : Boolean := True;
+ 274    begin
+ 275      for Event in Event_Selector_t range Event_Selector_t'First .. Event_Selector_t'Last loop
+ 276        if Events (Event) then
+ 277          if Event_Map (Event) = Unsupported_Event then
+ 278            Supported := False;
+ 279          end if;
+ 280        end if;
+ 281        --# assert Event <= Event_Selector_t'Last
+ 282        --#    and Event >= Event_Selector_t'First;
+ 283      end loop;
+ 284      return Supported;
+ 285    end Check_Signal_Events;
+
++++        Flow analysis of subprogram Check_Signal_Events 
+           performed: no errors found.
+
+ 286  
+ 287    --
+ 288    -- Convert Events array to event mask.
+ 289    --
+ 290  
+ 291    function Signal_Event_Mask (Events : in Events_t) return Event_Value_t is
+ 292      Mask       : Event_Value_t := 0;
+ 293      Event_Mask : Event_Value_t;
+ 294    begin
+ 295      --# assert (Mask or Event_Value_t'Last) = Event_Value_t'Last;
+ 296      for Event in Event_Selector_t range Event_Selector_t'First .. Event_Selector_t'Last loop
+ 297        if Events (Event) then
+ 298          Event_Mask := Event_Map (Event);
+ 299          Mask       := Mask or Event_Mask;
+ 300        end if;
+ 301        --# assert Event <= Event_Selector_t'Last
+ 302        --#    and Event >= Event_Selector_t'First;
+ 303      end loop;
+ 304      return Mask;
+ 305    end Signal_Event_Mask;
+
++++        Flow analysis of subprogram Signal_Event_Mask 
+           performed: no errors found.
+
+ 306  
+ 307    procedure Set_Signal_Events
+ 308      (Descriptor  : in     File.Valid_Descriptor_t;
+ 309       Events      : in     Events_t;
+ 310       Error_Value :    out Error.Error_t)
+ 311    is
+ 312      Supported : Boolean;
+ 313  
+ 314      function Ioctl
+ 315        (Descriptor : in File.Valid_Descriptor_t;
+ 316         Request    : in Request_t;
+ 317         Arg        : in Event_Value_t) return Ioctl_Return_Value_t;
+ 318      pragma Import (C, Ioctl, "ioctl");
+ 319    begin
+ 320      Supported := Check_Request_Support (I_SETSIG) and
+ 321                   Check_Signal_Events (Events);
+ 322      if Supported then
+ 323        if Ioctl
+ 324          (Descriptor => Descriptor,
+ 325           Request    => I_SETSIG,
+ 326           Arg        => Signal_Event_Mask (Events)) = -1 then
+ 327          Error_Value := Error.Get_Error;
+ 328        else
+ 329          Error_Value := Error.Error_None;
+ 330        end if;
+ 331      else
+ 332        Error_Value := Error.Error_Not_Supported;
+ 333      end if;
+ 334    end Set_Signal_Events;
+
++++        Flow analysis of subprogram Set_Signal_Events 
+           performed: no errors found.
+
+ 335  
+ 336    --
+ 337    -- Get_Signal_Events
+ 338    --
+ 339  
+ 340    --
+ 341    -- Convert Events array to event mask.
+ 342    --
+ 343  
+ 344    function Signal_Mask_To_Events (Mask : in Event_Value_t) return Events_t is
+ 345      Return_Events : Events_t := Events_t'(others => False);
+ 346    begin
+ 347      for Event in Event_Selector_t range Event_Selector_t'First .. Event_Selector_t'Last loop
+ 348        if (Mask and Event_Map (Event)) = Event_Map (Event) then
+ 349          Return_Events (Event) := True;
+ 350        end if;
+ 351        --# assert Event <= Event_Selector_t'Last
+ 352        --#    and Event >= Event_Selector_t'First;
+ 353      end loop;
+ 354      return Return_Events;
+ 355    end Signal_Mask_To_Events;
+
++++        Flow analysis of subprogram 
+           Signal_Mask_To_Events performed: no errors found.
+
+ 356  
+ 357    procedure Get_Signal_Events_Boundary
+ 358      (Descriptor  : in     File.Valid_Descriptor_t;
+ 359       Events      :    out Events_t;
+ 360       Failed      :    out Boolean)
+ 361      --# derives Events, Failed from Descriptor;
+ 362    is
+ 363      --# hide Get_Signal_Events_Boundary
+ 364      Event_Value : aliased Event_Value_t;
+ 365  
+ 366      function Ioctl
+ 367        (Descriptor : in File.Valid_Descriptor_t;
+ 368         Request    : in Request_t;
+ 369         Arg        : in System.Address) return Ioctl_Return_Value_t;
+ 370      pragma Import (C, Ioctl, "ioctl");
+ 371    begin
+ 372      if Ioctl
+ 373        (Descriptor => Descriptor,
+ 374         Request    => I_GETSIG,
+ 375         Arg        => Event_Value'Address) = -1 then
+ 376        Failed := True;
+ 377      else
+ 378        Failed := False;
+ 379        Events := Signal_Mask_To_Events (Event_Value);
+ 380      end if;
+ 381    end Get_Signal_Events_Boundary;
+
+--- (  7)  Warning           : 10: The body of subprogram 
+           Get_Signal_Events_Boundary is hidden - hidden text is ignored by the 
+           SPARK Examiner.
+
+ 382  
+ 383    procedure Get_Signal_Events
+ 384      (Descriptor  : in     File.Valid_Descriptor_t;
+ 385       Events      :    out Events_t;
+ 386       Error_Value :    out Error.Error_t)
+ 387    is
+ 388      Failed : Boolean;
+ 389    begin
+ 390      --# accept Flow, 22, "Value is implementation-defined.";
+ 391      if Check_Request_Support (I_GETSIG) then
+ 392      --# end accept;
+ 393        Get_Signal_Events_Boundary
+ 394          (Descriptor => Descriptor,
+ 395           Events     => Events,
+ 396           Failed     => Failed);
+ 397        if Failed then
+ 398          Error_Value := Error.Error_None;
+ 399        else
+ 400          Error_Value := Error.Get_Error;
+ 401        end if;
+ 402      else
+ 403        Events      := Events_t'(others => False);
+ 404        Error_Value := Error.Error_Not_Supported;
+ 405      end if;
+ 406    end Get_Signal_Events;
+
++++        Flow analysis of subprogram Get_Signal_Events 
+           performed: no errors found.
+
+ 407  
+ 408    --
+ 409    -- Find_Module.
+ 410    --
+ 411  
+ 412    function Find_Module_Boundary
+ 413      (Descriptor : in File.Valid_Descriptor_t;
+ 414       Name       : in String) return Ioctl_Return_Value_t
+ 415    is
+ 416      --# hide Find_Module_Boundary
+ 417      function Ioctl
+ 418        (Descriptor : in File.Valid_Descriptor_t;
+ 419         Request    : in Request_t;
+ 420         Name       : in C_String.String_Not_Null_Ptr_t)
+ 421        return Ioctl_Return_Value_t;
+ 422      pragma Import (C, Ioctl, "ioctl");
+ 423  
+ 424      Name_Buffer : aliased Interfaces.C.char_array := Interfaces.C.To_C (Name);
+ 425    begin
+ 426      return Ioctl
+ 427        (Descriptor => Descriptor,
+ 428         Request    => I_FIND,
+ 429         Name       => C_String.To_C_String (Name_Buffer'Unchecked_Access));
+ 430    exception
+ 431      -- Do not propagate exceptions.
+ 432      when Storage_Error =>
+ 433        Error.Set_Error (Error.Error_Out_Of_Memory);
+ 434        return -1;
+ 435      when others =>
+ 436        Error.Set_Error (Error.Error_Unknown);
+ 437        return -1;
+ 438    end Find_Module_Boundary;
+
+--- (  8)  Warning           : 10: The body of subprogram Find_Module_Boundary is 
+           hidden - hidden text is ignored by the SPARK Examiner.
+
+ 439  
+ 440    procedure Find_Module
+ 441      (Descriptor  : in     File.Valid_Descriptor_t;
+ 442       Name        : in     String;
+ 443       Found       :    out Boolean;
+ 444       Error_Value :    out Error.Error_t) is
+ 445    begin
+ 446      --# accept Flow, 22, "Value is implementation-defined.";
+ 447      if Check_Request_Support (I_FIND) then
+ 448      --# end accept;
+ 449        case Find_Module_Boundary
+ 450          (Descriptor => Descriptor,
+ 451           Name       => Name) is
+ 452          when  0 =>
+ 453            Error_Value := Error.Error_None;
+ 454            Found := False;
+ 455          when  1 =>
+ 456            Error_Value := Error.Error_None;
+ 457            Found := True;
+ 458          when others =>
+ 459            Error_Value := Error.Get_Error;
+ 460            Found       := False;
+ 461        end case;
+ 462      else
+ 463        Found       := False;
+ 464        Error_Value := Error.Error_Not_Supported;
+ 465      end if;
+ 466    end Find_Module;
+
++++        Flow analysis of subprogram Find_Module 
+           performed: no errors found.
+
+ 467  
+ 468  end POSIX.IO_Control;
+
+Expected messages marked with the accept annotation
+Type Msg    Lines              Reason                    Match
+     No.  From    To                                    No.  Line
+Flow  22    61    63  Value is implementation-defined.    1    62
+Flow  22    93    95  Value is implementation-defined.    1    94
+Flow  22   154   156  Value is implementation-defined.    1   155
+Flow  22   200   202  Value is implementation-defined.    1   201
+Flow  22   248   250  Value is implementation-defined.    1   249
+Flow  22   390   392  Value is implementation-defined.    1   391
+Flow  22   446   448  Value is implementation-defined.    1   447
+
+
+No summarized warnings
+
+
+
+--End of file--------------------------------------------------

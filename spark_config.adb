@@ -30,6 +30,17 @@ begin
   IO.Put_Line ("-- " & System.Name'Image (System.System_Name));
   IO.New_Line;
 
+  IO.Put_Line ("package Standard is");
+  IO.New_Line;
+  IO.Put_Line ("  type Integer is range "               &
+    Discrete_Type'Image (Discrete_Type (Integer'First)) &
+    " .."                                               &
+    Discrete_Type'Image (Discrete_Type (Integer'Last))  &
+    ";");
+  IO.New_Line;
+  IO.Put_Line ("end Standard;");
+  IO.New_Line;
+
   IO.Put_Line ("package System is");
   IO.Put_Line ("  type Address is private;");
   IO.New_Line;
