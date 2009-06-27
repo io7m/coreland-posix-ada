@@ -6,7 +6,7 @@ int
 main (void)
 {
   const unsigned long long bits       = sizeof (off_t) * CHAR_BIT;
-  const unsigned long long shift_bits = bits - 2;
+  const unsigned long long shift_bits = bits - 1;
   const unsigned long long off_max    = 1LL << shift_bits;
 
   (void) printf ("  type Offset_t is range -%llu .. %llu;\n", off_max, off_max);
