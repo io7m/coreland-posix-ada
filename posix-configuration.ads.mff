@@ -1,0 +1,7 @@
+posix-configuration.ads:   \
+auto-warn.txt              \
+posix-configuration.ads.sh \
+posix-config               \
+LICENSE
+	./posix-configuration.ads.sh > posix-configuration.ads.tmp
+	mv posix-configuration.ads.tmp posix-configuration.ads

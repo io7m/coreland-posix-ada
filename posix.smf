@@ -1,9 +1,10 @@
+posix-configuration.ads
 posix-directory.adb
 posix-error.adb
 posix-file.adb
 posix-file_status.adb
-posix-io_control.adb
 posix-io.adb
+posix-io_control.adb
 posix-permissions.adb
 posix-process_info.adb
 posix-symlink.adb

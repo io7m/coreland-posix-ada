@@ -1,0 +1,9 @@
+posix-config.c:   \
+auto-warn.txt     \
+posix-config.c.sh \
+posix-config.map  \
+posix_config.h    \
+titlecase         \
+LICENSE
+	./posix-config.c.sh posix-config.map > posix-config.c.tmp
+	mv posix-config.c.tmp posix-config.c

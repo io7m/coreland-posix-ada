@@ -26,7 +26,8 @@ ctxt/ctxt.a ctxt/dlibdir.o ctxt/fakeroot.o ctxt/incdir.o ctxt/repos.o \
 ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o errno_int errno_int.o \
 install-core.o install-error.o install-posix.o install-win32.o install.a \
 installer installer.o instchk instchk.o insthier.o posix-ada-conf \
-posix-ada-conf.o posix-ada.a posix-c_types.ali posix-c_types.o \
+posix-ada-conf.o posix-ada.a posix-c_types.ali posix-c_types.o posix-config \
+posix-config.o posix-configuration.ali posix-configuration.o \
 posix-directory.ali posix-directory.o posix-errno.ali posix-errno.o \
 posix-error.ali posix-error.o posix-file.ali posix-file.o posix-file_status.ali \
 posix-file_status.o posix-io.ali posix-io.o posix-io_control.ali \
@@ -35,8 +36,8 @@ posix-permissions.o posix-process_info.ali posix-process_info.o \
 posix-symlink.ali posix-symlink.o posix-user_db.ali posix-user_db.o posix.ali \
 posix.o posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o \
 spark_config spark_config.ali spark_config.o test_config.ali test_config.o \
-type-discrete type-discrete.o type-mode type-mode.o type-offset type-offset.o \
-type-passwd type-passwd.o type-status type-status.o
+titlecase titlecase.o type-discrete type-discrete.o type-mode type-mode.o \
+type-offset type-offset.o type-passwd type-passwd.o type-status type-status.o
 
 # Mkf-deinstall
 deinstall: deinstaller conf-sosuffix
@@ -418,11 +419,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -617,14 +618,16 @@ cc-compile posix-ada-conf.c ctxt.h _sysinfo.h
 	./cc-compile posix-ada-conf.c
 
 posix-ada.a:\
-cc-slib posix-ada.sld posix-c_types.o posix-directory.o posix-errno.o \
-posix-error.o posix-file.o posix-file_status.o posix-io_control.o posix-io.o \
-posix-path.o posix-permissions.o posix-process_info.o posix-symlink.o \
-posix-user_db.o posix.o posix_error.o posix_passwd.o posix_stat.o
-	./cc-slib posix-ada posix-c_types.o posix-directory.o posix-errno.o \
-	posix-error.o posix-file.o posix-file_status.o posix-io_control.o posix-io.o \
-	posix-path.o posix-permissions.o posix-process_info.o posix-symlink.o \
-	posix-user_db.o posix.o posix_error.o posix_passwd.o posix_stat.o
+cc-slib posix-ada.sld posix-c_types.o posix-configuration.o posix-directory.o \
+posix-errno.o posix-error.o posix-file.o posix-file_status.o posix-io.o \
+posix-io_control.o posix-path.o posix-permissions.o posix-process_info.o \
+posix-symlink.o posix-user_db.o posix.o posix_error.o posix_passwd.o \
+posix_stat.o
+	./cc-slib posix-ada posix-c_types.o posix-configuration.o posix-directory.o \
+	posix-errno.o posix-error.o posix-file.o posix-file_status.o posix-io.o \
+	posix-io_control.o posix-path.o posix-permissions.o posix-process_info.o \
+	posix-symlink.o posix-user_db.o posix.o posix_error.o posix_passwd.o \
+	posix_stat.o
 
 # posix-c_types.ads.mff
 posix-c_types.ads:   \
@@ -641,6 +644,41 @@ ada-compile posix-c_types.ads
 
 posix-c_types.o:\
 posix-c_types.ali
+
+posix-config:\
+cc-link posix-config.ld posix-config.o
+	./cc-link posix-config posix-config.o
+
+# posix-config.c.mff
+posix-config.c:   \
+auto-warn.txt     \
+posix-config.c.sh \
+posix-config.map  \
+posix_config.h    \
+titlecase         \
+LICENSE
+	./posix-config.c.sh posix-config.map > posix-config.c.tmp
+	mv posix-config.c.tmp posix-config.c
+
+posix-config.o:\
+cc-compile posix-config.c
+	./cc-compile posix-config.c
+
+# posix-configuration.ads.mff
+posix-configuration.ads:   \
+auto-warn.txt              \
+posix-configuration.ads.sh \
+posix-config               \
+LICENSE
+	./posix-configuration.ads.sh > posix-configuration.ads.tmp
+	mv posix-configuration.ads.tmp posix-configuration.ads
+
+posix-configuration.ali:\
+ada-compile posix-configuration.ads
+	./ada-compile posix-configuration.ads
+
+posix-configuration.o:\
+posix-configuration.ali
 
 # posix-directory.ads.mff
 posix-directory.ads:   \
@@ -952,6 +990,14 @@ ada-compile test_config.ads
 test_config.o:\
 test_config.ali
 
+titlecase:\
+cc-link titlecase.ld titlecase.o
+	./cc-link titlecase titlecase.o
+
+titlecase.o:\
+cc-compile titlecase.c
+	./cc-compile titlecase.c
+
 type-discrete:\
 cc-link type-discrete.ld type-discrete.o
 	./cc-link type-discrete type-discrete.o
@@ -1020,20 +1066,22 @@ obj_clean:
 	deinstaller deinstaller.o errno_int errno_int.c errno_int.o install-core.o \
 	install-error.o install-posix.o install-win32.o install.a installer installer.o \
 	instchk instchk.o insthier.o posix-ada-conf posix-ada-conf.o posix-ada.a \
-	posix-c_types.ads posix-c_types.ali posix-c_types.o posix-directory.ads \
-	posix-directory.ali posix-directory.o posix-errno.ads posix-errno.ali \
-	posix-errno.o posix-error.adb posix-error.ads posix-error.ali posix-error.o \
-	posix-file.ads posix-file.ali posix-file.o posix-file_status.ads \
-	posix-file_status.ali posix-file_status.o posix-io.ads posix-io.ali posix-io.o \
-	posix-io_control.ads posix-io_control.ali posix-io_control.o
-	rm -f posix-path.ads posix-path.ali posix-path.o posix-permissions.ads \
-	posix-permissions.ali posix-permissions.o posix-process_info.ads \
-	posix-process_info.ali posix-process_info.o posix-symlink.ali posix-symlink.o \
-	posix-user_db.ads posix-user_db.ali posix-user_db.o posix.ali posix.o \
-	posix_error.o posix_file posix_file.o posix_passwd.o posix_stat.o spark_config \
-	spark_config.ali spark_config.o test_config.ads test_config.ali test_config.o \
-	type-discrete type-discrete.o type-mode type-mode.o type-offset type-offset.o \
-	type-passwd type-passwd.o type-status type-status.o
+	posix-c_types.ads posix-c_types.ali posix-c_types.o posix-config posix-config.c \
+	posix-config.o posix-configuration.ads posix-configuration.ali \
+	posix-configuration.o posix-directory.ads posix-directory.ali posix-directory.o \
+	posix-errno.ads posix-errno.ali posix-errno.o posix-error.adb posix-error.ads \
+	posix-error.ali posix-error.o posix-file.ads posix-file.ali posix-file.o \
+	posix-file_status.ads posix-file_status.ali
+	rm -f posix-file_status.o posix-io.ads posix-io.ali posix-io.o \
+	posix-io_control.ads posix-io_control.ali posix-io_control.o posix-path.ads \
+	posix-path.ali posix-path.o posix-permissions.ads posix-permissions.ali \
+	posix-permissions.o posix-process_info.ads posix-process_info.ali \
+	posix-process_info.o posix-symlink.ali posix-symlink.o posix-user_db.ads \
+	posix-user_db.ali posix-user_db.o posix.ali posix.o posix_error.o posix_file \
+	posix_file.o posix_passwd.o posix_stat.o spark_config spark_config.ali \
+	spark_config.o test_config.ads test_config.ali test_config.o titlecase \
+	titlecase.o type-discrete type-discrete.o type-mode type-mode.o type-offset \
+	type-offset.o type-passwd type-passwd.o type-status type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 
