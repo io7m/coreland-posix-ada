@@ -3,8 +3,9 @@
 cat LICENSE       || exit 1
 cat auto-warn.txt || exit 1
 cat <<EOF
-with POSIX.File;
 with POSIX.Error;
+with POSIX.File;
+with POSIX.Path;
 with POSIX.Permissions;
 
 use type POSIX.Error.Error_t;
@@ -14,16 +15,17 @@ use type POSIX.Error.Return_Value_t;
 --#         POSIX.Error,
 --#         POSIX.Errno,
 --#         POSIX.File,
+--#         POSIX.Path,
 --#         POSIX.Permissions;
 
 package POSIX.Directory is
 
   -- subprogram_map : chdir
   procedure Change_By_Name
-    (Path        : in     String;
+    (Name        : in     String;
      Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
-  --# derives Error_Value from Path, Errno.Errno_Value;
+  --# derives Error_Value from Name, Errno.Errno_Value;
 
   -- subprogram_map : fchdir
   procedure Change_By_Descriptor
@@ -46,6 +48,14 @@ package POSIX.Directory is
      Error_Value :    out Error.Error_t);
   --# global in Errno.Errno_Value;
   --# derives Error_Value from Name, Errno.Errno_Value;
+
+  -- subprogram_map : getcwd
+  procedure Get_Current
+    (Name        :    out Path.Path_Name_t;
+     Name_Size   :    out Path.Path_Name_Size_t;
+     Error_Value :    out Error.Error_t);
+  --# global in Errno.Errno_Value;
+  --# derives Name, Name_Size, Error_Value from Errno.Errno_Value;
 
 end POSIX.Directory;
 EOF

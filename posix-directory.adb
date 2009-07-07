@@ -1,5 +1,7 @@
 with C_String;
 with Interfaces.C;
+with POSIX.C_Types;
+with System;
 
 package body POSIX.Directory is
 
@@ -27,14 +29,14 @@ package body POSIX.Directory is
   --
 
   procedure Change_By_Name
-    (Path        : in     String;
+    (Name        : in     String;
      Error_Value :    out Error.Error_t)
   is
     Descriptor   : File.Descriptor_t;
     Error_Local  : Error.Error_t;
   begin
     File.Open_Read_Only
-      (File_Name    => Path,
+      (File_Name    => Name,
        Non_Blocking => False,
        Descriptor   => Descriptor,
        Error_Value  => Error_Local);
@@ -64,6 +66,7 @@ package body POSIX.Directory is
     --# return R =>
     --#  ((R = 0)  -> (Error.Get_Error (Errno.Errno_Value)  = Error.Error_None)) or
     --#  ((R = -1) -> (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None));
+    --# hide Create_Boundary
   is
     C_Name : aliased Interfaces.C.char_array := Interfaces.C.To_C (Name);
 
@@ -97,6 +100,7 @@ package body POSIX.Directory is
     --# return R =>
     --#  ((R = 0)  -> (Error.Get_Error (Errno.Errno_Value)  = Error.Error_None)) or
     --#  ((R = -1) -> (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None));
+    --# hide Remove_Boundary
   is
     C_Name : aliased Interfaces.C.char_array := Interfaces.C.To_C (Name);
 
@@ -116,5 +120,48 @@ package body POSIX.Directory is
       when -1 => Error_Value := Error.Get_Error;
     end case;
   end Remove;
+
+  --
+  -- Retrieve current working directory.
+  --
+
+  procedure Get_Current_Boundary
+    (Name        :    out Path.Path_Name_t;
+     Name_Size   :    out Path.Path_Name_Size_t;
+     Error_Value :    out Error.Error_t)
+    --# hide Get_Current_Boundary
+  is
+    use type C_String.String_Ptr_t;
+
+    function Getcwd
+      (Buffer : System.Address;
+       Size   : C_Types.Size_t) return C_String.String_Ptr_t;
+    pragma Import (C, Getcwd, "getcwd");
+
+    Pointer : C_String.String_Ptr_t;
+  begin
+    Pointer := Getcwd
+      (Buffer => Name (Name'First)'Address,
+       Size   => C_Types.Size_t (Path.Path_Name_Index_t'Last));
+
+    if Pointer = null then
+      Error_Value := Error.Get_Error;
+      Name_Size   := 0;
+    else
+      Error_Value := Error.Error_None;
+      Name_Size   := Path.Path_Name_Size_t (C_String.Length (Pointer));
+    end if;
+  end Get_Current_Boundary;
+
+  procedure Get_Current
+    (Name        :    out Path.Path_Name_t;
+     Name_Size   :    out Path.Path_Name_Size_t;
+     Error_Value :    out Error.Error_t) is
+  begin
+    Get_Current_Boundary
+      (Name        => Name,
+       Name_Size   => Name_Size,
+       Error_Value => Error_Value);
+  end Get_Current;
 
 end POSIX.Directory;
