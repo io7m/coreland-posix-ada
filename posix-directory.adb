@@ -83,8 +83,8 @@ package body POSIX.Directory is
      Error_Value :    out Error.Error_t) is
   begin
     case Create_Boundary (Name, Mode) is
-      when  0 => Error_Value := Error.Get_Error;
-      when -1 => Error_Value := Error.Error_None;
+      when  0 => Error_Value := Error.Error_None;
+      when -1 => Error_Value := Error.Get_Error;
     end case;
   end Create;
 
@@ -112,8 +112,8 @@ package body POSIX.Directory is
      Error_Value :    out Error.Error_t) is
   begin
     case Remove_Boundary (Name) is
-      when  0 => Error_Value := Error.Get_Error;
-      when -1 => Error_Value := Error.Error_None;
+      when  0 => Error_Value := Error.Error_None;
+      when -1 => Error_Value := Error.Get_Error;
     end case;
   end Remove;
 
