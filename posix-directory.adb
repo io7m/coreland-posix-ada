@@ -66,8 +66,9 @@ package body POSIX.Directory is
     --# return R =>
     --#  ((R = 0)  -> (Error.Get_Error (Errno.Errno_Value)  = Error.Error_None)) or
     --#  ((R = -1) -> (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None));
-    --# hide Create_Boundary
   is
+    --# hide Create_Boundary
+
     C_Name : aliased Interfaces.C.char_array := Interfaces.C.To_C (Name);
 
     function Mkdir
@@ -100,8 +101,9 @@ package body POSIX.Directory is
     --# return R =>
     --#  ((R = 0)  -> (Error.Get_Error (Errno.Errno_Value)  = Error.Error_None)) or
     --#  ((R = -1) -> (Error.Get_Error (Errno.Errno_Value) /= Error.Error_None));
-    --# hide Remove_Boundary
   is
+    --# hide Remove_Boundary
+
     C_Name : aliased Interfaces.C.char_array := Interfaces.C.To_C (Name);
 
     function Rmdir (Name : in C_String.String_Not_Null_Ptr_t)
@@ -129,8 +131,11 @@ package body POSIX.Directory is
     (Name        :    out Path.Path_Name_t;
      Name_Size   :    out Path.Path_Name_Size_t;
      Error_Value :    out Error.Error_t)
-    --# hide Get_Current_Boundary
+    --# global in Errno.Errno_Value;
+    --# derives Name, Name_Size, Error_Value from Errno.Errno_Value;
   is
+    --# hide Get_Current_Boundary
+
     use type C_String.String_Ptr_t;
 
     function Getcwd
