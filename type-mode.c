@@ -22,7 +22,7 @@ main (int argc, char *argv[])
     S_ISUID | S_ISGID | S_ISVTX;
 
   (void) printf ("  type Mode_Integer_t is mod 8#%o# + 1;\n", mode_max);
-  (void) printf ("  for Mode_Integer_t'Size use %u;\n", sizeof (mode_t) * CHAR_BIT);
+  (void) printf ("  for Mode_Integer_t'Size use %u;\n", (unsigned int) sizeof (mode_t) * CHAR_BIT);
   (void) printf ("  pragma Convention (C, Mode_Integer_t);\n");
 
   return 0;

@@ -89,17 +89,17 @@ static const struct {
   { SIGNED_LONG, { FLUSHW      }, "FLUSHW"      },
   { SIGNED_LONG, { FLUSHRW     }, "FLUSHRW"     },
 
-  { UNSIGNED_LONG, { S_RDNORM  }, "S_RDNORM"    },
-  { UNSIGNED_LONG, { S_RDBAND  }, "S_RDBAND"    },
-  { UNSIGNED_LONG, { S_INPUT   }, "S_INPUT"     },
-  { UNSIGNED_LONG, { S_HIPRI   }, "S_HIPRI"     },
-  { UNSIGNED_LONG, { S_OUTPUT  }, "S_OUTPUT"    },
-  { UNSIGNED_LONG, { S_WRNORM  }, "S_WRNORM"    },
-  { UNSIGNED_LONG, { S_WRBAND  }, "S_WRBAND"    },
-  { UNSIGNED_LONG, { S_MSG     }, "S_MSG"       },
-  { UNSIGNED_LONG, { S_ERROR   }, "S_ERROR"     },
-  { UNSIGNED_LONG, { S_HANGUP  }, "S_HANGUP"    },
-  { UNSIGNED_LONG, { S_BANDURG }, "S_BANDURG"   },
+  { SIGNED_LONG, { S_RDNORM  }, "S_RDNORM"    },
+  { SIGNED_LONG, { S_RDBAND  }, "S_RDBAND"    },
+  { SIGNED_LONG, { S_INPUT   }, "S_INPUT"     },
+  { SIGNED_LONG, { S_HIPRI   }, "S_HIPRI"     },
+  { SIGNED_LONG, { S_OUTPUT  }, "S_OUTPUT"    },
+  { SIGNED_LONG, { S_WRNORM  }, "S_WRNORM"    },
+  { SIGNED_LONG, { S_WRBAND  }, "S_WRBAND"    },
+  { SIGNED_LONG, { S_MSG     }, "S_MSG"       },
+  { SIGNED_LONG, { S_ERROR   }, "S_ERROR"     },
+  { SIGNED_LONG, { S_HANGUP  }, "S_HANGUP"    },
+  { SIGNED_LONG, { S_BANDURG }, "S_BANDURG"   },
 
 };
 const unsigned int compile_time_constants_size =
