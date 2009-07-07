@@ -1,6 +1,4 @@
 #!/bin/sh
-./t_pathrm ""
-
 ./t_pathrm /
 ./t_pathrm //
 ./t_pathrm ///
