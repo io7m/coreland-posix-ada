@@ -9,9 +9,9 @@ package POSIX.Path is
   Max_Length : constant Positive := `./constants PATH_MAX`;
 
   -- Remove component of Path.
-  procedure Remove_Component
-    (Path       : in     String;
-     Last_Index :    out Positive);
+  function Remove_Component (Path_Name  : in String) return Positive;
+  --# pre Path_Name'First >= 1
+  --# and Path_Name'Last  >= Path_Name'First;
 
 end POSIX.Path;
 EOF

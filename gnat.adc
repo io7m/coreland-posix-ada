@@ -1,9 +1,12 @@
 
--- ./posix-c_types.apk
-pragma source_file_name(POSIX.C_Types, spec_file_name => "posix-c_types.ads");
+-- ./posix.apk
+pragma source_file_name(POSIX, spec_file_name => "posix.ads");
 
 -- ./posix-configuration.apk
 pragma source_file_name(POSIX.Configuration, spec_file_name => "posix-configuration.ads");
+
+-- ./posix-c_types.apk
+pragma source_file_name(POSIX.C_Types, spec_file_name => "posix-c_types.ads");
 
 -- ./posix-directory.apk
 pragma source_file_name(POSIX.Directory, spec_file_name => "posix-directory.ads");
@@ -34,6 +37,7 @@ pragma source_file_name(POSIX.IO_Control, body_file_name => "posix-io_control.ad
 
 -- ./posix-path.apk
 pragma source_file_name(POSIX.Path, spec_file_name => "posix-path.ads");
+pragma source_file_name(POSIX.Path, body_file_name => "posix-path.adb");
 
 -- ./posix-permissions.apk
 pragma source_file_name(POSIX.Permissions, spec_file_name => "posix-permissions.ads");
@@ -49,9 +53,6 @@ pragma source_file_name(POSIX.Symlink, body_file_name => "posix-symlink.adb");
 
 -- ./posix-user_db.apk
 pragma source_file_name(POSIX.User_DB, spec_file_name => "posix-user_db.ads");
-
--- ./posix.apk
-pragma source_file_name(POSIX, spec_file_name => "posix.ads");
 
 -- UNIT_TESTS/test.apk
 pragma source_file_name(Test, spec_file_name => "test.ads");

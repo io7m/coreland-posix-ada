@@ -1,0 +1,28 @@
+#!/bin/sh
+./t_pathrm ""
+
+./t_pathrm /
+./t_pathrm //
+./t_pathrm ///
+
+./t_pathrm /a
+./t_pathrm //a
+./t_pathrm ///a
+./t_pathrm ////a
+
+./t_pathrm /a/
+./t_pathrm //a//
+./t_pathrm ///a///
+./t_pathrm ////a////
+
+./t_pathrm /a/b
+./t_pathrm //a/b//
+./t_pathrm ///a/b///
+./t_pathrm ////a/b////
+
+./t_pathrm /a//b/
+./t_pathrm /a///b/
+./t_pathrm /a////b/
+./t_pathrm //a////b//
+./t_pathrm ///a////b///
+./t_pathrm ////a////b////
