@@ -14,6 +14,7 @@ POSIX.IO            body is in posix-io.adb
 POSIX.IO            spec is in posix-io.ads
 POSIX.IO_Control    body is in posix-io_control.adb
 POSIX.IO_Control    spec is in posix-io_control.ads
+POSIX.Path          body is in posix-path.adb
 POSIX.Path          spec is in posix-path.ads
 POSIX.Permissions   spec is in posix-permissions.ads
 POSIX.Process_Info  body is in posix-process_info.adb

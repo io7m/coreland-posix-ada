@@ -9,3 +9,4 @@ posix-permissions.adb
 posix-process_info.adb
 posix-symlink.adb
 posix-user_db.adb
+posix-path.adb
