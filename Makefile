@@ -66,8 +66,11 @@ install-check: instchk conf-sosuffix
 # that the library is built before any of the test suite.
 #
 
-local: posix-ada.a
+local: dep-check posix-ada.a
 local_clean:
+
+dep-check: libs-c_string-S flags-c_string
+	./check-deps
 
 # Mkf-test
 tests:
@@ -75,44 +78,47 @@ tests:
 tests_clean:
 	(cd UNIT_TESTS && make clean)
 
-# -- SYSDEPS start
+#----------------------------------------------------------------------
+# SYSDEPS start
+
 flags-c_string:
 	@echo SYSDEPS c_string-flags run create flags-c_string 
-	@(cd SYSDEPS/modules/c_string-flags && ./run)
+	@(cd SYSDEPS && ./sd-run modules/c_string-flags)
 libs-c_string-S:
 	@echo SYSDEPS c_string-libs-S run create libs-c_string-S 
-	@(cd SYSDEPS/modules/c_string-libs-S && ./run)
+	@(cd SYSDEPS && ./sd-run modules/c_string-libs-S)
 _sd_streams.h:
 	@echo SYSDEPS sd-streams run create _sd_streams.h 
-	@(cd SYSDEPS/modules/sd-streams && ./run)
-_sysinfo.h:
-	@echo SYSDEPS sysinfo run create _sysinfo.h 
-	@(cd SYSDEPS/modules/sysinfo && ./run)
+	@(cd SYSDEPS && ./sd-run modules/sd-streams)
+_sd_sysinfo.h:
+	@echo SYSDEPS sd-sysinfo run create _sd_sysinfo.h 
+	@(cd SYSDEPS && ./sd-run modules/sd-sysinfo)
 
 
 c_string-flags_clean:
 	@echo SYSDEPS c_string-flags clean flags-c_string 
-	@(cd SYSDEPS/modules/c_string-flags && ./clean)
+	@(cd SYSDEPS && ./sd-clean modules/c_string-flags)
 c_string-libs-S_clean:
 	@echo SYSDEPS c_string-libs-S clean libs-c_string-S 
-	@(cd SYSDEPS/modules/c_string-libs-S && ./clean)
+	@(cd SYSDEPS && ./sd-clean modules/c_string-libs-S)
 sd-streams_clean:
 	@echo SYSDEPS sd-streams clean _sd_streams.h 
-	@(cd SYSDEPS/modules/sd-streams && ./clean)
-sysinfo_clean:
-	@echo SYSDEPS sysinfo clean _sysinfo.h 
-	@(cd SYSDEPS/modules/sysinfo && ./clean)
+	@(cd SYSDEPS && ./sd-clean modules/sd-streams)
+sd-sysinfo_clean:
+	@echo SYSDEPS sd-sysinfo clean _sd_sysinfo.h 
+	@(cd SYSDEPS && ./sd-clean modules/sd-sysinfo)
 
 
 sysdeps_clean:\
 c_string-flags_clean \
 c_string-libs-S_clean \
 sd-streams_clean \
-sysinfo_clean \
+sd-sysinfo_clean \
 
 
-# -- SYSDEPS end
 
+# SYSDEPS end
+#----------------------------------------------------------------------
 
 UNIT_TESTS/t_em1:\
 ada-bind ada-link UNIT_TESTS/t_em1.ald UNIT_TESTS/t_em1.ali UNIT_TESTS/test.ali \
@@ -120,12 +126,9 @@ test_config.ali posix-error.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_em1.ali
 	./ada-link UNIT_TESTS/t_em1 UNIT_TESTS/t_em1.ali posix-ada.a
 
-UNIT_TESTS/t_em1.ali:\
-ada-compile UNIT_TESTS/t_em1.adb
+UNIT_TESTS/t_em1.o UNIT_TESTS/t_em1.ali:\
+ada-compile UNIT_TESTS/t_em1.adb posix-error.ali
 	./ada-compile UNIT_TESTS/t_em1.adb
-
-UNIT_TESTS/t_em1.o:\
-UNIT_TESTS/t_em1.ali
 
 UNIT_TESTS/t_error1:\
 ada-bind ada-link UNIT_TESTS/t_error1.ald UNIT_TESTS/t_error1.ali \
@@ -133,12 +136,9 @@ UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-errno.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_error1.ali
 	./ada-link UNIT_TESTS/t_error1 UNIT_TESTS/t_error1.ali posix-ada.a
 
-UNIT_TESTS/t_error1.ali:\
-ada-compile UNIT_TESTS/t_error1.adb
+UNIT_TESTS/t_error1.o UNIT_TESTS/t_error1.ali:\
+ada-compile UNIT_TESTS/t_error1.adb posix-error.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_error1.adb
-
-UNIT_TESTS/t_error1.o:\
-UNIT_TESTS/t_error1.ali
 
 UNIT_TESTS/t_io1:\
 ada-bind ada-link UNIT_TESTS/t_io1.ald UNIT_TESTS/t_io1.ali UNIT_TESTS/test.ali \
@@ -147,12 +147,10 @@ posix-permissions.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_io1.ali
 	./ada-link UNIT_TESTS/t_io1 UNIT_TESTS/t_io1.ali posix-ada.a
 
-UNIT_TESTS/t_io1.ali:\
-ada-compile UNIT_TESTS/t_io1.adb
+UNIT_TESTS/t_io1.o UNIT_TESTS/t_io1.ali:\
+ada-compile UNIT_TESTS/t_io1.adb posix-error.ali posix-file.ali posix-io.ali \
+posix-permissions.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_io1.adb
-
-UNIT_TESTS/t_io1.o:\
-UNIT_TESTS/t_io1.ali
 
 UNIT_TESTS/t_open1:\
 ada-bind ada-link UNIT_TESTS/t_open1.ald UNIT_TESTS/t_open1.ali \
@@ -161,12 +159,10 @@ posix-permissions.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_open1.ali
 	./ada-link UNIT_TESTS/t_open1 UNIT_TESTS/t_open1.ali posix-ada.a
 
-UNIT_TESTS/t_open1.ali:\
-ada-compile UNIT_TESTS/t_open1.adb
+UNIT_TESTS/t_open1.o UNIT_TESTS/t_open1.ali:\
+ada-compile UNIT_TESTS/t_open1.adb posix-error.ali posix-file.ali \
+posix-permissions.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_open1.adb
-
-UNIT_TESTS/t_open1.o:\
-UNIT_TESTS/t_open1.ali
 
 UNIT_TESTS/t_open2:\
 ada-bind ada-link UNIT_TESTS/t_open2.ald UNIT_TESTS/t_open2.ali \
@@ -174,12 +170,10 @@ UNIT_TESTS/test.ali test_config.ali posix-error.ali posix-file.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_open2.ali
 	./ada-link UNIT_TESTS/t_open2 UNIT_TESTS/t_open2.ali posix-ada.a
 
-UNIT_TESTS/t_open2.ali:\
-ada-compile UNIT_TESTS/t_open2.adb
+UNIT_TESTS/t_open2.o UNIT_TESTS/t_open2.ali:\
+ada-compile UNIT_TESTS/t_open2.adb posix-error.ali posix-file.ali \
+UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_open2.adb
-
-UNIT_TESTS/t_open2.o:\
-UNIT_TESTS/t_open2.ali
 
 UNIT_TESTS/t_pathrm:\
 ada-bind ada-link UNIT_TESTS/t_pathrm.ald UNIT_TESTS/t_pathrm.ali \
@@ -187,12 +181,9 @@ posix-error.ali posix-path.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_pathrm.ali
 	./ada-link UNIT_TESTS/t_pathrm UNIT_TESTS/t_pathrm.ali posix-ada.a
 
-UNIT_TESTS/t_pathrm.ali:\
-ada-compile UNIT_TESTS/t_pathrm.adb
+UNIT_TESTS/t_pathrm.o UNIT_TESTS/t_pathrm.ali:\
+ada-compile UNIT_TESTS/t_pathrm.adb posix-path.ali
 	./ada-compile UNIT_TESTS/t_pathrm.adb
-
-UNIT_TESTS/t_pathrm.o:\
-UNIT_TESTS/t_pathrm.ali
 
 UNIT_TESTS/t_perm1:\
 ada-bind ada-link UNIT_TESTS/t_perm1.ald UNIT_TESTS/t_perm1.ali \
@@ -200,12 +191,9 @@ UNIT_TESTS/test.ali test_config.ali posix-permissions.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_perm1.ali
 	./ada-link UNIT_TESTS/t_perm1 UNIT_TESTS/t_perm1.ali posix-ada.a
 
-UNIT_TESTS/t_perm1.ali:\
-ada-compile UNIT_TESTS/t_perm1.adb
+UNIT_TESTS/t_perm1.o UNIT_TESTS/t_perm1.ali:\
+ada-compile UNIT_TESTS/t_perm1.adb posix-permissions.ali
 	./ada-compile UNIT_TESTS/t_perm1.adb
-
-UNIT_TESTS/t_perm1.o:\
-UNIT_TESTS/t_perm1.ali
 
 UNIT_TESTS/t_stat1:\
 ada-bind ada-link UNIT_TESTS/t_stat1.ald UNIT_TESTS/t_stat1.ali \
@@ -214,12 +202,10 @@ posix-file.ali posix-permissions.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_stat1.ali
 	./ada-link UNIT_TESTS/t_stat1 UNIT_TESTS/t_stat1.ali posix-ada.a
 
-UNIT_TESTS/t_stat1.ali:\
-ada-compile UNIT_TESTS/t_stat1.adb
+UNIT_TESTS/t_stat1.o UNIT_TESTS/t_stat1.ali:\
+ada-compile UNIT_TESTS/t_stat1.adb posix-error.ali posix-file.ali \
+posix-file_status.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_stat1.adb
-
-UNIT_TESTS/t_stat1.o:\
-UNIT_TESTS/t_stat1.ali
 
 UNIT_TESTS/t_stat2:\
 ada-bind ada-link UNIT_TESTS/t_stat2.ald UNIT_TESTS/t_stat2.ali \
@@ -228,12 +214,10 @@ posix-file.ali posix-permissions.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_stat2.ali
 	./ada-link UNIT_TESTS/t_stat2 UNIT_TESTS/t_stat2.ali posix-ada.a
 
-UNIT_TESTS/t_stat2.ali:\
-ada-compile UNIT_TESTS/t_stat2.adb
+UNIT_TESTS/t_stat2.o UNIT_TESTS/t_stat2.ali:\
+ada-compile UNIT_TESTS/t_stat2.adb posix-error.ali posix-file.ali \
+posix-file_status.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_stat2.adb
-
-UNIT_TESTS/t_stat2.o:\
-UNIT_TESTS/t_stat2.ali
 
 UNIT_TESTS/t_symlink1:\
 ada-bind ada-link UNIT_TESTS/t_symlink1.ald UNIT_TESTS/t_symlink1.ali \
@@ -242,12 +226,10 @@ posix-symlink.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_symlink1.ali
 	./ada-link UNIT_TESTS/t_symlink1 UNIT_TESTS/t_symlink1.ali posix-ada.a
 
-UNIT_TESTS/t_symlink1.ali:\
-ada-compile UNIT_TESTS/t_symlink1.adb
+UNIT_TESTS/t_symlink1.o UNIT_TESTS/t_symlink1.ali:\
+ada-compile UNIT_TESTS/t_symlink1.adb posix-error.ali posix-file.ali \
+posix-symlink.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_symlink1.adb
-
-UNIT_TESTS/t_symlink1.o:\
-UNIT_TESTS/t_symlink1.ali
 
 UNIT_TESTS/t_symlink2:\
 ada-bind ada-link UNIT_TESTS/t_symlink2.ald UNIT_TESTS/t_symlink2.ali \
@@ -256,12 +238,10 @@ posix-symlink.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_symlink2.ali
 	./ada-link UNIT_TESTS/t_symlink2 UNIT_TESTS/t_symlink2.ali posix-ada.a
 
-UNIT_TESTS/t_symlink2.ali:\
-ada-compile UNIT_TESTS/t_symlink2.adb
+UNIT_TESTS/t_symlink2.o UNIT_TESTS/t_symlink2.ali:\
+ada-compile UNIT_TESTS/t_symlink2.adb posix-error.ali posix-file.ali \
+posix-symlink.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_symlink2.adb
-
-UNIT_TESTS/t_symlink2.o:\
-UNIT_TESTS/t_symlink2.ali
 
 UNIT_TESTS/t_symlink3:\
 ada-bind ada-link UNIT_TESTS/t_symlink3.ald UNIT_TESTS/t_symlink3.ali \
@@ -270,12 +250,10 @@ posix-symlink.ali posix-ada.a
 	./ada-bind UNIT_TESTS/t_symlink3.ali
 	./ada-link UNIT_TESTS/t_symlink3 UNIT_TESTS/t_symlink3.ali posix-ada.a
 
-UNIT_TESTS/t_symlink3.ali:\
-ada-compile UNIT_TESTS/t_symlink3.adb
+UNIT_TESTS/t_symlink3.o UNIT_TESTS/t_symlink3.ali:\
+ada-compile UNIT_TESTS/t_symlink3.adb posix-error.ali posix-file.ali \
+posix-symlink.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_symlink3.adb
-
-UNIT_TESTS/t_symlink3.o:\
-UNIT_TESTS/t_symlink3.ali
 
 UNIT_TESTS/t_udb_ge1:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge1.ald UNIT_TESTS/t_udb_ge1.ali \
@@ -284,12 +262,10 @@ posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge1.ali
 	./ada-link UNIT_TESTS/t_udb_ge1 UNIT_TESTS/t_udb_ge1.ali posix-ada.a
 
-UNIT_TESTS/t_udb_ge1.ali:\
-ada-compile UNIT_TESTS/t_udb_ge1.adb
+UNIT_TESTS/t_udb_ge1.o UNIT_TESTS/t_udb_ge1.ali:\
+ada-compile UNIT_TESTS/t_udb_ge1.adb posix-error.ali posix-user_db.ali \
+UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_udb_ge1.adb
-
-UNIT_TESTS/t_udb_ge1.o:\
-UNIT_TESTS/t_udb_ge1.ali
 
 UNIT_TESTS/t_udb_ge2:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge2.ald UNIT_TESTS/t_udb_ge2.ali \
@@ -298,12 +274,10 @@ posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge2.ali
 	./ada-link UNIT_TESTS/t_udb_ge2 UNIT_TESTS/t_udb_ge2.ali posix-ada.a
 
-UNIT_TESTS/t_udb_ge2.ali:\
-ada-compile UNIT_TESTS/t_udb_ge2.adb
+UNIT_TESTS/t_udb_ge2.o UNIT_TESTS/t_udb_ge2.ali:\
+ada-compile UNIT_TESTS/t_udb_ge2.adb posix-error.ali posix-user_db.ali \
+UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_udb_ge2.adb
-
-UNIT_TESTS/t_udb_ge2.o:\
-UNIT_TESTS/t_udb_ge2.ali
 
 UNIT_TESTS/t_udb_ge3:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge3.ald UNIT_TESTS/t_udb_ge3.ali \
@@ -312,12 +286,10 @@ posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge3.ali
 	./ada-link UNIT_TESTS/t_udb_ge3 UNIT_TESTS/t_udb_ge3.ali posix-ada.a
 
-UNIT_TESTS/t_udb_ge3.ali:\
-ada-compile UNIT_TESTS/t_udb_ge3.adb
+UNIT_TESTS/t_udb_ge3.o UNIT_TESTS/t_udb_ge3.ali:\
+ada-compile UNIT_TESTS/t_udb_ge3.adb posix-error.ali posix-user_db.ali \
+UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_udb_ge3.adb
-
-UNIT_TESTS/t_udb_ge3.o:\
-UNIT_TESTS/t_udb_ge3.ali
 
 UNIT_TESTS/t_udb_ge4:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge4.ald UNIT_TESTS/t_udb_ge4.ali \
@@ -326,12 +298,10 @@ posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge4.ali
 	./ada-link UNIT_TESTS/t_udb_ge4 UNIT_TESTS/t_udb_ge4.ali posix-ada.a
 
-UNIT_TESTS/t_udb_ge4.ali:\
-ada-compile UNIT_TESTS/t_udb_ge4.adb
+UNIT_TESTS/t_udb_ge4.o UNIT_TESTS/t_udb_ge4.ali:\
+ada-compile UNIT_TESTS/t_udb_ge4.adb posix-error.ali posix-user_db.ali \
+UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_udb_ge4.adb
-
-UNIT_TESTS/t_udb_ge4.o:\
-UNIT_TESTS/t_udb_ge4.ali
 
 UNIT_TESTS/t_udb_ge5:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge5.ald UNIT_TESTS/t_udb_ge5.ali \
@@ -340,12 +310,10 @@ posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge5.ali
 	./ada-link UNIT_TESTS/t_udb_ge5 UNIT_TESTS/t_udb_ge5.ali posix-ada.a
 
-UNIT_TESTS/t_udb_ge5.ali:\
-ada-compile UNIT_TESTS/t_udb_ge5.adb
+UNIT_TESTS/t_udb_ge5.o UNIT_TESTS/t_udb_ge5.ali:\
+ada-compile UNIT_TESTS/t_udb_ge5.adb posix-error.ali posix-user_db.ali \
+UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_udb_ge5.adb
-
-UNIT_TESTS/t_udb_ge5.o:\
-UNIT_TESTS/t_udb_ge5.ali
 
 UNIT_TESTS/t_udb_ge6:\
 ada-bind ada-link UNIT_TESTS/t_udb_ge6.ald UNIT_TESTS/t_udb_ge6.ali \
@@ -354,12 +322,10 @@ posix-ada.a
 	./ada-bind UNIT_TESTS/t_udb_ge6.ali
 	./ada-link UNIT_TESTS/t_udb_ge6 UNIT_TESTS/t_udb_ge6.ali posix-ada.a
 
-UNIT_TESTS/t_udb_ge6.ali:\
-ada-compile UNIT_TESTS/t_udb_ge6.adb
+UNIT_TESTS/t_udb_ge6.o UNIT_TESTS/t_udb_ge6.ali:\
+ada-compile UNIT_TESTS/t_udb_ge6.adb posix-error.ali posix-user_db.ali \
+UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_udb_ge6.adb
-
-UNIT_TESTS/t_udb_ge6.o:\
-UNIT_TESTS/t_udb_ge6.ali
 
 UNIT_TESTS/t_unlink1:\
 ada-bind ada-link UNIT_TESTS/t_unlink1.ald UNIT_TESTS/t_unlink1.ali \
@@ -368,23 +334,18 @@ posix-ada.a
 	./ada-bind UNIT_TESTS/t_unlink1.ali
 	./ada-link UNIT_TESTS/t_unlink1 UNIT_TESTS/t_unlink1.ali posix-ada.a
 
-UNIT_TESTS/t_unlink1.ali:\
-ada-compile UNIT_TESTS/t_unlink1.adb
+UNIT_TESTS/t_unlink1.o UNIT_TESTS/t_unlink1.ali:\
+ada-compile UNIT_TESTS/t_unlink1.adb posix-error.ali posix-file.ali \
+posix-permissions.ali UNIT_TESTS/test.ali
 	./ada-compile UNIT_TESTS/t_unlink1.adb
-
-UNIT_TESTS/t_unlink1.o:\
-UNIT_TESTS/t_unlink1.ali
 
 UNIT_TESTS/test.a:\
 cc-slib UNIT_TESTS/test.sld UNIT_TESTS/test.o
 	./cc-slib UNIT_TESTS/test UNIT_TESTS/test.o
 
-UNIT_TESTS/test.ali:\
+UNIT_TESTS/test.o UNIT_TESTS/test.ali:\
 ada-compile UNIT_TESTS/test.adb UNIT_TESTS/test.ads
 	./ada-compile UNIT_TESTS/test.adb
-
-UNIT_TESTS/test.o:\
-UNIT_TESTS/test.ali
 
 ada-bind:\
 conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist flags-cwd \
@@ -418,11 +379,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc conf-cc mk-cctype
+conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld conf-ld mk-ldtype
+conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -613,7 +574,7 @@ cc-link posix-ada-conf.ld posix-ada-conf.o ctxt/ctxt.a
 	./cc-link posix-ada-conf posix-ada-conf.o ctxt/ctxt.a
 
 posix-ada-conf.o:\
-cc-compile posix-ada-conf.c ctxt.h _sysinfo.h
+cc-compile posix-ada-conf.c ctxt.h _sd_sysinfo.h
 	./cc-compile posix-ada-conf.c
 
 posix-ada.a:\
@@ -637,12 +598,9 @@ LICENSE
 	./posix-c_types.ads.sh > posix-c_types.ads.tmp
 	mv posix-c_types.ads.tmp posix-c_types.ads
 
-posix-c_types.ali:\
+posix-c_types.o posix-c_types.ali:\
 ada-compile posix-c_types.ads
 	./ada-compile posix-c_types.ads
-
-posix-c_types.o:\
-posix-c_types.ali
 
 posix-config:\
 cc-link posix-config.ld posix-config.o
@@ -672,12 +630,9 @@ LICENSE
 	./posix-configuration.ads.sh > posix-configuration.ads.tmp
 	mv posix-configuration.ads.tmp posix-configuration.ads
 
-posix-configuration.ali:\
+posix-configuration.o posix-configuration.ali:\
 ada-compile posix-configuration.ads
 	./ada-compile posix-configuration.ads
-
-posix-configuration.o:\
-posix-configuration.ali
 
 # posix-directory.ads.mff
 posix-directory.ads:   \
@@ -691,12 +646,9 @@ LICENSE
 	./posix-directory.ads.sh > posix-directory.ads.tmp
 	mv posix-directory.ads.tmp posix-directory.ads
 
-posix-directory.ali:\
-ada-compile posix-directory.adb posix.ali posix-directory.ads
+posix-directory.o posix-directory.ali:\
+ada-compile posix-directory.adb posix.ali posix-directory.ads posix-c_types.ali
 	./ada-compile posix-directory.adb
-
-posix-directory.o:\
-posix-directory.ali
 
 # posix-errno.ads.mff
 posix-errno.ads:    \
@@ -709,12 +661,9 @@ type-discrete
 	./posix-errno.ads.sh > posix-errno.ads.tmp
 	mv posix-errno.ads.tmp posix-errno.ads
 
-posix-errno.ali:\
+posix-errno.o posix-errno.ali:\
 ada-compile posix-errno.ads
 	./ada-compile posix-errno.ads
-
-posix-errno.o:\
-posix-errno.ali
 
 # posix-error.adb.mff
 posix-error.adb:    \
@@ -741,12 +690,9 @@ type-discrete
 	./posix-error.ads.sh > posix-error.ads.tmp
 	mv posix-error.ads.tmp posix-error.ads
 
-posix-error.ali:\
+posix-error.o posix-error.ali:\
 ada-compile posix-error.adb
 	./ada-compile posix-error.adb
-
-posix-error.o:\
-posix-error.ali
 
 # posix-file.ads.mff
 posix-file.ads:       \
@@ -765,12 +711,9 @@ type-offset
 	./posix-file.ads.sh > posix-file.ads.tmp
 	mv posix-file.ads.tmp posix-file.ads
 
-posix-file.ali:\
+posix-file.o posix-file.ali:\
 ada-compile posix-file.adb posix.ali posix-file.ads
 	./ada-compile posix-file.adb
-
-posix-file.o:\
-posix-file.ali
 
 # posix-file_status.ads.mff
 posix-file_status.ads:   \
@@ -789,12 +732,9 @@ LICENSE
 	./posix-file_status.ads.sh > posix-file_status.ads.tmp
 	mv posix-file_status.ads.tmp posix-file_status.ads
 
-posix-file_status.ali:\
-ada-compile posix-file_status.adb posix-file_status.ads
+posix-file_status.o posix-file_status.ali:\
+ada-compile posix-file_status.adb posix-file_status.ads posix-c_types.ali
 	./ada-compile posix-file_status.adb
-
-posix-file_status.o:\
-posix-file_status.ali
 
 # posix-io.ads.mff
 posix-io.ads:   \
@@ -809,12 +749,9 @@ LICENSE
 	./posix-io.ads.sh > posix-io.ads.tmp
 	mv posix-io.ads.tmp posix-io.ads
 
-posix-io.ali:\
-ada-compile posix-io.adb posix.ali posix-io.ads
+posix-io.o posix-io.ali:\
+ada-compile posix-io.adb posix.ali posix-io.ads posix-c_types.ali
 	./ada-compile posix-io.adb
-
-posix-io.o:\
-posix-io.ali
 
 # posix-io_control.ads.mff
 posix-io_control.ads:   \
@@ -830,12 +767,9 @@ LICENSE
 	./posix-io_control.ads.sh > posix-io_control.ads.tmp
 	mv posix-io_control.ads.tmp posix-io_control.ads
 
-posix-io_control.ali:\
+posix-io_control.o posix-io_control.ali:\
 ada-compile posix-io_control.adb posix-io_control.ads
 	./ada-compile posix-io_control.adb
-
-posix-io_control.o:\
-posix-io_control.ali
 
 # posix-path.ads.mff
 posix-path.ads:  \
@@ -846,12 +780,9 @@ posix-path.ads.sh
 	./posix-path.ads.sh > posix-path.ads.tmp
 	mv posix-path.ads.tmp posix-path.ads
 
-posix-path.ali:\
+posix-path.o posix-path.ali:\
 ada-compile posix-path.adb posix.ali posix-path.ads
 	./ada-compile posix-path.adb
-
-posix-path.o:\
-posix-path.ali
 
 # posix-permissions.ads.mff
 posix-permissions.ads:   \
@@ -864,12 +795,9 @@ LICENSE
 	./posix-permissions.ads.sh > posix-permissions.ads.tmp
 	mv posix-permissions.ads.tmp posix-permissions.ads
 
-posix-permissions.ali:\
+posix-permissions.o posix-permissions.ali:\
 ada-compile posix-permissions.adb posix.ali posix-permissions.ads
 	./ada-compile posix-permissions.adb
-
-posix-permissions.o:\
-posix-permissions.ali
 
 # posix-process_info.ads.mff
 posix-process_info.ads:   \
@@ -884,12 +812,9 @@ LICENSE
 	./posix-process_info.ads.sh > posix-process_info.ads.tmp
 	mv posix-process_info.ads.tmp posix-process_info.ads
 
-posix-process_info.ali:\
+posix-process_info.o posix-process_info.ali:\
 ada-compile posix-process_info.adb posix-process_info.ads
 	./ada-compile posix-process_info.adb
-
-posix-process_info.o:\
-posix-process_info.ali
 
 # posix-symlink.ads.mff
 posix-symlink.ads:    \
@@ -903,12 +828,9 @@ type-discrete
 	./posix-symlink.ads.sh > posix-symlink.ads.tmp
 	mv posix-symlink.ads.tmp posix-symlink.ads
 
-posix-symlink.ali:\
-ada-compile posix-symlink.adb posix.ali posix-symlink.ads
+posix-symlink.o posix-symlink.ali:\
+ada-compile posix-symlink.adb posix.ali posix-symlink.ads posix-path.ali
 	./ada-compile posix-symlink.adb
-
-posix-symlink.o:\
-posix-symlink.ali
 
 # posix-user_db.ads.mff
 posix-user_db.ads:   \
@@ -922,19 +844,13 @@ LICENSE
 	./posix-user_db.ads.sh > posix-user_db.ads.tmp
 	mv posix-user_db.ads.tmp posix-user_db.ads
 
-posix-user_db.ali:\
-ada-compile posix-user_db.adb
+posix-user_db.o posix-user_db.ali:\
+ada-compile posix-user_db.adb posix-c_types.ali
 	./ada-compile posix-user_db.adb
 
-posix-user_db.o:\
-posix-user_db.ali
-
-posix.ali:\
+posix.o posix.ali:\
 ada-compile posix.ads posix.ads
 	./ada-compile posix.ads
-
-posix.o:\
-posix.ali
 
 posix_error.o:\
 cc-compile posix_error.c posix_config.h
@@ -964,12 +880,9 @@ ada-bind ada-link spark_config.ald spark_config.ali
 	./ada-bind spark_config.ali
 	./ada-link spark_config spark_config.ali
 
-spark_config.ali:\
+spark_config.o spark_config.ali:\
 ada-compile spark_config.adb
 	./ada-compile spark_config.adb
-
-spark_config.o:\
-spark_config.ali
 
 # test_config.ads.mff
 test_config.ads:   \
@@ -982,12 +895,9 @@ conf-T-user
 	./test_config.ads.sh > test_config.ads.tmp
 	mv test_config.ads.tmp test_config.ads
 
-test_config.ali:\
+test_config.o test_config.ali:\
 ada-compile test_config.ads
 	./ada-compile test_config.ads
-
-test_config.o:\
-test_config.ali
 
 titlecase:\
 cc-link titlecase.ld titlecase.o
@@ -1076,12 +986,12 @@ obj_clean:
 	posix-io_control.ali posix-io_control.o posix-path.ads posix-path.ali \
 	posix-path.o posix-permissions.ads posix-permissions.ali posix-permissions.o \
 	posix-process_info.ads posix-process_info.ali posix-process_info.o \
-	posix-symlink.ali posix-symlink.o posix-user_db.ads posix-user_db.ali \
-	posix-user_db.o posix.ali posix.o posix_error.o posix_file posix_file.o \
-	posix_passwd.o posix_stat.o spark_config spark_config.ali spark_config.o \
-	test_config.ads test_config.ali test_config.o titlecase titlecase.o \
-	type-discrete type-discrete.o type-mode type-mode.o type-offset type-offset.o \
-	type-passwd type-passwd.o type-status type-status.o
+	posix-symlink.ads posix-symlink.ali posix-symlink.o posix-user_db.ads \
+	posix-user_db.ali posix-user_db.o posix.ali posix.o posix_error.o posix_file \
+	posix_file.o posix_passwd.o posix_stat.o spark_config spark_config.ali \
+	spark_config.o test_config.ads test_config.ali test_config.o titlecase \
+	titlecase.o type-discrete type-discrete.o type-mode type-mode.o type-offset \
+	type-offset.o type-passwd type-passwd.o type-status type-status.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 

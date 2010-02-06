@@ -5,5 +5,8 @@
 # that the library is built before any of the test suite.
 #
 
-local: posix-ada.a
+local: dep-check posix-ada.a
 local_clean:
+
+dep-check: libs-c_string-S flags-c_string
+	./check-deps

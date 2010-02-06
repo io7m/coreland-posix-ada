@@ -1,0 +1,57 @@
+#!/bin/sh
+
+. ${SYSDEP_BASE_DIRECTORY}/sysdep-subs || exit 1
+
+PROGRAM_NAME="sd-search_header"
+
+debug()
+{
+  SYSDEP_DEBUG "${PROGRAM_NAME}: $1"
+}
+
+fatal()
+{
+  SYSDEP_FATAL "${PROGRAM_NAME}: $1"
+}
+
+found()
+{
+  for ELEMENT in ${FOUND_PATHS}
+  do
+    debug "found ${ELEMENT}/${HEADER_FILE}"
+  done
+
+  FIRST_ELEMENT=`${SYSDEP_UTIL_ECHO} ${FOUND_PATHS} |
+    ${SYSDEP_UTIL_AWK} '{print $1}'` || fatal "could not select first list element"
+
+  ${SYSDEP_UTIL_ECHO} "-I${FIRST_ELEMENT}"
+  ${SYSDEP_UTIL_EXIT} 0
+}
+
+#----------------------------------------------------------------------
+# Entry point
+
+SYSDEP_CHECK_DEFINED "${SYSDEP_STATIC_LIB_SUFFIXES}" "SYSDEP_STATIC_LIB_SUFFIXES"
+SYSDEP_CHECK_DEFINED "${SYSDEP_TRY_MANUAL}"          "SYSDEP_TRY_MANUAL"
+SYSDEP_CHECK_DEFINED "${SYSDEP_OS}"                  "SYSDEP_OS"
+SYSDEP_CHECK_DEFINED "${SYSDEP_LINE}"                "SYSDEP_LINE"
+
+#----------------------------------------------------------------------
+# main
+
+HEADER_FILE="`${SYSDEP_LINE} 1 < header`" ||
+  fatal "could not read 'header'"
+
+if [ -f "os_ext/${SYSDEP_OS}/header" ]
+then
+  HEADER_FILE="`${SYSDEP_LINE} 1 < os_ext/${SYSDEP_OS}/header`" ||
+    fatal "could not read 'os_ext/${SYSDEP_OS}/header'"
+fi
+
+FOUND_PATHS=`${SYSDEP_TRY_MANUAL} "${HEADER_FILE}" "${SYSDEP_STDINC}" ""`
+if [ $? -eq 0 ]
+then
+  found
+fi
+
+${SYSDEP_UTIL_EXIT} 0

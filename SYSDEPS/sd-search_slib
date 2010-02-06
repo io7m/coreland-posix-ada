@@ -1,0 +1,97 @@
+#!/bin/sh
+
+. ${SYSDEP_BASE_DIRECTORY}/sysdep-subs || exit 1
+
+PROGRAM_NAME="sd-search_slib"
+
+debug()
+{
+  SYSDEP_DEBUG "${PROGRAM_NAME}: $1"
+}
+
+fatal()
+{
+  SYSDEP_FATAL "${PROGRAM_NAME}: $1"
+}
+
+found()
+{
+  for ELEMENT in ${FOUND_PATHS}
+  do
+    debug "found ${ELEMENT}/${STATIC_LIBRARY_FILE}"
+  done
+
+  FIRST_ELEMENT=`${SYSDEP_UTIL_ECHO} ${FOUND_PATHS} |
+    ${SYSDEP_UTIL_AWK} '{print $1}'` || fatal "could not select first list element"
+
+  case ${SYSDEP_OS} in
+    #
+    # On Win32, some linkers get extremely upset if told to
+    # look in the system directories (C:\WINDOWS\system32, etc)
+    # for libraries using the -L flag. Given that it's not really
+    # possible to tell which directories are "dangerous" in this
+    # manner, all are assumed to be "dangerous". The library is
+    # passed directly to the linker by name.
+    #
+    # Of course, this may be linker-specific and may get significantly
+    # more complex in future.
+    #
+    SD_SYSINFO_OS_MS_WINDOWS)
+      ${SYSDEP_UTIL_ECHO} "${FIRST_ELEMENT}/${STATIC_LIBRARY_FILE}"
+      ;;
+    #
+    # It is necessary to pass the library to the linker by name
+    # directly on all tested platforms due to the fact that the
+    # linker usually picks dynamic libraries first when using the
+    # standard '-l' flag.
+    #
+    *)
+      ${SYSDEP_UTIL_ECHO} "${FIRST_ELEMENT}/${STATIC_LIBRARY_FILE}"
+      ;;
+  esac
+
+  ${SYSDEP_UTIL_EXIT} 0
+}
+
+#----------------------------------------------------------------------
+# Entry point
+
+SYSDEP_CHECK_DEFINED "${SYSDEP_STATIC_LIB_SUFFIXES}" "SYSDEP_STATIC_LIB_SUFFIXES"
+SYSDEP_CHECK_DEFINED "${SYSDEP_TRY_MANUAL}"          "SYSDEP_TRY_MANUAL"
+SYSDEP_CHECK_DEFINED "${SYSDEP_OS}"                  "SYSDEP_OS"
+SYSDEP_CHECK_DEFINED "${SYSDEP_LINE}"                "SYSDEP_LINE"
+
+#----------------------------------------------------------------------
+# main
+
+STATIC_LIBRARY="`${SYSDEP_LINE} 1 < static_lib`" ||
+  fatal "could not read 'static_lib'"
+
+if [ -f "os_ext/${SYSDEP_OS}/static_lib" ]
+then
+  STATIC_LIBRARY="`${SYSDEP_LINE} 1 < os_ext/${SYSDEP_OS}/static_lib`" ||
+    fatal "could not read 'os_ext/${SYSDEP_OS}/static_lib'"
+fi
+
+for SUFFIX in ${SYSDEP_STATIC_LIB_SUFFIXES}
+do
+  STATIC_LIBRARY_FILE="lib${STATIC_LIBRARY}.${SUFFIX}"
+  debug "checking ${STATIC_LIBRARY_FILE}"
+
+  FOUND_PATHS=`${SYSDEP_TRY_MANUAL} "${STATIC_LIBRARY_FILE}" "${SYSDEP_STDLIB}" ""`
+  if [ $? -eq 0 ]
+  then
+    found
+  fi
+
+  STATIC_LIBRARY_FILE="${STATIC_LIBRARY}.${SUFFIX}"
+  debug "checking ${STATIC_LIBRARY_FILE}"
+
+  FOUND_PATHS=`${SYSDEP_TRY_MANUAL} "${STATIC_LIBRARY_FILE}" "${SYSDEP_STDLIB}" ""`
+  if [ $? -eq 0 ]
+  then
+    found
+  fi
+done
+
+${SYSDEP_UTIL_EXIT} 0

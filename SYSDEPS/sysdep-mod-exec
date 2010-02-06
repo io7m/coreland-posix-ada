@@ -1,0 +1,378 @@
+#!/bin/sh
+
+#
+# sysdep-mod-exec
+#
+# Execute a module.
+#
+
+SYSDEP_CHECK_DEFINED "${SYSDEP_SEARCH_DYNAMIC_LIB}" "SYSDEP_SEARCH_DYNAMIC_LIB"
+SYSDEP_CHECK_DEFINED "${SYSDEP_SEARCH_STATIC_LIB}"  "SYSDEP_SEARCH_STATIC_LIB"
+SYSDEP_CHECK_DEFINED "${SYSDEP_SEARCH_HEADER}"      "SYSDEP_SEARCH_HEADER"
+
+#
+# Support subprograms.
+#
+
+#
+# Mark module as successful or failed.
+#
+
+SDM_module_succeed()
+{
+  STATUS_FILE="${SYSDEP_STATUS_DIRECTORY}/${SYSDEP_MODULE}"
+  ${SYSDEP_UTIL_ECHO} 'succeeded' > "${STATUS_FILE}" ||
+    SYSDEP_ERROR "could not write ${STATUS_FILE}"
+}
+
+SDM_module_fail()
+{
+  STATUS_FILE="${SYSDEP_STATUS_DIRECTORY}/${SYSDEP_MODULE}"
+  ${SYSDEP_UTIL_ECHO} 'failed' > "${STATUS_FILE}" ||
+    SYSDEP_ERROR "could not write ${STATUS_FILE}"
+}
+
+SDM_module_fatal()
+{
+  SDM_module_fail
+  SYSDEP_FATAL "$1"
+}
+
+SDM_module_exit_success()
+{
+  SDM_module_succeed || SDM_module_fail || ${SYSDEP_UTIL_EXIT} 1
+  ${SYSDEP_UTIL_EXIT} 0
+}
+
+#
+# Move created files out of working directory into output directory.
+#
+
+SDM_files_move()
+{
+  for file in ${SDM_CREATES}
+  do
+    if [ "${file}" = "sysdeps.out" ]
+    then
+      ${SYSDEP_UTIL_CAT} "$file" >> "${SYSDEP_OUTPUT_DIRECTORY}/$file"
+      SYSDEP_REMOVE "${file}"
+    else
+      ${SYSDEP_UTIL_CP} "$file" "${SYSDEP_OUTPUT_DIRECTORY}/$file"
+      SYSDEP_REMOVE "${file}"
+    fi
+  done
+}
+
+#
+# Complete module, write and move output files.
+#
+
+SDM_module_complete()
+{
+  OUTPUT_FLAGS="$1 ${SYSDEP_MODULE_ALL_FLAGS}"
+
+  ${SYSDEP_UTIL_ECHO} "${OUTPUT_FLAGS}" >> "${OUTPUT_FILE}" ||
+    SDM_module_fatal "could not write ${OUTPUT_FILE}"
+  ${SYSDEP_UTIL_ECHO} "${SYSDEP_MODULE}: ${OUTPUT_FLAGS}" >> "sysdeps.out" ||
+    SDM_module_fatal "could not write sysdeps.out"
+
+  SDM_files_move || SDM_module_fatal "error moving files"
+  SDM_module_exit_success
+}
+
+#
+# Convert list of macro names into flattened string with each macro
+# name prefixed with '-D'.
+#
+# XXX: Do all compilers accept -D?
+#
+
+SDM_flatten_defines()
+{
+  d=""
+  if [ ! -z "$1" ]
+  then
+    for tag in $1
+    do
+      d="-D${tag} ${d}"
+    done
+    ${SYSDEP_UTIL_ECHO} "$d"
+  fi
+}
+
+#
+# Add given list of directories to standard search paths.
+#
+
+SDM_paths_add()
+{
+  for p in $1; do SYSDEP_STDINC="$p/include $p ${SYSDEP_STDINC}"; done
+  for p in $1; do SYSDEP_STDLIB="$p/lib $p ${SYSDEP_STDLIB}"; done
+
+  debug "module modified SYSDEP_STDINC: ${SYSDEP_STDINC}"
+  debug "module modified SYSDEP_STDLIB: ${SYSDEP_STDLIB}"
+
+  export SYSDEP_STDINC
+  export SYSDEP_STDLIB
+}
+
+#
+# Concatentate each element of given list of path components
+# to each component of the standard search paths and combine
+# the two resulting lists.
+#
+
+SDM_paths_extend()
+{
+  for d in ${SYSDEP_STDINC}
+  do
+    for e in $1; do SYSDEP_STDINC="$d/$e ${SYSDEP_STDINC}"; done
+  done
+  for d in ${SYSDEP_STDLIB}
+  do
+    for e in $1; do SYSDEP_STDLIB="$d/$e ${SYSDEP_STDLIB}"; done
+  done
+
+  debug "module modified SYSDEP_STDINC: ${SYSDEP_STDINC}"
+  debug "module modified SYSDEP_STDLIB: ${SYSDEP_STDLIB}"
+
+  export SYSDEP_STDINC
+  export SYSDEP_STDLIB
+}
+
+#
+# Obtain list of files that the current module creates.
+#
+
+SDM_CREATES=`${SYSDEP_UTIL_CAT} creates` || SDM_module_fatal "could not read 'creates' file"
+SDM_CREATES="${SDM_CREATES} sysdeps.out"
+
+#
+# Execute module.
+#
+
+#
+# Ensure a clean environment.
+#
+
+SYSDEP_REMOVE ${SDM_CREATES}        || SDM_module_fatal "could not clean up created files"
+${SYSDEP_UTIL_TOUCH} ${SDM_CREATES} || SDM_module_fatal "could not create empty files"
+
+#
+# Read OS specific and standard definitions.
+#
+
+SYSDEP_MODULE_DEFINES=""
+if [ -f "defines" ]
+then
+  SYSDEP_MODULE_DEFINES="`${SYSDEP_UTIL_CAT} defines |
+    ${SYSDEP_UTIL_AWK} -F: '{print $1}' |
+    ${SYSDEP_UTIL_TR} -d ' '`" ||
+    SDM_module_fatal "could not read 'defines'"
+fi
+if [ -f "os_ext/${SYSDEP_OS}/defines" ]
+then
+  SYSDEP_MODULE_DEFINES="${SYSDEP_MODULE_DEFINES} `${SYSDEP_UTIL_CAT} os_ext/${SYSDEP_OS}/defines |
+    ${SYSDEP_UTIL_AWK} -F: '{print $1}' |
+    ${SYSDEP_UTIL_TR} -d ' '`" ||
+    SDM_module_fatal "could not read 'os_ext/${SYSDEP_OS}/defines'"
+fi
+SYSDEP_MODULE_DEFINES_FLAT=`SDM_flatten_defines "${SYSDEP_MODULE_DEFINES}"` ||
+  fatal "could not flatten preprocessor definitions"
+export SYSDEP_MODULE_DEFINES
+export SYSDEP_MODULE_DEFINES_FLAT
+
+#
+# Read OS specific and standard flags.
+#
+
+SYSDEP_MODULE_FLAGS=""
+if [ -f "flags" ]
+then
+  SYSDEP_MODULE_FLAGS="`${SYSDEP_LINE} 1 < flags`" ||
+    SDM_module_fatal "could not read 'flags'"
+fi
+if [ -f "os_ext/${SYSDEP_OS}/flags" ]
+then
+  SYSDEP_MODULE_FLAGS="${SYSDEP_MODULE_FLAGS} `${SYSDEP_LINE} 1 < os_ext/${SYSDEP_OS}/flags`" ||
+    SDM_module_fatal "could not read 'os_ext/${SYSDEP_OS}/flags'"
+fi
+export SYSDEP_MODULE_FLAGS
+
+SYSDEP_MODULE_ALL_FLAGS="${SYSDEP_MODULE_DEFINES_FLAT} ${SYSDEP_MODULE_FLAGS}"
+export SYSDEP_MODULE_ALL_FLAGS
+
+#
+# Read module path additions/extensions.
+#
+
+if [ -f "path_add" ]
+then
+  SDM_paths_add "`${SYSDEP_UTIL_CAT} path_add`" ||
+    SDM_module_fatal "could not read 'path_add'"
+fi
+if [ -f "os_ext/${SYSDEP_OS}/path_add" ]
+then
+  SDM_paths_add "`${SYSDEP_UTIL_CAT} os_ext/${SYSDEP_OS}/path_add`" ||
+    SDM_module_fatal "could not read 'os_ext/${SYSDEP_OS}/path_add'"
+fi
+if [ -f "path_ext" ]
+then
+  SDM_paths_extend "`${SYSDEP_UTIL_CAT} path_ext`" ||
+    SDM_module_fatal "could not read 'path_ext'"
+fi
+if [ -f "os_ext/${SYSDEP_OS}/path_ext" ]
+then
+  SDM_paths_extend "`${SYSDEP_UTIL_CAT} os_ext/${SYSDEP_OS}/path_ext`" ||
+    SDM_module_fatal "could not read 'os_ext/${SYSDEP_OS}/path_ext'"
+fi
+
+#
+# Execute custom script if present.
+#
+
+if [ -x "custom" ]
+then
+  SYSDEP_DEBUG "custom exists and is executable"
+
+  ./custom ${SDM_CREATES}
+  RETURN_CODE=$?
+
+  SDM_files_move
+
+  if [ ${RETURN_CODE} -eq 0 ]
+  then
+    SDM_module_exit_success
+  else
+    SYSDEP_ERROR "custom program reported failure"
+    SDM_module_fail
+    ${SYSDEP_UTIL_EXIT} 0
+  fi
+else
+  if [ -f "custom" ]
+  then
+    SDM_module_fatal "'custom' exists but is not executable"
+  fi
+fi
+
+#
+# Create output file.
+#
+
+OUTPUT_FILE="`${SYSDEP_LINE} 1 < creates`" ||
+  SDM_module_fatal "could not determine primary output file"
+${SYSDEP_UTIL_TOUCH} ${OUTPUT_FILE} ||
+  SDM_module_fatal "could not create '${OUTPUT_FILE}'"
+
+#
+# Try OS-specific override if requested.
+#
+
+if [ -f "os_ext/${SYSDEP_OS}/override" ]
+then
+  SYSDEP_DEBUG "reading OS-specific override"
+
+  OUTPUT_FLAGS=`${SYSDEP_UTIL_CAT} "os_ext/${SYSDEP_OS}/override"` ||
+    SDM_module_fatal "could not read os_ext/${SYSDEP_OS}/override"
+
+  SDM_module_complete "${OUTPUT_FLAGS}"
+fi
+
+#
+# Try config binary if requested
+#
+
+if [ -f "config_bin" ]
+then
+  SYSDEP_DEBUG "executing config binary"
+
+  CONFIG_BINARY="`${SYSDEP_LINE} 1 < config_bin`" ||
+    SDM_module_fatal "could not read 'config_bin'"
+  CONFIG_BINARY_ARGS="`${SYSDEP_LINE} 1 < config_bin_args`" ||
+    SDM_module_fatal "could not read 'config_bin_args'"
+
+  OUTPUT_FLAGS=`${SYSDEP_TRY_CONFIG_BIN} "${CONFIG_BINARY}" "${CONFIG_BINARY_ARGS}"` ||
+    SYSDEP_ERROR "config binary '${CONFIG_BINARY}' failed"
+
+  if [ ! -z "${OUTPUT_FLAGS}" ]
+  then
+    SDM_module_complete "${OUTPUT_FLAGS}"
+  fi
+fi
+
+#
+# Try pkg-config if requested
+#
+
+if [ -f "pkg" ]
+then
+  SYSDEP_DEBUG "executing pkg-config"
+
+  PKG_CONFIG_ARGS="`${SYSDEP_LINE} 1 < pkg_config_args`" ||
+    SDM_module_fatal "could not read 'pkg_config_args'"
+  PACKAGE="`${SYSDEP_LINE} 1 < pkg`" ||
+    SDM_module_fatal "could not read 'pkg'"
+
+  OUTPUT_FLAGS=`${SYSDEP_TRY_PKG_CONFIG} "${PACKAGE}" "${PKG_CONFIG_ARGS}"` ||
+    SYSDEP_ERROR "pkg-config failed for '${PACKAGE}'"
+
+  if [ ! -z "${OUTPUT_FLAGS}" ]
+  then
+    SDM_module_complete "${OUTPUT_FLAGS}"
+  fi
+fi
+
+#
+# Header file search.
+#
+
+if [ -f "header" ]
+then
+  SYSDEP_DEBUG "executing ${SYSDEP_SEARCH_HEADER}"
+
+  OUTPUT_FLAGS=`${SYSDEP_SEARCH_HEADER}` ||
+    SDM_module_fatal "error searching for header"
+
+  if [ ! -z "${OUTPUT_FLAGS}" ]
+  then
+    SDM_module_complete "${OUTPUT_FLAGS}"
+  fi
+fi
+
+#
+# Dynamic library search.
+#
+
+if [ -f "dynamic_lib" ]
+then
+  SYSDEP_DEBUG "executing ${SYSDEP_SEARCH_DYNAMIC_LIB}"
+
+  OUTPUT_FLAGS=`${SYSDEP_SEARCH_DYNAMIC_LIB}` ||
+    SDM_module_fatal "error searching for dynamic library"
+
+  if [ ! -z "${OUTPUT_FLAGS}" ]
+  then
+    SDM_module_complete "${OUTPUT_FLAGS}"
+  fi
+fi
+
+#
+# Static library search.
+#
+
+if [ -f "static_lib" ]
+then
+  SYSDEP_DEBUG "executing ${SYSDEP_SEARCH_STATIC_LIB}"
+
+  OUTPUT_FLAGS=`${SYSDEP_SEARCH_STATIC_LIB}` ||
+    SDM_module_fatal "error searching for static library"
+
+  if [ ! -z "${OUTPUT_FLAGS}" ]
+  then
+    SDM_module_complete "${OUTPUT_FLAGS}"
+  fi
+fi
+
+SYSDEP_INFO "all search types failed"
+SDM_module_fail
+SDM_files_move || SDM_module_fatal "error moving files"
